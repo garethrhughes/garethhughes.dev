@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# garethhughes.dev
 
-## Getting Started
+Personal blog built with Next.js (static export), deployed to S3.
 
-First, run the development server:
+## Writing a post
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Create a markdown file in `posts/`:
+
+```yaml
+---
+title: "Your Post Title"
+datePublished: Mon Jan 01 2026 12:00:00 GMT+0000
+slug: your-post-slug
+tags: tag-one, tag-two
+---
+
+Post content here…
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Add any images to `public/images/` and reference them in markdown as `/images/my-image.png`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+## Build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+# Static output is in out/
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to S3
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Set your bucket name (once):
 
-## Deploy on Vercel
+```bash
+export BUCKET=your-s3-bucket-name
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy site:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+make deploy
+```
+
+Sync images only (no rebuild):
+
+```bash
+make deploy-images
+```
+
+With CloudFront invalidation:
+
+```bash
+make deploy CLOUDFRONT_ID=EXAMPLEID
+```
+
+## S3 bucket setup
+
+Enable **Static website hosting** on your S3 bucket with:
+- Index document: `index.html`
+- Error document: `index.html`
+
+## Styling
+
+Uses the same design system as squirrel-notes:
+Tailwind CSS v4 · Geist font · slate/blue palette · dark mode support.
+
+## Deploy to GitHub Pages
+
+The site deploys automatically to GitHub Pages on every push to `main`.
+
+**One-time setup:**
+
+1. Go to your repo → **Settings → Pages**
+2. Under *Source*, select **GitHub Actions**
+3. If using a custom domain, add it under *Custom domain* and create a `CNAME` file in `public/`:
+
+```bash
+echo "garethhughes.dev" > public/CNAME
+```
+
+Then push to `main` — the workflow will build and deploy automatically.
+
+You can also trigger a deploy manually from the **Actions** tab → *Deploy to GitHub Pages* → **Run workflow**.

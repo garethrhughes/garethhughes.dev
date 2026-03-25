@@ -1,26 +1,173 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  --color-squirrel-50: #eff6ff;
+  --color-squirrel-100: #dbeafe;
+  --color-squirrel-200: #bfdbfe;
+  --color-squirrel-300: #93c5fd;
+  --color-squirrel-400: #60a5fa;
+  --color-squirrel-500: #3b82f6;
+  --color-squirrel-600: #2563eb;
+  --color-squirrel-700: #1d4ed8;
+  --color-squirrel-800: #1e40af;
+  --color-squirrel-900: #1e3a8a;
+
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-surface-brand: var(--surface-brand);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-active: var(--surface-active);
+  --color-border: var(--border-color);
+  --color-border-light: var(--border-light);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #1e293b;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --surface-brand: #eff6ff;
+  --surface-hover: #f1f5f9;
+  --surface-raised: #e2e8f0;
+  --surface-active: #dbeafe;
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #334155;
+  --text-tertiary: #475569;
+  --text-muted: #64748b;
+  --text-faint: #94a3b8;
+
+  --preview-h1: #1e3a8a;
+  --preview-h2: #1e40af;
+  --preview-h3: #1d4ed8;
+  --preview-blockquote-border: #93c5fd;
+  --preview-blockquote-color: #64748b;
+  --preview-code-bg: #eff6ff;
+  --preview-code-color: #1d4ed8;
+  --preview-pre-bg: #1e3a8a;
+  --preview-pre-color: #e2e8f0;
+  --preview-link: #2563eb;
+  --preview-link-hover: #1e40af;
+  --preview-th-bg: #eff6ff;
+}
+
+.dark {
+  --background: #282c34;
+  --foreground: #abb2bf;
+  --surface: #282c34;
+  --surface-alt: #21252b;
+  --surface-brand: #2c313a;
+  --surface-hover: #2c313a;
+  --surface-raised: #3e4451;
+  --surface-active: #3e4451;
+  --border-color: #3e4451;
+  --border-light: #2c313a;
+  --text-primary: #abb2bf;
+  --text-secondary: #9da5b4;
+  --text-tertiary: #7f8799;
+  --text-muted: #636d83;
+  --text-faint: #5c6370;
+
+  --preview-h1: #e06c75;
+  --preview-h2: #61afef;
+  --preview-h3: #c678dd;
+  --preview-blockquote-border: #5c6370;
+  --preview-blockquote-color: #7f8799;
+  --preview-code-bg: #2c313a;
+  --preview-code-color: #98c379;
+  --preview-pre-bg: #21252b;
+  --preview-pre-color: #abb2bf;
+  --preview-link: #8cc8ff;
+  --preview-link-hover: #b0daff;
+  --preview-th-bg: #2c313a;
+}
+
+html, body {
+  min-height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-raised); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* Prose / markdown */
+.note-preview h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--preview-h1); }
+.note-preview h2 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--preview-h2); }
+.note-preview h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--preview-h3); }
+.note-preview p { margin-bottom: 0.75rem; line-height: 1.7; }
+.note-preview ul, .note-preview ol { margin-bottom: 0.75rem; padding-left: 1.5rem; }
+.note-preview ul { list-style-type: disc; }
+.note-preview ol { list-style-type: decimal; }
+.note-preview li { margin-bottom: 0.25rem; line-height: 1.6; }
+.note-preview blockquote { border-left: 4px solid var(--preview-blockquote-border); padding-left: 1rem; margin-bottom: 0.75rem; color: var(--preview-blockquote-color); font-style: italic; }
+.note-preview :not(pre) > code { background: var(--preview-code-bg); color: var(--preview-code-color); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+.note-preview pre { background: var(--preview-pre-bg); color: var(--preview-pre-color); padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.75rem; overflow-x: auto; }
+.note-preview a { color: var(--preview-link); text-decoration: underline; }
+.note-preview a:hover { color: var(--preview-link-hover); }
+.note-preview strong { font-weight: 700; }
+.note-preview em { font-style: italic; }
+.note-preview hr { border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0; }
+.note-preview table { width: 100%; border-collapse: collapse; margin-bottom: 0.75rem; }
+.note-preview th, .note-preview td { border: 1px solid var(--border-color); padding: 0.5rem; text-align: left; }
+.note-preview th { background: var(--preview-th-bg); font-weight: 600; }
+.note-preview img { max-width: 100%; border-radius: 0.5rem; margin: 0.75rem 0; }
+.note-preview input[type="checkbox"] { accent-color: var(--color-squirrel-500); }
+
+/* Syntax highlighting — Atom One Light */
+pre code.hljs { display: block; overflow-x: auto; padding: 1em; border-radius: 0.5rem; }
+code.hljs { padding: 3px 5px; }
+.hljs { color: #383a42; background: #fafafa; }
+.hljs-comment, .hljs-quote { color: #a0a1a7; font-style: italic; }
+.hljs-doctag, .hljs-keyword, .hljs-formula { color: #a626a4; }
+.hljs-section, .hljs-name, .hljs-selector-tag, .hljs-deletion, .hljs-subst { color: #e45649; }
+.hljs-literal { color: #0184bb; }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-attribute, .hljs-meta .hljs-string { color: #50a14f; }
+.hljs-attr, .hljs-variable, .hljs-template-variable, .hljs-type,
+.hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number { color: #986801; }
+.hljs-symbol, .hljs-bullet, .hljs-link, .hljs-meta, .hljs-selector-id, .hljs-title { color: #4078f2; }
+.hljs-built_in, .hljs-title.class_, .hljs-class .hljs-title { color: #c18401; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.hljs-link { text-decoration: underline; }
+.note-preview pre:has(code.hljs) { background: transparent; padding: 0; }
+
+/* Syntax highlighting — Atom One Dark */
+.dark .hljs { color: #abb2bf; background: #282c34; }
+.dark .hljs-comment, .dark .hljs-quote { color: #5c6370; font-style: italic; }
+.dark .hljs-doctag, .dark .hljs-keyword, .dark .hljs-formula { color: #c678dd; }
+.dark .hljs-section, .dark .hljs-name, .dark .hljs-selector-tag,
+.dark .hljs-deletion, .dark .hljs-subst { color: #e06c75; }
+.dark .hljs-literal { color: #56b6c2; }
+.dark .hljs-string, .dark .hljs-regexp, .dark .hljs-addition,
+.dark .hljs-attribute, .dark .hljs-meta .hljs-string { color: #98c379; }
+.dark .hljs-attr, .dark .hljs-variable, .dark .hljs-template-variable,
+.dark .hljs-type, .dark .hljs-selector-class, .dark .hljs-selector-attr,
+.dark .hljs-selector-pseudo, .dark .hljs-number { color: #d19a66; }
+.dark .hljs-symbol, .dark .hljs-bullet, .dark .hljs-link, .dark .hljs-meta,
+.dark .hljs-selector-id, .dark .hljs-title { color: #61aeee; }
+.dark .hljs-built_in, .dark .hljs-title.class_, .dark .hljs-class .hljs-title { color: #e6c07b; }
+.dark .hljs-emphasis { font-style: italic; }
+.dark .hljs-strong { font-weight: bold; }
+.dark .hljs-link { text-decoration: underline; }
