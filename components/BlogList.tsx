@@ -4,7 +4,9 @@ import { useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 import { PostMeta } from '@/lib/posts';
 import { PostCard } from './PostCard';
-import { Search, X } from 'lucide-react';
+import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const PAGE_SIZE = 10;
 
 interface BlogListProps {
   posts: PostMeta[];
@@ -13,6 +15,7 @@ interface BlogListProps {
 export function BlogList({ posts }: BlogListProps) {
   const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   const allTags = useMemo(
     () => Array.from(new Set(posts.flatMap((p) => p.tags))).sort(),
@@ -35,6 +38,33 @@ export function BlogList({ posts }: BlogListProps) {
     return results;
   }, [query, activeTag, fuse, posts]);
 
+  // Reset to page 1 when search/filter changes
+  const isFiltering = query.trim() !== '' || activeTag !== null;
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const currentPage = isFiltering ? 1 : Math.min(page, totalPages || 1);
+
+  // Separate featured (first of all posts, page 1 only) from the paginated list
+  const showFeatured = !isFiltering && currentPage === 1 && filtered.length > 0;
+  const featuredPost = showFeatured ? filtered[0] : null;
+  const remainingPosts = showFeatured ? filtered.slice(1) : filtered;
+
+  const pageStart = (currentPage - 1) * PAGE_SIZE - (showFeatured ? 1 : 0);
+  const pageEnd = pageStart + PAGE_SIZE - (showFeatured ? 1 : 0);
+  const pagePosts = remainingPosts.slice(
+    Math.max(0, pageStart),
+    Math.max(0, pageEnd)
+  );
+
+  function handleTagClick(tag: string) {
+    setActiveTag(activeTag === tag ? null : tag);
+    setPage(1);
+  }
+
+  function handleQueryChange(val: string) {
+    setQuery(val);
+    setPage(1);
+  }
+
   return (
     <div>
       {/* Search */}
@@ -43,12 +73,12 @@ export function BlogList({ posts }: BlogListProps) {
         <input
           type="search"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => handleQueryChange(e.target.value)}
           placeholder="Search posts…"
           className="flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-faint"
         />
         {query && (
-          <button onClick={() => setQuery('')} className="text-text-faint hover:text-text-muted">
+          <button onClick={() => handleQueryChange('')} className="text-text-faint hover:text-text-muted">
             <X size={14} />
           </button>
         )}
@@ -60,7 +90,7 @@ export function BlogList({ posts }: BlogListProps) {
           {allTags.map((tag) => (
             <button
               key={tag}
-              onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+              onClick={() => handleTagClick(tag)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-squirrel-500 text-white'
@@ -77,11 +107,41 @@ export function BlogList({ posts }: BlogListProps) {
       {filtered.length === 0 ? (
         <p className="py-12 text-center text-sm text-text-muted">No posts found.</p>
       ) : (
-        <div className="flex flex-col gap-4">
-          {filtered.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
+        <>
+          <div className="flex flex-col gap-4">
+            {featuredPost && <PostCard post={featuredPost} featured />}
+            {pagePosts.map((post) => (
+              <PostCard key={post.slug} post={post} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {!isFiltering && totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-between gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft size={16} />
+                Previous
+              </button>
+
+              <span className="text-sm text-text-muted">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Next
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

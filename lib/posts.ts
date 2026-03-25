@@ -25,7 +25,7 @@ function parseDate(raw: string): string {
   }
 }
 
-function extractExcerpt(content: string, maxLength = 160): string {
+function extractExcerpt(content: string, maxLength = 400): string {
   const text = content
     .replace(/^---[\s\S]*?---/, "")
     .replace(/#{1,6}\s+/g, "")

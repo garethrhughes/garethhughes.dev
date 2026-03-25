@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,6 +17,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://garethhughes.dev"),
   title: { default: "Gareth Hughes", template: "%s | Gareth Hughes" },
   description: "Thoughts on software engineering, leadership, and technology.",
+  icons: {
+    icon: "/avatar.jpeg",
+    apple: "/avatar.jpeg",
+  },
 };
 
 export default function RootLayout({
@@ -32,6 +37,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
+        <Footer />
       </body>
     </html>
   );

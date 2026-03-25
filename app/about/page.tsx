@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/about/" />
-      <main className="mx-auto max-w-2xl px-4 py-10 md:px-6">
+      <main className="mx-auto max-w-3xl px-4 py-10 md:px-6">
         <PostContent content={content} />
       </main>
     </div>
