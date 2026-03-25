@@ -10,22 +10,22 @@ Expert .NET and JavaScript engineer and technical leader with 20 years experienc
 
 ## Skills
 
-**Architecture & Design**
+**Architecture & Design**:
 Event-Driven Architecture · Microservices · DDD · CQRS · System Design · Micro-FE
 
-**Cloud & Infrastructure**
+**Cloud & Infrastructure**: 
 AWS (ECS, Fargate, Lambda, DynamoDB) · Kubernetes · Terraform · CDK · OpenTelemetry · Elastic
 
-**Languages & Frameworks** - 
+**Languages & Frameworks**: 
 C# · .NET Framework · .NET 5+ · TypeScript · Node.js · React · Vue.js · PHP
 
-**Data & Messaging** - 
+**Data & Messaging**: 
 PostgreSQL · SQL Server · DynamoDB · SNS/SQS · Snowflake · Entity Framework
 
-**DevOps & Tooling** - 
+**DevOps & Tooling**: 
 CI/CD · Docker · Azure DevOps · GitHub Actions · IaC · TeamCity · OpsGenie
 
-**Security & Compliance** -
+**Security & Compliance**:
 IAM Policy Design · Secrets Management · API Security · ISO 27001 · PCI DSS
 
 ---
