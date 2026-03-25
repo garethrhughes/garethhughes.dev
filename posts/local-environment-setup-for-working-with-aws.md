@@ -1,0 +1,57 @@
+---
+title: "Local Environment Setup for Working with AWS"
+datePublished: Mon, 27 Nov 2023 01:00:00 GMT
+slug: local-environment-setup-for-working-with-aws
+---
+
+I recently wrote this up on confluence at work. However there is nothing here that's specific to that environment other than it being for AWS. The idea is to have a consistent environment for all the developers on the team to use to make life easier when debugging issues.
+
+This is written for a Mac as my current team are all using Macs but I'm currently running the same setup on Kubuntu.
+
+### Requirements
+
+- [Brew](https://brew.sh/)
+- [Firefox](https://www.mozilla.org/en-US/firefox/new/)
+
+### Setup Dependencies
+
+```console
+brew tap common-fate/granted
+brew install coreutils curl git granted awscli
+```
+
+### Setup asdf
+
+```console
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
+```
+
+Add the following to ~/.zshrc, see [here](https://asdf-vm.com/guide/getting-started.html) if not using ZSH.
+```console
+. "$HOME/.asdf/asdf.sh"
+```
+You will need to reload your terminal at this point
+
+Add the nodejs plugin & configure defaults
+
+```console
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+asdf install nodejs latest
+asdf global nodejs latest
+```
+
+asdf gives a nice way to control the versions of software required on a project level, this is a `nodejs` setup but it also handls other software.
+
+### Assume
+
+Run the `assume` command and follow the installation steps to get the required plugin installed in Firefox.
+
+Once this is completed setup an account with the command
+
+```console
+aws configure sso --profile {account/environment name}
+```
+
+Complete the setup steps with the correct details then add as many accounts as you need to interact with.
+
+Now the command `assume` will log you in to your terminal and correctly export the AWS credentials and `assume -c` will take you straight to the AWS Console.

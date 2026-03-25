@@ -1,0 +1,27 @@
+---
+title: "Adventures in dotnet on Xubuntu conclusion"
+datePublished: Mon, 14 Nov 2022 01:00:00 GMT
+slug: adventures-in-dotnet-on-xubuntu-conclusion
+---
+
+## Background
+
+While working at Wilbur last year I switched to using Linux as my daily driver. I had previously used Linux as my main OS when I first started as a PHP developer back in 2006 so I was still reasonably familiar with the platform. 
+
+When I moved into .NET it obviously wasn't possible to work on anything other than Windows at the time and I didn't get an opportunity for a long time to work in anything other than Windows. Sadly most orgs don't offer Linux as an option.
+
+I decided to go with Xubuntu last year due to my familiarity with Ubuntu, however, after having audio issues that I couldn't resolve and a bunch of USB issues I ended up jumping to Manjaro which I'm still running. 
+
+## Manjaro
+
+While I liked Xfce it is very basic and I found the styling/customisation options to be very limited, this wasn't a deal breaker however I started to get audio issues where my audio device would start blasting static and I couldn't find a resolution. I suspect related to the USB hub and external sound device I was using. 
+
+I decided I wanted to use KDE and I landed on Manjaro as I'd never used an Arc based distro before. (Previously I've used Ubuntu, OpenSUSE and then Xubuntu.)
+
+## Conclusion
+
+My primary difficulties which I couldn't overcome were all USB related. I had a USB KVM device which I plug my webcam, external sound device, keyboard, mouse and mic into. This works completely fine in Windows and OSX, however in Linux the webcam will never work when plugged into that USB device. My only solution to this currently is that my webcam is plugged directly into my work Macbook as I generally only need my webcam for that device anyway. And my personal laptop is the exact same model laptop (Macbook Pro 2021 14") so if I want to use the camera on a personal device it's an easy switch.
+
+The dotnet experience was much the same on Manjaro as it was on Xubuntu however I left Wilbur in June and no longer have the option to work on my own machine so I'm now working in Node on MacOS. 
+
+However with the Steam Deck and Proton the Linux gaming support has greatly improved so I have left my computer on Manjaro and don't intend to go back to developing on Windows any time soon. 
