@@ -3,6 +3,7 @@ title: "Introducing Squirrel Notes"
 datePublished: Thu, 26 Mar 2026 00:00:00 GMT
 slug: introducing-squirrel-notes
 tags: ai, software-development, productivity, notes
+coverImage: /images/screenshot2.png
 ---
 
 How I build and releasd [Squirrel Notes](https://squirrelnotes.app) with Claude Code and Copilot. Use it for free at [Squirrel Notes](https://my.squirrelnotes.app).
