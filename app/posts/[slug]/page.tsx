@@ -19,10 +19,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return {};
+
+  const canonicalUrl = `/posts/${post.slug}`;
+  const imageUrl = post.coverImage || '/avatar.jpeg';
+
   return {
     title: post.title,
     description: post.excerpt,
-    openGraph: post.coverImage ? { images: [post.coverImage] } : undefined,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: 'article',
+      url: canonicalUrl,
+      title: post.title,
+      description: post.excerpt,
+      siteName: 'Gareth Hughes',
+      publishedTime: post.datePublished,
+      authors: ['Gareth Hughes'],
+      tags: post.tags,
+      images: [
+        {
+          url: imageUrl,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [imageUrl],
+    },
   };
 }
 
