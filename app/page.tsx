@@ -4,7 +4,7 @@ import { BlogList } from '@/components/BlogList';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Blog | Gareth Hughes',
   description: 'Thoughts on software engineering, leadership, and technology.',
   alternates: {
     canonical: '/',
