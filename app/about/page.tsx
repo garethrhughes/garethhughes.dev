@@ -13,7 +13,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/about/" />
-      <main className="mx-auto max-w-3xl px-4 py-10 md:px-6">
+      <main className="mx-auto max-w-4xl px-4 py-10 md:px-6">
 
         {/* Profile hero */}
         <div className="mb-10 flex flex-col items-center gap-6 rounded-xl border border-border bg-surface p-8 shadow-sm sm:flex-row sm:items-start">

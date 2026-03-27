@@ -67,7 +67,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header currentPath="/" />
 
       {post.coverImage && (
         <div className="relative h-64 w-full overflow-hidden md:h-96">
@@ -82,7 +82,7 @@ export default async function PostPage({ params }: Props) {
         </div>
       )}
 
-      <main className="mx-auto max-w-3xl px-4 py-10 md:px-6">
+      <main className="mx-auto max-w-4xl px-4 py-10 md:px-6">
         <Link
           href="/"
           className="mb-8 inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-squirrel-600 transition-colors"
