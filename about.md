@@ -2,9 +2,9 @@
 title: About
 ---
 
-Expert .NET and JavaScript engineer and technical leader with 20 years experience across England and Australia, with over 10 years of people leadership experience delivering software solutions in insurance, real estate, compliance, and government sectors.
+Expert .NET and JavaScript engineer and technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
 
-**Core competencies:** System design and architecture, technical transformation, legacy modernisation, CI/CD pipeline development, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
+**Core competencies:** System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
 
 ---
 
@@ -17,13 +17,16 @@ Event-Driven Architecture · Microservices · DDD · CQRS · System Design · Mi
 AWS (ECS, Fargate, Lambda, DynamoDB) · Kubernetes · Terraform · CDK · OpenTelemetry · Elastic
 
 **Languages & Frameworks**: 
-C# · .NET Framework · .NET 5+ · TypeScript · Node.js · React · Vue.js · PHP
+C# · .NET Framework · .NET 5+ · TypeScript · Node.js · React · Vue.js · PHP · GraphQL
 
 **Data & Messaging**: 
-PostgreSQL · SQL Server · DynamoDB · SNS/SQS · Snowflake · Entity Framework
+PostgreSQL · SQL Server · DynamoDB · SNS/SQS · Kafka · Snowflake · Entity Framework
 
 **DevOps & Tooling**: 
-CI/CD · Docker · Azure DevOps · GitHub Actions · IaC · TeamCity · OpsGenie
+CI/CD · Docker · Azure DevOps · GitHub Actions · IaC · Serverless Framework · OpsGenie
+
+**AI & Automation**:
+Agentic AI · Claude Code · Amazon Q · Gemini · AI workflow design
 
 **Security & Compliance**:
 IAM Policy Design · Secrets Management · API Security · ISO 27001 · PCI DSS
@@ -34,18 +37,22 @@ IAM Policy Design · Secrets Management · API Security · ISO 27001 · PCI DSS
 
 ### Senior Engineering Manager — [MyPass Global](https://en-us.mypassglobal.com/)
 
-Leading software engineering & data with five teams (20+ engineers), responsible for re-platforming and platform stability including designing future-state architecture in collaboration with current engineering squads.
+*Sydney · 2024–2026*
 
-- Led technical discovery with a major enterprise client, successfully landing a $6–8m ARR project through solution design and technical engagement
-- Developed engineering roadmap and future-state architecture including database migration strategy, platform stability initiatives, and event-driven architecture patterns
-- Rolled out new CI/CD pipelines to streamline release processes and improve deployment velocity
-- Introduced Kong API Gateway with new architectural patterns to improve API management and scalability
+Led software engineering and data across six cross-functional squads (25–30 engineers), responsible for re-platforming and platform stability including future-state architecture design in collaboration with engineering squads.
+
+- Architected and executed an engineering-wide AI enablement strategy, progressing from initial Amazon Q pilots to a mature agentic AI ecosystem using Claude Code and Gemini — measurably increasing developer velocity
+- Directed a high-performance engineering department across six squads, establishing a new Platform Engineering function to bridge developer experience and operational stability
+- Acted as primary technical stakeholder in enterprise discovery, designing future-state architecture that secured a $6–8m ARR partnership
+- Authored a multi-year technical roadmap covering legacy infrastructure transition to event-driven architecture, including a comprehensive database migration strategy
 
 *Java · TypeScript · Neo4j · GraphQL · Kubernetes · AWS · Snowflake · Jenkins · Azure DevOps*
 
 ---
 
 ### Lead Engineer — [A-Leagues](https://aleagues.com.au/)
+
+*Sydney · 2023–2024*
 
 Established a new engineering team, building agile processes and optimising ways of working from the ground up.
 
@@ -58,7 +65,23 @@ Established a new engineering team, building agile processes and optimising ways
 
 ---
 
+### Senior Developer — [Pluralsight](https://www.pluralsight.com/)
+
+*Remote · 2022–2023*
+
+Technical integration between A Cloud Guru and Pluralsight platforms following acquisition, working across distributed systems and event-driven architecture.
+
+- Led large-scale Node.js version upgrade across multiple services, improving security posture and enabling modern tooling
+- Developed custom Serverless Framework plugin to standardise secrets management across 50+ Lambda functions
+- Architected integration with Pluralsight's Kafka-based event platform using Inbox/Outbox pattern for reliable message delivery
+
+*TypeScript · Node.js · GraphQL · Serverless Framework · Kafka · AWS (Lambda, DynamoDB, Secrets Manager)*
+
+---
+
 ### Software Engineering Team Lead — Wilbur
+
+*Remote · 2020–2022*
 
 Brought in to take over from an outgoing engineering team; established agile methodologies and modernised legacy systems while maintaining business continuity.
 
@@ -73,6 +96,8 @@ Brought in to take over from an outgoing engineering team; established agile met
 
 ### Software Engineering Team Lead — [Domain](https://domain.com.au/)
 
+*Sydney · 2019–2020*
+
 Responsible for the billing platform, managing complex stakeholder relationships across Strategy, Salesforce, and Operations teams.
 
 - Delivered a complex price change project introducing a price-banding system, coordinating across multiple business units
@@ -83,7 +108,9 @@ Responsible for the billing platform, managing complex stakeholder relationships
 
 ---
 
-### Technical Director — [Helium](https://heliumcreative.com.au/)
+### Technical Director — Helium
+
+*Sydney · 2016–2019*
 
 Responsible for all technical aspects of the consultancy including strategy, team resourcing, and engineering processes. Combined hands-on technical leadership with client-facing responsibilities.
 
