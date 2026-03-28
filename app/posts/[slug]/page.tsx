@@ -69,19 +69,6 @@ export default async function PostPage({ params }: Props) {
     <div className="min-h-screen bg-background">
       <Header currentPath="/" />
 
-      {post.coverImage && (
-        <div className="relative h-64 w-full overflow-hidden md:h-96">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-        </div>
-      )}
-
       <main className="mx-auto max-w-4xl px-4 py-10 md:px-6">
         <Link
           href="/"

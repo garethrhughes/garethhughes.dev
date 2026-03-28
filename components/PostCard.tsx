@@ -34,12 +34,14 @@ export function PostCard({ post, featured = false }: PostCardProps) {
       <article className="group rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md overflow-hidden">
         <Link href={`/posts/${post.slug}/`} className="block">
           {post.coverImage && (
-            <div className="relative h-56 w-full overflow-hidden md:h-72">
+            <div className="w-full overflow-hidden">
               <Image
                 src={post.coverImage}
                 alt={post.title}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
                 priority
               />
             </div>
@@ -71,12 +73,14 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     <article className="group rounded-lg border border-border bg-surface shadow-sm transition-shadow hover:shadow-md overflow-hidden">
       <Link href={`/posts/${post.slug}/`} className="block">
         {post.coverImage && (
-          <div className="relative h-44 w-full overflow-hidden">
+          <div className="w-full overflow-hidden">
             <Image
               src={post.coverImage}
               alt={post.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
             />
           </div>
         )}
