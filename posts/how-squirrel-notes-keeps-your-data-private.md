@@ -124,8 +124,6 @@ No security architecture is perfect, and I'd rather be upfront about the trade-o
 
 **`unsafe-inline` in the Content Security Policy.** Next.js uses inline scripts for theme detection on page load, which requires `unsafe-inline` in the CSP's `script-src`. This weakens XSS protection at the CSP layer. The non-extractable IDB key limits the worst-case outcome, but it's a known gap. A nonce-based CSP is on the roadmap.
 
-**Task text in IndexedDB is currently plaintext.** Checkbox items extracted from notes are stored unencrypted in the local IndexedDB cache for fast task-list rendering. Everything else — note content, titles, the full-text search index — is cached as ciphertext. This is a known gap and will be fixed in a future release.
-
 ---
 
 ## The short version
@@ -134,7 +132,7 @@ If Squirrel Notes' servers were compromised tomorrow, the attacker would get a d
 
 That's the guarantee. It's not marketing language — it's how the code is written.
 
-If you want to dig into the specifics, the full security architecture document is available [here](#). <!-- link to published doc when ready -->
+If you want to dig into the specifics, the full security architecture document is available [here](https://my.squirrelnotes.app/public/cef7da65-5f56-4e76-9746-c61a130cac5f#squirrelnotes).
 
 ---
 
