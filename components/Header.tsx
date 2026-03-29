@@ -23,7 +23,7 @@ export function Header({ currentPath = '' }: HeaderProps) {
           className="rounded-full object-cover ring-2 ring-squirrel-200 dark:ring-surface-raised"
           priority
         />
-        <span className="text-base font-bold text-squirrel-800 dark:text-text-primary">
+        <span className="hidden sm:inline whitespace-nowrap text-base font-bold text-squirrel-800 dark:text-text-primary">
           Gareth Hughes
         </span>
       </Link>
@@ -49,7 +49,7 @@ export function Header({ currentPath = '' }: HeaderProps) {
           href="https://gareth.photography"
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-text-tertiary hover:bg-surface-hover hover:text-text-primary"
+          className="hidden sm:block rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-text-tertiary hover:bg-surface-hover hover:text-text-primary"
         >
           Photography
         </a>

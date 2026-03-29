@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-03-29
+
+### Responsive header: hide name and Photography link on mobile
+- Decision: On `< sm` breakpoints, hide the "Gareth Hughes" text and the Photography nav link using `hidden sm:inline` / `hidden sm:block`. The avatar alone acts as the home link on mobile.
+- Why: Combined header content (~446px) overflows a typical mobile viewport (~375px), causing the name to wrap to two lines. Hiding lower-priority content is the standard responsive pattern and requires no structural changes.
+- Scope: `components/Header.tsx`
+- Notes: Photography is an external link and the lowest-priority nav item, making it the natural candidate to hide first. Name text hides cleanly at `sm` (640px); below that the avatar is sufficient identity.
+
 ## Historical Decisions (Inferred From Git History)
 
 ## 2026-03-25
