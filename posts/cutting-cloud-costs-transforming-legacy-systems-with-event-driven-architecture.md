@@ -5,40 +5,36 @@ slug: cutting-cloud-costs-transforming-legacy-systems-with-event-driven-architec
 tags: aws, cost-optimisation, event-driven-architecture
 ---
 
-I previously worked for A-League and during my time there we launched [aleagues.com.au](https://aleagues.com.au) and migrated all the club websites to a Wordpress platform developed by a third-party.
+I previously worked for A-League, and during my time there we launched [aleagues.com.au](https://aleagues.com.au) and migrated all the club websites to a WordPress platform developed by a third party.
 
-The system we inherited had a set of APIs deployed into AWS. Games, Teams, and Competitions are imported from a third-party provider via Event Bridge and a series of Lambdas.
+The system we inherited had a set of APIs deployed into AWS. Games, Teams, and Competitions were imported from a third-party provider via EventBridge and a series of Lambdas. The data was stored in MongoDB, then surfaced via API Gateway and Lambda API endpoints. The website itself was built in WordPress, with Matches, Teams, and Competitions synced via WordPress Cron running every few minutes.
 
-The data is stored in MongoDB, then surfaced via API Gateway and Lambda API endpoints. The website itself was built in WordPress, and the Matches, Teams, and Competitions are synced via WordPress Cron running every few minutes.
+Here's a simplified diagram of that architecture.
 
-This is a simplified diagram showing this architecture.
+![Legacy Architecture Diagram](/images/e8d22d85-2f37-487a-87ec-9e92c0e30978.png)
 
-![](/images/e8d22d85-2f37-487a-87ec-9e92c0e30978.png)
+The WordPress website was actually a WordPress Multisite deployment, and problems began to surface when we added 14 additional websites — each with their own running Crons and database tables.
 
-The WordPress website is actually a WordPress Multi-site deployment, and problems started to occur when we added 14 additional websites, each with their own running Crons and database tables.
+Fixtures would not reliably update, requiring a full re-sync of the database on a regular basis.
 
-Fixtures would not reliably update, and it would require a re-sync of the whole database regularly.
+There were other issues with this approach. We were syncing and storing data for competitions we didn't care about, and we were attempting to sync constantly — even though fixture updates only happened a few times per month.
 
-There were other issues with this approach. We were syncing and storing information about competitions that we didn’t care about and we were attempting to sync data constantly, even though fixture updates would only happen a few times per month.
+## Event-Driven Architecture
 
-### Event-Driven Architecture
+The legacy system was never designed with cost efficiency in mind, and we wanted to improve both cost and reliability. We decided to switch to an event-driven architecture using SQS and SNS.
 
-The legacy system wasn't designed with cost efficiency in mind, and we wanted to improve both costs and reliability. So, we decided to switch to an event-driven architecture with SQS and SNS.
+Here's a simplified diagram of the new architecture.
 
-This is a simplified diagram showing the new architecture.
+![Event-Driven Architecture Diagram](/images/1908d579-1d98-4240-a998-6897bf895485.png)
 
-![](/images/1908d579-1d98-4240-a998-6897bf895485.png)
+The first step was migrating from MongoDB to DynamoDB, primarily for the improved AWS tooling and native integration with the rest of the stack.
 
-Firstly, we migrated from MongoDB to DynamoDB, the main reason being improved AWS tooling.
+From there, a DynamoDB Stream was connected to an SNS topic. That topic fanned out to several SQS queues, each with a corresponding Lambda that pushed updates to the WordPress APIs across the various websites. Each queue also had a Dead-Letter Queue (DLQ) configured to send failure notifications to Slack.
 
-Then a Dynamo event stream was connected to an SNS topic. This topic had several queues and Lambdas that would trigger updates into the WordPress APIs across the various websites - these queues also had DLQs (Dead-Letter Queues) configured which would send notifications of failures to Slack.
+Instead of WordPress polling for updates, we were able to disable WP Cron entirely and rely on changes in DynamoDB being pushed through to the sites in real time.
 
-This means that instead of WordPress polling for updates, the team was able to disable the WP Cron and instead rely on changes made in Dynamo being pushed through to the sites via API.
+By disabling Cron across 15 websites, we reduced AWS operating costs from **$40,000 USD to under $1,000 USD per month**. Platform reliability improved significantly, and fixture updates appeared on the websites faster than they ever had under the polling approach.
 
-And because we disabled the Cron on 15 websites, the team was able to reduce AWS operating costs from $40,000 USD to under $1,000 USD per month. This also increased the reliability of the platform and updates appeared on the website faster than when updating by Cron.
+## Conclusion
 
-### Conclusion
-
-In conclusion, transitioning from a legacy architecture to an event-driven architecture using SQS and SNS significantly improved the efficiency and cost-effectiveness of the system. By migrating from MongoDB to DynamoDB and leveraging AWS's improved tooling, the team was able to streamline data updates and reduce unnecessary data syncing.
-
-Disabling the WP Cron across multiple websites and relying on real-time updates through DynamoDB and SNS not only resolved the issues with unreliable fixture updates but also drastically reduced AWS operating costs from $40,000 USD to under $1,000 USD per month. This transformation highlights the benefits of adopting modern cloud architecture practices to optimize performance and control costs.
+Switching from a legacy polling architecture to an event-driven model using SQS, SNS, and DynamoDB Streams solved two problems at once: unreliable fixture updates and runaway cloud costs. The key insight was that we were paying to sync data constantly, when the data itself rarely changed. Eliminating the Cron jobs and letting DynamoDB push changes only when they occurred was the right architectural fit for the problem — and the cost reduction speaks for itself.
