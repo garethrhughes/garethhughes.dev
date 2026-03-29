@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://garethhughes.dev"),
-  title: { default: "Gareth Hughes", template: "%s | Gareth Hughes" },
+  title: { default: "Gareth Hughes", template: "%s - Gareth Hughes" },
   description: "Thoughts on software engineering, leadership, and technology.",
   icons: {
     icon: "/avatar.jpeg",

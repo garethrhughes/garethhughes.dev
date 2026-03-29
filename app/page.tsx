@@ -4,7 +4,7 @@ import { BlogList } from '@/components/BlogList';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog | Gareth Hughes',
+  title: 'Blog - Gareth Hughes',
   description: 'Thoughts on software engineering, leadership, and technology.',
   alternates: {
     canonical: '/',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/',
-    title: 'Blog | Gareth Hughes',
+    title: 'Blog - Gareth Hughes',
     description: 'Thoughts on software engineering, leadership, and technology.',
     siteName: 'Gareth Hughes',
     images: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Blog | Gareth Hughes',
+    title: 'Blog - Gareth Hughes',
     description: 'Thoughts on software engineering, leadership, and technology.',
     images: ['/avatar.jpeg'],
   },

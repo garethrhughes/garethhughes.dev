@@ -45,6 +45,14 @@ export function Header({ currentPath = '' }: HeaderProps) {
             </Link>
           );
         })}
+        <a
+          href="https://gareth.photography"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-text-tertiary hover:bg-surface-hover hover:text-text-primary"
+        >
+          Photography
+        </a>
       </nav>
 
       <div className="ml-auto">
