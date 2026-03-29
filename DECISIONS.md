@@ -68,6 +68,14 @@ Living log of implementation and architecture decisions for this repository.
 - Scope: `app/page.tsx`, `app/posts/[slug]/page.tsx`, `public/avatar.jpeg`.
 - Notes: Keep fallback image path stable unless explicitly migrated.
 
+## 2026-03-29
+
+### Client-side redirect for legacy post URL
+- Decision: Create a thin client component page at `/cutting-cloud-costs-transforming-legacy-systems-with-event-driven-architecture/` that uses `useRouter().replace()` to redirect to the canonical `/posts/…/` URL.
+- Why: The site uses `output: "export"` targeting GitHub Pages, so `next.config.ts` `redirects()` and server-side `redirect()` are unavailable. A static client component page is the correct approach.
+- Scope: `app/cutting-cloud-costs-transforming-legacy-systems-with-event-driven-architecture/page.tsx`.
+- Notes: If more legacy redirects are needed, follow the same pattern.
+
 ### Keep project and decision context in-repo
 - Decision: Expand `AGENTS.md` with repository-specific conventions and require decision logging in this file.
 - Why: Improve consistency for future edits and preserve rationale over time.
