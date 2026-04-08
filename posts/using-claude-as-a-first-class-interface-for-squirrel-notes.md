@@ -37,8 +37,8 @@ The trust boundary is your local machine. That's a boundary you already accept w
 {
   "mcpServers": {
     "squirrel-notes": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp/dist/stdio-handler.js"],
+      "command": "npx",
+      "args": ["-y", "@squirrelnotes.app/mcp"],
       "env": {
         "SQUIRREL_API_BASE_URL": "https://api.squirrelnotes.app",
         "SQUIRREL_API_KEY": "sqn_<your_api_key>",
