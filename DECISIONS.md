@@ -89,3 +89,17 @@ Living log of implementation and architecture decisions for this repository.
 - Why: Improve consistency for future edits and preserve rationale over time.
 - Scope: `AGENTS.md`, `DECISIONS.md`.
 - Notes: Add new entries for non-trivial implementation choices going forward.
+
+## 2026-04-15
+
+### Normalize draft post metadata for blog ingestion
+- Decision: Convert the Fragile draft into a fully frontmatter-backed markdown post with a canonical slug and cover image.
+- Why: The site parser expects consistent metadata so the post can be listed, sorted, routed, and shared correctly.
+- Scope: `posts/introducing-fragile.md`.
+- Notes: Use the DORA screenshot as the cover image until a dedicated social image exists.
+
+### Make blog post images open full-size
+- Decision: Wrap rendered markdown images in blog post content with direct image links that open in a new tab.
+- Why: Readers can inspect screenshots at full resolution without changing the post layout.
+- Scope: `components/PostContent.tsx`, `app/posts/[slug]/page.tsx`, `app/globals.css`.
+- Notes: This behavior is opt-in for blog posts only; non-post content and card thumbnails keep their existing navigation behavior.

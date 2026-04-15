@@ -132,7 +132,10 @@ body {
 .note-preview table { width: 100%; border-collapse: collapse; margin-bottom: 0.75rem; }
 .note-preview th, .note-preview td { border: 1px solid var(--border-color); padding: 0.5rem; text-align: left; }
 .note-preview th { background: var(--preview-th-bg); font-weight: 600; }
-.note-preview img { max-width: 100%; border-radius: 0.5rem; margin: 0.75rem 0; }
+.note-preview .markdown-image-link { display: inline-block; width: 100%; text-decoration: none; }
+.note-preview .markdown-image-link:hover { color: inherit; }
+.note-preview img { max-width: 100%; border-radius: 0.5rem; margin: 0.75rem 0; cursor: zoom-in; transition: opacity 0.2s ease; }
+.note-preview .markdown-image-link:hover img { opacity: 0.96; }
 .note-preview input[type="checkbox"] { accent-color: var(--color-squirrel-500); }
 
 /* Syntax highlighting — Atom One Light */

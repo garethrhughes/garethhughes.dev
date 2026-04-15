@@ -105,7 +105,7 @@ export default async function PostPage({ params }: Props) {
             <hr className="mt-6 border-border" />
           </header>
 
-          <PostContent content={post.content} />
+          <PostContent content={post.content} enableImageLinks />
         </article>
       </main>
     </div>
