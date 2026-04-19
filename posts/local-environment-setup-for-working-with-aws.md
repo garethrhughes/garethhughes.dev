@@ -2,6 +2,7 @@
 title: "Local Environment Setup for Working with AWS"
 datePublished: Mon, 27 Nov 2023 01:00:00 GMT
 slug: local-environment-setup-for-working-with-aws
+tags: aws, developer-setup, devops
 ---
 
 I recently wrote this up on confluence at work. However there is nothing here that's specific to that environment other than it being for AWS. The idea is to have a consistent environment for all the developers on the team to use to make life easier when debugging issues.

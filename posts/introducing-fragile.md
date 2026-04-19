@@ -2,7 +2,7 @@
 title: "Introducing Fragile"
 datePublished: 2026-04-15T00:00:00Z
 slug: introducing-fragile
-tags: software-development, engineering-metrics, jira, dora, reporting
+tags: software-development, engineering-metrics, devops
 coverImage: /images/screencapture-localhost-3000-dora-2026-04-15-12_10_43.png
 ---
 

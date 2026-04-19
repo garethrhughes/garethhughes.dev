@@ -2,6 +2,7 @@
 title: "Base64 image helper for Handlebars"
 datePublished: Wed, 07 Jul 2021 02:00:00 GMT
 slug: base64-image-helper-for-handlebars
+tags: javascript, software-development
 ---
 
 The PDF generator only currently accepts a HTML payload with no external references, this means that all CSS and images and images need to be embedded in the HTML directly.
