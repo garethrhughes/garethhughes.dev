@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ThemeToggle } from './ThemeToggle';
+import { MobileMenu } from './MobileMenu';
 
 interface HeaderProps {
   currentPath?: string;
@@ -9,7 +10,13 @@ interface HeaderProps {
 export function Header({ currentPath = '' }: HeaderProps) {
   const navLinks = [
     { href: '/', label: 'Blog' },
+    { href: '/projects/', label: 'Projects' },
     { href: '/about/', label: 'About' },
+  ];
+
+  const allLinks = [
+    ...navLinks,
+    { href: 'https://gareth.photography', label: 'Photography', external: true },
   ];
 
   return (
@@ -28,7 +35,7 @@ export function Header({ currentPath = '' }: HeaderProps) {
         </span>
       </Link>
 
-      <nav className="flex items-center gap-1 ml-4">
+      <nav className="hidden md:flex items-center gap-1 ml-4">
         {navLinks.map(({ href, label }) => {
           const isActive = currentPath === href;
           return (
@@ -49,14 +56,15 @@ export function Header({ currentPath = '' }: HeaderProps) {
           href="https://gareth.photography"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden sm:block rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-text-tertiary hover:bg-surface-hover hover:text-text-primary"
+          className="rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-text-tertiary hover:bg-surface-hover hover:text-text-primary"
         >
           Photography
         </a>
       </nav>
 
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-1">
         <ThemeToggle />
+        <MobileMenu navLinks={allLinks} currentPath={currentPath} />
       </div>
     </header>
   );
