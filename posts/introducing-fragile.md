@@ -58,3 +58,5 @@ The lack of source control and build pipeline integration is a limiting factor f
 ![Gaps](/images/screencapture-localhost-3000-gaps-2026-04-15-12_11_49.png)
 
 Fragile is still early, but it's already proving the point I cared about most: useful engineering reporting doesn't need to be bloated, expensive, or disconnected from how a team actually works.
+
+Fragile is open source — check it out on [GitHub](https://github.com/garethrhughes/fragile).
