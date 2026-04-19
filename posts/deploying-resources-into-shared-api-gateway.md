@@ -2,6 +2,7 @@
 title: "Deploying Resources Into Shared API Gateway"
 datePublished: Sat, 09 Dec 2023 01:00:00 GMT
 slug: deploying-resources-into-shared-api-gateway
+tags: aws, typescript, cdk
 ---
 
 We wanted to have a shared Cloudfront Distribution and API Gateway and deploy multiple resources from potentially different stacks as endpoints on this API Gateway, this way we can control access and authenication at a centralised location.

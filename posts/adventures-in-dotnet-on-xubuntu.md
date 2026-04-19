@@ -2,6 +2,7 @@
 title: "Adventures in dotnet on Xubuntu"
 datePublished: Fri, 22 Oct 2021 01:00:00 GMT
 slug: adventures-in-dotnet-on-xubuntu
+tags: linux, dotnet, developer-setup
 coverImage: /images/b2d437e7-d998-47e9-b8b0-517a80b5714f.png
 ---
 

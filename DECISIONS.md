@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-04-19
+
+### Normalise post tag taxonomy
+- Decision: Audited and retagged all 18 blog posts with a consistent, lowercase hyphenated tag taxonomy. Added tags to 7 previously untagged posts. Removed noise tags (`programming-blogs`, `jira`, `dora`, `reporting`, `wordpress`, `hashnode`, `process-improvement`, `software-engineering`). Consolidated `engineering`/`software-engineering` → `software-development`. Ensured related series posts share identical tags.
+- Why: Tags were inconsistent — some posts had none, others had overly specific tool names mixed with broad categories. A clean taxonomy makes filtering and discovery predictable.
+- Scope: All files in `posts/`.
+- Notes: Canonical tag set in use: `software-development`, `aws`, `ai`, `productivity`, `security`, `interviewing`, `architecture`, `linux`, `dotnet`, `typescript`, `cdk`, `terraform`, `serverless`, `devops`, `developer-setup`, `blogging`, `photography`, `engineering-metrics`, `javascript`, `web`, `notes`.
+
 ## 2026-03-29
 
 ### Responsive header: hide name and Photography link on mobile

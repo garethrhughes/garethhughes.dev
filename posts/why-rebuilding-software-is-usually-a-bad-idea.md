@@ -2,7 +2,7 @@
 title: "Why rebuilding software is (usually) a bad idea"
 datePublished: Tue, 03 Dec 2024 03:00:45 GMT
 slug: why-rebuilding-software-is-usually-a-bad-idea
-tags: engineering, software-development, software-engineering
+tags: software-development, architecture
 ---
 
 This was originally going to be a presentation I put together for work, but I shelved that for now and decided to create a blog post with roughly the same content. Images are, of course, courtesy of ChatGPT.

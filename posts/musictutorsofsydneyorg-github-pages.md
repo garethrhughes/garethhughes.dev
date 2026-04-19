@@ -2,7 +2,7 @@
 title: "musictutorsofsydney.org - GitHub pages"
 datePublished: Fri, 19 Sep 2025 23:28:11 GMT
 slug: musictutorsofsydneyorg-github-pages
-tags: development
+tags: software-development, web
 coverImage: /images/12ae9044-aec1-4b20-9874-956b9c8be65b.png
 ---
 
