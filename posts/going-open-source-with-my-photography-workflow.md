@@ -3,6 +3,7 @@ title: "Going Open Source with My Photography Workflow"
 datePublished: 2026-04-20T00:00:00Z
 slug: going-open-source-with-my-photography-workflow
 tags: photography, open-source, aws, github-pages
+coverImage: /images/gareth-photography-preview.jpg
 ---
 
 # Going Open Source with My Photography Workflow
