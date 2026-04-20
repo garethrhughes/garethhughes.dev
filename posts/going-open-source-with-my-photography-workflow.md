@@ -6,8 +6,6 @@ tags: photography, open-source, aws, github-pages
 coverImage: /images/gareth-photography-preview.jpg
 ---
 
-# Going Open Source with My Photography Workflow
-
 Following on the theme of building your own tools, this post covers my photography workflow.
 
 I'm a very amateur photographer (my gear is much better than I am). I have a subscription to Lightroom and Adobe Cloud, which is fine when I'm doing a lot of photography — however the subscriptions all add up, and it's not something I use enough to justify.
