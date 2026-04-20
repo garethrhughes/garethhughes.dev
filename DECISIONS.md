@@ -98,6 +98,14 @@ Living log of implementation and architecture decisions for this repository.
 - Scope: `AGENTS.md`, `DECISIONS.md`.
 - Notes: Add new entries for non-trivial implementation choices going forward.
 
+## 2026-04-20
+
+### Add robots.txt, sitemap.xml, and enhanced root metadata
+- Decision: Add `app/robots.ts` and `app/sitemap.ts` using Next.js Metadata Route handlers. Enhance `app/layout.tsx` root metadata with Open Graph, Twitter card, `keywords`, `authors`, and `creator` fields.
+- Why: Site had no robots.txt or sitemap — both are essential for crawler discoverability and search indexing. Root metadata lacked OG/Twitter fields, meaning social shares fell back to defaults.
+- Scope: `app/robots.ts` (new), `app/sitemap.ts` (new), `app/layout.tsx`.
+- Notes: Static export (`output: "export"`) requires `export const dynamic = "force-static"` on both route files. Sitemap includes static routes (`/`, `/about`, `/projects`, `/calendar`) and all dynamic post routes sourced via `getAllPostMeta()` with `datePublished` as `lastModified`.
+
 ## 2026-04-15
 
 ### Normalize draft post metadata for blog ingestion

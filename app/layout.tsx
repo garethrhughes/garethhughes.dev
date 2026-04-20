@@ -17,9 +17,29 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://garethhughes.dev"),
   title: { default: "Gareth Hughes", template: "%s - Gareth Hughes" },
   description: "Thoughts on software engineering, leadership, and technology.",
+  keywords: ["software engineering", "engineering leadership", "technology", "blog"],
+  authors: [{ name: "Gareth Hughes", url: "https://garethhughes.dev" }],
+  creator: "Gareth Hughes",
   icons: {
     icon: "/avatar.jpeg",
     apple: "/avatar.jpeg",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Gareth Hughes",
+    title: "Gareth Hughes",
+    description: "Thoughts on software engineering, leadership, and technology.",
+    url: "https://garethhughes.dev",
+    images: [{ url: "/avatar.jpeg", alt: "Gareth Hughes" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gareth Hughes",
+    description: "Thoughts on software engineering, leadership, and technology.",
+    images: ["/avatar.jpeg"],
+  },
+  alternates: {
+    canonical: "https://garethhughes.dev",
   },
 };
 
