@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-04-20
+
+### Style calendar redirect page within site layout
+- Decision: Rewrote `app/calendar/page.tsx` to render inside the root Next.js layout (removing its own `<html>`/`<head>`/`<body>` tags) so it inherits global CSS, fonts, and the site `Header`. Added a centered card with a calendar icon and fallback link matching the site's design system. Replaced the inline `<script>` with Next.js `<Script strategy="afterInteractive">` for the JS redirect; removed the `httpEquiv` meta refresh (JS redirect is sufficient).
+- Why: The previous page was an unstyled raw HTML document that bypassed the layout, appearing completely broken visually during the brief redirect window.
+- Scope: `app/calendar/page.tsx`.
+- Notes: `robots: { index: false }` is preserved so the page is not indexed.
+
 ## 2026-04-19
 
 ### Normalise post tag taxonomy
