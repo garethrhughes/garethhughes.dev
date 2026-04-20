@@ -12,11 +12,7 @@ export function Header({ currentPath = '' }: HeaderProps) {
     { href: '/', label: 'Blog' },
     { href: '/projects/', label: 'Projects' },
     { href: '/about/', label: 'About' },
-  ];
-
-  const allLinks = [
-    ...navLinks,
-    { href: 'https://gareth.photography', label: 'Photography', external: true },
+    { href: 'https://gareth.photography', label: 'Photography' }
   ];
 
   return (
@@ -52,19 +48,11 @@ export function Header({ currentPath = '' }: HeaderProps) {
             </Link>
           );
         })}
-        <a
-          href="https://gareth.photography"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-md px-3 py-1.5 text-sm font-medium transition-colors text-text-tertiary hover:bg-surface-hover hover:text-text-primary"
-        >
-          Photography
-        </a>
       </nav>
 
       <div className="ml-auto flex items-center gap-1">
         <ThemeToggle />
-        <MobileMenu navLinks={allLinks} currentPath={currentPath} />
+        <MobileMenu navLinks={navLinks} currentPath={currentPath} />
       </div>
     </header>
   );
