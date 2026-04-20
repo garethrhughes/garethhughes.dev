@@ -20,7 +20,7 @@ const projects = [
     appUrl: 'https://my.squirrelnotes.app',
     githubUrl: null as string | null,
     tags: ['Zero-Knowledge', 'E2EE', 'Notes', 'MCP'],
-    blogSlug: 'introducing-squirrel-notes',
+    blogSlug: 'introducing-squirrel-notes' as string | null,
     image: '/images/screenshot2.png',
   },
   {
@@ -31,8 +31,19 @@ const projects = [
     appUrl: null,
     githubUrl: 'https://github.com/garethrhughes/fragile',
     tags: ['DORA', 'Jira', 'Engineering Metrics'],
-    blogSlug: 'introducing-fragile',
+    blogSlug: 'introducing-fragile' as string | null,
     image: '/images/screencapture-localhost-3000-dora-2026-04-15-12_10_43.png',
+  },
+  {
+    name: 'gareth.photography',
+    description:
+      'A photography portfolio showcasing landscapes, wildlife, and nature across Australia. Built as a statically-exported Next.js site with album-based organisation and a clean, minimal gallery experience.',
+    url: 'https://gareth.photography',
+    appUrl: null,
+    githubUrl: 'https://github.com/garethrhughes/gareth.photography',
+    tags: ['Photography', 'Portfolio', 'Next.js'],
+    blogSlug: null as string | null,
+    image: '/images/gareth-photography-preview.jpg',
   },
 ];
 
@@ -113,12 +124,14 @@ export default function ProjectsPage() {
                     GitHub
                   </a>
                 )}
+                {project.blogSlug && (
                 <Link
                   href={`/posts/${project.blogSlug}/`}
                   className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-text-tertiary hover:bg-surface-hover hover:text-text-primary transition-colors"
                 >
                   Read the blog post
                 </Link>
+                )}
               </div>
               </div>
             </div>
