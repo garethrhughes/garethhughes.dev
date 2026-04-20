@@ -23,4 +23,4 @@ I also created a couple of scripts to help with my workflow:
 - Uploading images to S3
 - Storing dimension information in JSON so layout calculations can run
 
-It's now live at <a href="https://gareth.photography">https://gareth.photography</a> and the source is at <a href="http://github.com/garethrhughes/gareth.photography">http://github.com/garethrhughes/gareth.photography</a>.
+It's now live at <a href="https://gareth.photography">https://gareth.photography</a> and the source is at <a href="https://github.com/garethrhughes/gareth.photography">https://github.com/garethrhughes/gareth.photography</a>.
