@@ -35,7 +35,7 @@ export default function CalendarPage() {
           <div>
             <h1 className="text-xl font-semibold text-text-primary mb-2">Redirecting to calendar…</h1>
             <p className="text-sm text-text-muted">
-              You&rsquo;ll be taken to Google Calendar to book a time.{' '}
+              You&apos;ll be taken to Google Calendar to book a time.{' '}
               <a
                 href={CALENDAR_URL}
                 className="text-squirrel-600 underline hover:text-squirrel-700 transition-colors"
