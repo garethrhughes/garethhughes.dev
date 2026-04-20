@@ -1,6 +1,6 @@
 ---
 title: "Local Environment Setup for Working with AWS"
-datePublished: Mon, 27 Nov 2023 01:00:00 GMT
+datePublished: 2023-11-27T01:00:00Z
 slug: local-environment-setup-for-working-with-aws
 tags: aws, developer-setup, devops
 ---

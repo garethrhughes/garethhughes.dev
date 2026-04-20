@@ -27,7 +27,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Expected frontmatter fields in `posts/*.md`:
 
 - `title`
-- `datePublished`
+- `datePublished` — ISO-8601 format (e.g. `2026-04-20T00:00:00Z`); parsed and sorted by `new Date()` in `lib/posts.ts`
 - `slug`
 - `tags` (comma-separated string or string array)
 - Optional: `coverImage`

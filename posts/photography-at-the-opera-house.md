@@ -1,6 +1,6 @@
 ---
 title: "Photography at the Opera House"
-datePublished: Sun, 08 Nov 2020 01:00:00 GMT
+datePublished: 2020-11-08T01:00:00Z
 slug: photography-at-the-opera-house
 tags: photography
 coverImage: /images/18136173-ad4d-4ff9-af36-3e9556ca71cf.jpeg

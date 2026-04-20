@@ -1,6 +1,6 @@
 ---
 title: "Introducing Squirrel Notes"
-datePublished: Thu, 26 Mar 2026 00:00:00 GMT
+datePublished: 2026-03-26T00:00:00Z
 slug: introducing-squirrel-notes
 tags: ai, software-development, productivity, notes
 coverImage: /images/screenshot2.png

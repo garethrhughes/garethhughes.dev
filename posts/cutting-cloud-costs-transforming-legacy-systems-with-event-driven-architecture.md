@@ -1,6 +1,6 @@
 ---
 title: "Cutting Cloud Costs: Transforming Legacy Systems with Event-Driven Architecture"
-datePublished: Mon, 18 Nov 2024 12:58:08 GMT
+datePublished: 2024-11-18T12:58:08Z
 slug: cutting-cloud-costs-transforming-legacy-systems-with-event-driven-architecture
 tags: aws, architecture, cost-optimisation
 ---

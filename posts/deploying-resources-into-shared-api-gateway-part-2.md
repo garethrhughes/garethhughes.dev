@@ -1,6 +1,6 @@
 ---
 title: "Deploying Resources Into Shared API Gateway - Part 2"
-datePublished: Thu, 18 Jan 2024 01:00:00 GMT
+datePublished: 2024-01-18T01:00:00Z
 slug: deploying-resources-into-shared-api-gateway-part-2
 tags: aws, typescript, cdk
 ---

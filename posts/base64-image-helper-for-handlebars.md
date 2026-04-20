@@ -1,6 +1,6 @@
 ---
 title: "Base64 image helper for Handlebars"
-datePublished: Wed, 07 Jul 2021 02:00:00 GMT
+datePublished: 2021-07-07T02:00:00Z
 slug: base64-image-helper-for-handlebars
 tags: javascript, software-development
 ---

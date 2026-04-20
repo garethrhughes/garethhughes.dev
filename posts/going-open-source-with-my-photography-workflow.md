@@ -1,6 +1,6 @@
 ---
 title: "Going Open Source with My Photography Workflow"
-datePublished: Sun, 20 April 2026 00:00:00 GMT
+datePublished: 2026-04-20T00:00:00Z
 slug: going-open-source-with-my-photography-workflow
 tags: photography, open-source, aws, github-pages
 ---
@@ -23,4 +23,4 @@ I also created a couple of scripts to help with my workflow:
 - Uploading images to S3
 - Storing dimension information in JSON so layout calculations can run
 
-It's now live at <a href="https://gareth.photography">https://gareth.photography</a> and the source is at <a href="https://github.com/garethrhughes/gareth.photography">https://github.com/garethrhughes/gareth.photography</a>.
+It's now live at [https://gareth.photography](https://gareth.photography) and the source is at [https://github.com/garethrhughes/gareth.photography](https://github.com/garethrhughes/gareth.photography).

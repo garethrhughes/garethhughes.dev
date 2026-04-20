@@ -1,6 +1,6 @@
 ---
 title: "Using Claude as a First-Class Interface for Squirrel Notes"
-datePublished: Wed, 08 April 2026 00:00:00 GMT
+datePublished: 2026-04-08T00:00:00Z
 slug: squirrel-notes-claude-mcp-stdio
 tags: ai, software-development, productivity
 ---
