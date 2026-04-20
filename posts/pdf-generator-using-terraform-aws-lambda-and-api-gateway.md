@@ -1,6 +1,6 @@
 ---
 title: "PDF Generator using Terraform, AWS, Lambda and API Gateway"
-datePublished: Mon, 05 Jul 2021 02:00:00 GMT
+datePublished: 2021-07-05T02:00:00Z
 slug: pdf-generator-using-terraform-aws-lambda-and-api-gateway
 tags: aws, terraform, serverless
 coverImage: /images/19de9079-7527-40f7-8b0b-29e77e1a9155.png

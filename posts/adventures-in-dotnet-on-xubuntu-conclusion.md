@@ -1,6 +1,6 @@
 ---
 title: "Adventures in dotnet on Xubuntu conclusion"
-datePublished: Mon, 14 Nov 2022 01:00:00 GMT
+datePublished: 2022-11-14T01:00:00Z
 slug: adventures-in-dotnet-on-xubuntu-conclusion
 tags: linux, dotnet, developer-setup
 ---

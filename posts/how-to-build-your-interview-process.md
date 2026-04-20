@@ -1,6 +1,6 @@
 ---
 title: "How to Build Your Interview Process"
-datePublished: Sun, 21 Dec 2025 23:49:34 GMT
+datePublished: 2025-12-21T23:49:34Z
 slug: how-to-build-your-interview-process
 tags: interviewing, software-development
 ---

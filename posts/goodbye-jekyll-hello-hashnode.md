@@ -1,6 +1,6 @@
 ---
 title: "Goodbye Jekyll, Hello Hashnode"
-datePublished: Fri, 15 Nov 2024 09:39:36 GMT
+datePublished: 2024-11-15T09:39:36Z
 slug: goodbye-jekyll-hello-hashnode
 tags: blogging
 ---

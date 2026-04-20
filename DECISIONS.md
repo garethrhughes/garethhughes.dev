@@ -100,6 +100,14 @@ Living log of implementation and architecture decisions for this repository.
 
 ## 2026-04-20
 
+## 2026-04-20
+
+### Normalise datePublished to ISO-8601 across all posts
+- Decision: Convert all `datePublished` frontmatter values from RFC-2822 strings (e.g. `Mon, 14 Nov 2022 01:00:00 GMT`) to ISO-8601 (e.g. `2022-11-14T01:00:00Z`).
+- Why: `lib/posts.ts` sorts posts via `new Date(datePublished)`. RFC-2822 parsing is implementation-dependent and produces inconsistent results across Node.js versions; ISO-8601 is the only format guaranteed by the ECMAScript spec.
+- Scope: All files in `posts/`, `AGENTS.md` (updated frontmatter contract to document ISO-8601 requirement).
+- Notes: `introducing-fragile.md` was already ISO-8601 and was left unchanged.
+
 ### Add robots.txt, sitemap.xml, and enhanced root metadata
 - Decision: Add `app/robots.ts` and `app/sitemap.ts` using Next.js Metadata Route handlers. Enhance `app/layout.tsx` root metadata with Open Graph, Twitter card, `keywords`, `authors`, and `creator` fields.
 - Why: Site had no robots.txt or sitemap — both are essential for crawler discoverability and search indexing. Root metadata lacked OG/Twitter fields, meaning social shares fell back to defaults.

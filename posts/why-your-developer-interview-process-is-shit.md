@@ -1,6 +1,6 @@
 ---
 title: "Why Your Developer Interview Process Is Shit"
-datePublished: Sat, 20 Dec 2025 05:43:44 GMT
+datePublished: 2025-12-20T05:43:44Z
 slug: why-your-developer-interview-process-is-shit
 tags: interviewing, software-development
 ---
