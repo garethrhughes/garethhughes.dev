@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Github, Linkedin } from 'lucide-react';
 import { getAboutContent } from '@/lib/posts';
 import { Header } from '@/components/Header';
 import { PostContent } from '@/components/PostContent';
@@ -44,6 +45,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-text-tertiary hover:bg-surface-hover hover:text-text-primary transition-colors"
               >
+                <Linkedin size={14} aria-hidden="true" />
                 LinkedIn
               </Link>
               <Link
@@ -52,6 +54,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-text-tertiary hover:bg-surface-hover hover:text-text-primary transition-colors"
               >
+                <Github size={14} aria-hidden="true" />
                 GitHub
               </Link>
             </div>
