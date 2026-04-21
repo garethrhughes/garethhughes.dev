@@ -94,7 +94,7 @@ export default async function PostPage({ params }: Props) {
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-squirrel-100 px-2.5 py-0.5 text-xs text-squirrel-700 dark:bg-surface-raised dark:text-squirrel-400"
+                      className="rounded-full bg-squirrel-100 px-2.5 py-0.5 text-xs text-squirrel-700"
                     >
                       {tag}
                     </span>

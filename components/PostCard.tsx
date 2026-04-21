@@ -21,7 +21,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
       {post.tags.map((tag) => (
         <span
           key={tag}
-          className="rounded-full bg-squirrel-100 px-2 py-0.5 text-squirrel-700 dark:bg-surface-raised dark:text-squirrel-400"
+          className="rounded-full bg-squirrel-100 px-2 py-0.5 text-squirrel-700"
         >
           {tag}
         </span>
@@ -47,7 +47,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
             </div>
           )}
           <div className="p-6">
-            <span className="mb-3 inline-block rounded-full bg-squirrel-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-squirrel-700 dark:bg-surface-raised dark:text-squirrel-400">
+            <span className="mb-3 inline-block rounded-full bg-squirrel-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-squirrel-700">
               Latest post
             </span>
             <h2 className="mb-3 text-2xl font-bold text-text-primary group-hover:text-squirrel-700 transition-colors leading-snug">

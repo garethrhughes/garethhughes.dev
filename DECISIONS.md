@@ -106,6 +106,14 @@ Living log of implementation and architecture decisions for this repository.
 - Scope: `AGENTS.md`, `DECISIONS.md`.
 - Notes: Add new entries for non-trivial implementation choices going forward.
 
+## 2026-04-21
+
+### Remove dark mode
+- Decision: Removed the dark mode toggle and all dark-mode styles from the site.
+- Why: Simplifies the UI and reduces maintenance overhead; the site will only render in light mode.
+- Scope: `components/ThemeToggle.tsx` (deleted), `components/Header.tsx`, `components/BlogList.tsx`, `components/PostCard.tsx`, `app/about/page.tsx`, `app/projects/page.tsx`, `app/posts/[slug]/page.tsx`, `app/globals.css`, `app/layout.tsx`.
+- Notes: Removed the `@variant dark` declaration, `.dark` CSS block, dark syntax-highlighting rules, the theme-init inline `<script>` in `layout.tsx`, and all `dark:` Tailwind utility classes.
+
 ## 2026-04-20
 
 ## 2026-04-20

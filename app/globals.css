@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *));
-
 @theme inline {
   --color-squirrel-50: #eff6ff;
   --color-squirrel-100: #dbeafe;
@@ -65,37 +63,6 @@
   --preview-th-bg: #eff6ff;
 }
 
-.dark {
-  --background: #282c34;
-  --foreground: #abb2bf;
-  --surface: #282c34;
-  --surface-alt: #21252b;
-  --surface-brand: #2c313a;
-  --surface-hover: #2c313a;
-  --surface-raised: #3e4451;
-  --surface-active: #3e4451;
-  --border-color: #3e4451;
-  --border-light: #2c313a;
-  --text-primary: #abb2bf;
-  --text-secondary: #9da5b4;
-  --text-tertiary: #7f8799;
-  --text-muted: #636d83;
-  --text-faint: #5c6370;
-
-  --preview-h1: #e06c75;
-  --preview-h2: #61afef;
-  --preview-h3: #c678dd;
-  --preview-blockquote-border: #5c6370;
-  --preview-blockquote-color: #7f8799;
-  --preview-code-bg: #2c313a;
-  --preview-code-color: #98c379;
-  --preview-pre-bg: #21252b;
-  --preview-pre-color: #abb2bf;
-  --preview-link: #8cc8ff;
-  --preview-link-hover: #b0daff;
-  --preview-th-bg: #2c313a;
-}
-
 html, body {
   min-height: 100%;
 }
@@ -155,22 +122,3 @@ code.hljs { padding: 3px 5px; }
 .hljs-strong { font-weight: bold; }
 .hljs-link { text-decoration: underline; }
 .note-preview pre:has(code.hljs) { background: transparent; padding: 0; }
-
-/* Syntax highlighting — Atom One Dark */
-.dark .hljs { color: #abb2bf; background: #282c34; }
-.dark .hljs-comment, .dark .hljs-quote { color: #5c6370; font-style: italic; }
-.dark .hljs-doctag, .dark .hljs-keyword, .dark .hljs-formula { color: #c678dd; }
-.dark .hljs-section, .dark .hljs-name, .dark .hljs-selector-tag,
-.dark .hljs-deletion, .dark .hljs-subst { color: #e06c75; }
-.dark .hljs-literal { color: #56b6c2; }
-.dark .hljs-string, .dark .hljs-regexp, .dark .hljs-addition,
-.dark .hljs-attribute, .dark .hljs-meta .hljs-string { color: #98c379; }
-.dark .hljs-attr, .dark .hljs-variable, .dark .hljs-template-variable,
-.dark .hljs-type, .dark .hljs-selector-class, .dark .hljs-selector-attr,
-.dark .hljs-selector-pseudo, .dark .hljs-number { color: #d19a66; }
-.dark .hljs-symbol, .dark .hljs-bullet, .dark .hljs-link, .dark .hljs-meta,
-.dark .hljs-selector-id, .dark .hljs-title { color: #61aeee; }
-.dark .hljs-built_in, .dark .hljs-title.class_, .dark .hljs-class .hljs-title { color: #e6c07b; }
-.dark .hljs-emphasis { font-style: italic; }
-.dark .hljs-strong { font-weight: bold; }
-.dark .hljs-link { text-decoration: underline; }

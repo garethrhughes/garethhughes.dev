@@ -94,7 +94,7 @@ export function BlogList({ posts }: BlogListProps) {
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-squirrel-500 text-white'
-                  : 'bg-squirrel-100 text-squirrel-700 hover:bg-squirrel-200 dark:bg-surface-raised dark:text-squirrel-400 dark:hover:bg-surface-active'
+                  : 'bg-squirrel-100 text-squirrel-700 hover:bg-squirrel-200'
               }`}
             >
               {tag}

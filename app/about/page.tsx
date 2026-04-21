@@ -22,7 +22,7 @@ export default function AboutPage() {
             alt="Gareth Hughes"
             width={96}
             height={96}
-            className="rounded-full object-cover ring-4 ring-squirrel-100 dark:ring-surface-raised shrink-0"
+            className="rounded-full object-cover ring-4 ring-squirrel-100 shrink-0"
             priority
           />
           <div className="text-center sm:text-left">
