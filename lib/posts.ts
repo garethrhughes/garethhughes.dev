@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { renderMermaidBlocks } from "./mermaid";
 
 const POSTS_DIR = path.join(process.cwd(), "posts");
 
@@ -91,7 +92,7 @@ export function getPostBySlug(slug: string): Post | null {
       tags,
       excerpt: extractExcerpt(content),
       coverImage: data.coverImage || undefined,
-      content,
+      content: renderMermaidBlocks(content),
     };
   }
   return null;
@@ -105,5 +106,5 @@ export function getAboutContent(): string {
   const aboutPath = path.join(process.cwd(), "about.md");
   if (!fs.existsSync(aboutPath)) return "";
   const { content } = matter(fs.readFileSync(aboutPath, "utf8"));
-  return content;
+  return renderMermaidBlocks(content);
 }

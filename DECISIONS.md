@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-04-26
+
+### Build-time mermaid diagram rendering via @mermaid-js/mermaid-cli
+- Decision: Added support for ` ```mermaid ` fenced code blocks in markdown posts, rendered to inline SVG at static build time using `@mermaid-js/mermaid-cli` (`mmdc`). Mermaid blocks are pre-processed in `lib/mermaid.ts` via `execSync`, replacing the fence with a `<div class="mermaid-diagram">…SVG…</div>` before content reaches the client. `rehype-raw` was added to `PostContent.tsx` to allow the inlined SVG HTML to pass through `react-markdown` without being stripped.
+- Why: The site uses `output: "export"` (fully static). Client-side mermaid rendering (as used in squirrel-notes) would require shipping the ~7–8 MB mermaid bundle and a DOM-manipulation runtime to every reader. Build-time rendering produces zero client-side JS overhead and works with the existing static hosting pipeline. `rehype-mermaid` and `remark-mermaidjs` were considered but both require Playwright (>200 MB). `@mermaid-js/mermaid-cli` uses Puppeteer/Chromium but is the official tool with a small, reliable API (file in → SVG file out). Failures fall back gracefully to the original fenced block rather than crashing the build.
+- Scope: `lib/mermaid.ts` (new), `lib/posts.ts`, `components/PostContent.tsx`, `package.json`.
+- Notes: `@mermaid-js/mermaid-cli` is a dev dependency (only needed at build time). If running in CI, ensure a compatible Chromium/Chrome is available (the package bundles Puppeteer which downloads its own). Diagram styling inherits the default mermaid theme; a custom config file can be passed via `mmdc -c` if theming is needed later.
+
 ## 2026-04-20
 
 ### Style calendar redirect page within site layout

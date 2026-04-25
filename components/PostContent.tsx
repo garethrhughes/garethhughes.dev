@@ -3,6 +3,7 @@
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 
 interface PostContentProps {
   content: string;
@@ -33,7 +34,7 @@ export function PostContent({ content, enableImageLinks = false }: PostContentPr
     <div className="note-preview">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
+        rehypePlugins={[rehypeRaw, rehypeHighlight]}
         components={enableImageLinks ? clickableImageComponents : undefined}
       >
         {content}

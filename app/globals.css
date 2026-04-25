@@ -122,3 +122,5 @@ code.hljs { padding: 3px 5px; }
 .hljs-strong { font-weight: bold; }
 .hljs-link { text-decoration: underline; }
 .note-preview pre:has(code.hljs) { background: transparent; padding: 0; }
+.note-preview .mermaid-diagram { display: flex; justify-content: center; margin: 0.75rem 0; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; overflow: hidden; }
+.note-preview .mermaid-diagram svg { display: block; }
