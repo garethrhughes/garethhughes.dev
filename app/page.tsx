@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getAllPostMeta } from '@/lib/posts';
 import { Header } from '@/components/Header';
 import { BlogList } from '@/components/BlogList';
@@ -41,7 +42,9 @@ export default function HomePage() {
         <p className="mb-8 text-text-muted">
           Thoughts on software engineering, leadership, and technology.
         </p>
-        <BlogList posts={posts} />
+        <Suspense>
+          <BlogList posts={posts} />
+        </Suspense>
       </main>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Fuse from 'fuse.js';
 import { PostMeta } from '@/lib/posts';
 import { PostCard } from './PostCard';
@@ -13,9 +14,25 @@ interface BlogListProps {
 }
 
 export function BlogList({ posts }: BlogListProps) {
-  const [query, setQuery] = useState('');
-  const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const query = searchParams.get('q') ?? '';
+  const activeTag = searchParams.get('tag') ?? null;
+  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
+
+  function updateParams(updates: Record<string, string | null>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === null || value === '') {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    }
+    const qs = params.toString();
+    router.push(qs ? `/?${qs}` : '/');
+  }
 
   const allTags = useMemo(
     () => Array.from(new Set(posts.flatMap((p) => p.tags))).sort(),
@@ -56,13 +73,11 @@ export function BlogList({ posts }: BlogListProps) {
   );
 
   function handleTagClick(tag: string) {
-    setActiveTag(activeTag === tag ? null : tag);
-    setPage(1);
+    updateParams({ tag: activeTag === tag ? null : tag, page: null });
   }
 
   function handleQueryChange(val: string) {
-    setQuery(val);
-    setPage(1);
+    updateParams({ q: val, page: null });
   }
 
   return (
@@ -119,7 +134,7 @@ export function BlogList({ posts }: BlogListProps) {
           {!isFiltering && totalPages > 1 && (
             <div className="mt-8 flex items-center justify-between gap-2">
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => updateParams({ page: String(currentPage - 1) })}
                 disabled={currentPage === 1}
                 className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
               >
@@ -132,7 +147,7 @@ export function BlogList({ posts }: BlogListProps) {
               </span>
 
               <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => updateParams({ page: String(currentPage + 1) })}
                 disabled={currentPage === totalPages}
                 className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
               >

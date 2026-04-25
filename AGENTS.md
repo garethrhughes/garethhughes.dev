@@ -24,6 +24,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Post Frontmatter Contract
 
+Post files live in `posts/` and must be named `YYYY-MM-DD-slug.md` where the date matches the `datePublished` frontmatter value and the slug portion matches the `slug` frontmatter field. Example: `2026-04-26-mermaid-support.md`.
+
 Expected frontmatter fields in `posts/*.md`:
 
 - `title`
