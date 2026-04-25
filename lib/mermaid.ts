@@ -2,8 +2,10 @@ import { execSync } from "child_process";
 import fs from "fs";
 import os from "os";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const MMDC = path.join(process.cwd(), "node_modules/.bin/mmdc");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const MMDC = path.resolve(__dirname, "../node_modules/.bin/mmdc");
 
 /**
  * Render a single mermaid diagram string to an SVG string using mmdc.
@@ -24,7 +26,10 @@ function renderDiagram(diagram: string): string | null {
     if (!fs.existsSync(outFile)) return null;
     const svg = fs.readFileSync(outFile, "utf8");
     return svg;
-  } catch {
+  } catch (e) {
+    console.error("[mermaid] failed to render diagram:", (e as NodeJS.ErrnoException).message);
+    const err = e as { stderr?: Buffer };
+    if (err.stderr) console.error("[mermaid] stderr:", err.stderr.toString());
     return null;
   } finally {
     try { fs.unlinkSync(inFile); } catch { /* ignore */ }

@@ -15,7 +15,7 @@ The end result is a fully static page — diagrams are plain SVG embedded in the
 
 ```mermaid
 flowchart LR
-  MD["```mermaid``` block"] --> mmdc
+  MD["mermaid block"] --> mmdc
   mmdc --> SVG["Inline SVG"]
   SVG --> HTML["Static HTML page"]
 ```
