@@ -2,7 +2,9 @@
 title: About
 ---
 
-Expert .NET and JavaScript engineer and technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
+Expert .NET and JavaScript engineer and hands-on technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
+
+Currently building production SaaS tooling — [Squirrel Notes](https://squirrelnotes.app) and [Fragile](https://github.com/garethrhughes/fragile) — using AI-assisted development workflows, demonstrating active IC technical contribution alongside organisational impact.
 
 **Core competencies:** System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
 
@@ -26,10 +28,30 @@ PostgreSQL · SQL Server · DynamoDB · SNS/SQS · Kafka · Snowflake · Entity 
 CI/CD · Docker · Azure DevOps · GitHub Actions · IaC · Serverless Framework · OpsGenie
 
 **AI & Automation**:
-Agentic AI · Claude Code · Amazon Q · Gemini · AI workflow design
+Agentic AI · Claude Code · GitHub Copilot · Amazon Q · AI workflow design
 
 **Security & Compliance**:
 IAM Policy Design · Secrets Management · API Security · ISO 27001 · PCI DSS
+
+---
+
+## Projects
+
+### [Squirrel Notes](https://squirrelnotes.app)
+*Mar 2026 – Present*
+
+A privacy-first, zero-knowledge note-taking app for ADHD brains. Built and launched end-to-end as a production SaaS product using AI-assisted development tooling — gaining firsthand intuition for where AI accelerates delivery and where human judgment remains essential.
+
+*TypeScript · Node.js · AWS · GitHub Copilot · CDK*
+
+---
+
+### [Fragile](https://github.com/garethrhughes/fragile)
+*Apr 2026 – Present*
+
+A self-hosted engineering metrics dashboard that connects to a Jira Cloud instance and surfaces DORA metrics, sprint and Kanban planning analytics, cycle time analysis, and roadmap accuracy tracking.
+
+*TypeScript · Node.js · AWS · GitHub Copilot · Terraform*
 
 ---
 
@@ -37,16 +59,15 @@ IAM Policy Design · Secrets Management · API Security · ISO 27001 · PCI DSS
 
 ### Senior Engineering Manager — [MyPass Global](https://en-us.mypassglobal.com/)
 
-*Sydney · 2024–2026*
+*Sydney · 2024–Present*
 
 Led software engineering and data across six cross-functional squads (25–30 engineers), responsible for re-platforming and platform stability including future-state architecture design in collaboration with engineering squads.
 
-- Architected and executed an engineering-wide AI enablement strategy, progressing from initial Amazon Q pilots to a mature agentic AI ecosystem using Claude Code and Gemini — measurably increasing developer velocity
 - Directed a high-performance engineering department across six squads, establishing a new Platform Engineering function to bridge developer experience and operational stability
 - Acted as primary technical stakeholder in enterprise discovery, designing future-state architecture that secured a $6–8m ARR partnership
 - Authored a multi-year technical roadmap covering legacy infrastructure transition to event-driven architecture, including a comprehensive database migration strategy
 
-*Java · TypeScript · Neo4j · GraphQL · Kubernetes · AWS · Snowflake · Jenkins · Azure DevOps*
+*TypeScript · Node.js · AWS (ECS, Fargate, Lambda, DynamoDB, SNS/SQS) · PostgreSQL · Terraform · CDK · Claude Code*
 
 ---
 
