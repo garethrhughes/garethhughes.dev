@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MMDC = path.resolve(__dirname, "../node_modules/.bin/mmdc");
 const PUPPETEER_CONFIG = path.resolve(__dirname, "puppeteer-config.json");
+const MERMAID_CONFIG = path.resolve(__dirname, "mermaid-config.json");
 // GitHub Actions (and most CI environments) set CI=true. Pass --no-sandbox
 // via a Puppeteer config so Chromium can launch without user namespaces.
 const PUPPETEER_FLAG = process.env.CI ? `-p "${PUPPETEER_CONFIG}"` : "";
@@ -23,7 +24,7 @@ function renderDiagram(diagram: string): string | null {
 
   try {
     fs.writeFileSync(inFile, diagram, "utf8");
-    execSync(`${MMDC} -i "${inFile}" -o "${outFile}" --quiet ${PUPPETEER_FLAG}`.trimEnd(), {
+    execSync(`${MMDC} -i "${inFile}" -o "${outFile}" -c "${MERMAID_CONFIG}" --quiet ${PUPPETEER_FLAG}`.trimEnd(), {
       timeout: 30_000,
       stdio: ["ignore", "ignore", "pipe"],
     });
