@@ -13,6 +13,17 @@ export const metadata: Metadata = {
 
 const projects = [
   {
+    name: 'OpenCode Skills',
+    description:
+      'A collection of reusable OpenCode skills for structured AI-assisted software development. Includes skills for architecture design, TDD-based development, security reviews, decision logging, and full feature dev-workflow orchestration.',
+    url: null,
+    appUrl: null,
+    githubUrl: 'https://github.com/garethrhughes/skills',
+    tags: ['OpenCode', 'AI', 'Developer Tooling', 'Skills'],
+    blogSlug: null as string | null,
+    image: null as string | null,
+  },
+  {
     name: 'Squirrel Notes',
     description:
       'A zero-knowledge, end-to-end encrypted notes app built for people who struggle to focus. Your passphrase never leaves your browser — the server stores only ciphertext. Features markdown editing, collections, tags, file attachments, and an MCP integration for Claude.',
@@ -63,14 +74,16 @@ export default function ProjectsPage() {
               key={project.name}
               className="rounded-xl border border-border bg-surface overflow-hidden shadow-sm"
             >
-              <div className="relative aspect-[2/1] w-full bg-surface-alt">
-                <Image
-                  src={project.image}
-                  alt={`${project.name} screenshot`}
-                  fill
-                  className="object-cover object-top"
-                />
-              </div>
+              {project.image && (
+                <div className="relative aspect-[2/1] w-full bg-surface-alt">
+                  <Image
+                    src={project.image}
+                    alt={`${project.name} screenshot`}
+                    fill
+                    className="object-cover object-top"
+                  />
+                </div>
+              )}
               <div className="p-6">
               <h2 className="mb-2 text-xl font-bold text-text-primary">
                 {project.name}
