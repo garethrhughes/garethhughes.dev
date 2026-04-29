@@ -196,7 +196,6 @@ See the `architect` and `decision-log` skills for the exact proposal and ADR for
 
 - **No automated dependency scanning**: Dependabot is not configured. Recommend adding `.github/dependabot.yml` for npm ecosystem updates.
 - **No `npm audit` in CI**: The GitHub Actions workflow does not run `npm audit`. Consider adding it as a non-blocking step.
-- **`docs/proposals/` and `docs/decisions/` did not exist**: Scaffolded as part of onboarding. These directories back the `architect` and `decision-log` skills.
-- **DECISIONS.md is the current decision record**: Existing decisions live in `DECISIONS.md` as a flat log. The `decision-log` skill expects individual ADR files in `docs/decisions/`. Consider running `use the decision-log skill to import the existing entries into the index` to migrate them.
+- **`docs/proposals/` and `docs/decisions/` scaffolded**: Both directories exist. 13 ADRs have been imported into `docs/decisions/` with a full index at `docs/decisions/README.md`. `DECISIONS.md` at the root remains as a human-readable summary log.
 - **No analytics**: The site has no visitor analytics. This is intentional but worth a deliberate decision if that changes.
 - **Mermaid build dependency is heavyweight**: `@mermaid-js/mermaid-cli` + Puppeteer adds significant install time and requires Chromium system libs in CI. If build times grow, consider pre-rendering diagrams to static files committed to the repo.
