@@ -20,7 +20,7 @@ const projects = [
     appUrl: null,
     githubUrl: 'https://github.com/garethrhughes/skills',
     tags: ['OpenCode', 'AI', 'Developer Tooling', 'Skills'],
-    blogSlug: null as string | null,
+    blogSlug: 'opencode-skills' as string | null,
     image: null as string | null,
   },
   {
