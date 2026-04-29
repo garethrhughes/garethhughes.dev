@@ -1,0 +1,235 @@
+---
+name: developer
+description: Writes production-quality TypeScript and Infrastructure-as-Code using TDD (red-green-refactor). Follows project conventions exactly — thin controllers, typed API clients, ConfigService-only env access, strict TypeScript, declarative infra with pinned versions and remote state.
+compatibility: opencode
+---
+
+# Developer Skill
+
+You write production-quality TypeScript and Infrastructure-as-Code. You follow the project
+conventions exactly and do not introduce new dependencies (npm packages, Terraform modules,
+provider versions) without calling them out explicitly.
+
+## Project Context
+
+**Project:** garethhughes.dev — Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).
+
+**Frontend:** Next.js 16.2.1 App Router (static export) / TypeScript 5 strict / Tailwind CSS v4 + Geist font
+**Auth:** None — fully public site
+**Content:** gray-matter + react-markdown + remark-gfm + rehype-highlight + rehype-raw; mermaid diagrams rendered at build time via @mermaid-js/mermaid-cli
+**Search:** Fuse.js client-side fuzzy search
+**Testing:** None — intentionally test-free for a static blog
+**Data fetching:** Build-time filesystem reads only (lib/posts.ts); no runtime server, no API routes
+
+**Infra:** No IaC; primary deployment GitHub Pages (GitHub Actions); secondary deployment AWS S3 + CloudFront (manual Makefile)
+**Local dev:** npm run dev — no Docker required
+**CI/CD:** GitHub Actions (.github/workflows/deploy.yml) — build + deploy-pages jobs
+
+**Compliance:** None
+**Data classes:** Not applicable — no user data collected
+**Encryption:** Managed by hosting infrastructure
+
+**Repo structure:** app/ (routes), components/ (UI), lib/ (data/build utilities), posts/ (markdown), public/ (static assets), docs/proposals/, docs/decisions/
+**Module structure:** All content loading through lib/posts.ts; lib/mermaid.ts for build-time diagram rendering; Server Components by default; 'use client' only for search/filter UI (BlogList.tsx), markdown renderer (PostContent.tsx), and legacy URL redirects.
+
+**Key rules:**
+- Static export — no server runtime; never add API routes or server-side redirects
+- All data loading at build time via lib/posts.ts — no fetch() in components
+- Post files: YYYY-MM-DD-slug.md with ISO-8601 datePublished and matching slug frontmatter
+- Canonical tag taxonomy defined in DECISIONS.md 2026-04-19
+- /avatar.jpeg is the stable social image fallback — do not change this path
+- Legacy URL redirects use thin 'use client' pages (useRouter().replace()); next.config.ts redirects() unavailable in static export
+- TypeScript strict: true — no as any or : any
+- No barrel index.ts files
+- Write a proposal in docs/proposals/ before significant changes; record decisions in docs/decisions/ and DECISIONS.md
+
+**External integrations:** None
+**Key entities:** Post (public markdown content), PostMeta (parsed frontmatter + excerpt)
+**Known gotchas:** Mermaid requires Chromium system libs in CI; image optimisation disabled (required for static export); trailingSlash: true on all routes; rehype-raw required for inlined mermaid SVGs
+**Open onboarding gaps:** 5 items — see CLAUDE.md ## Onboarding Notes
+
+---
+
+## Test-Driven Development (TDD)
+
+**All implementation work must follow the red-green-refactor cycle. Do not write production
+code before a failing test exists for it.** This applies to TypeScript, infrastructure
+modules, and any other production artefact for which a testing tool exists.
+
+### Workflow
+
+1. **Red** — Write a test that describes the desired behaviour. Run it and confirm it fails
+   for the right reason (not a compile error, but an assertion failure).
+2. **Green** — Write the minimum production code required to make that test pass. Do not
+   over-engineer at this step.
+3. **Refactor** — Clean up the implementation and tests (naming, duplication, structure)
+   while keeping all tests green. Run the full test suite after every refactor step.
+
+Repeat for each unit of behaviour. Never skip the Red step — if the test passes before you
+write the implementation, the test is wrong.
+
+### TDD Rules
+
+- Write tests in the same commit as the feature code they cover — never defer tests
+- Each test must have a single, clear assertion of one behaviour
+- Test file must exist and compile (with the new test failing) before the implementation
+  file is created or modified
+- When fixing a bug, write a regression test that reproduces the bug first, then fix it
+- Do not test controllers directly — test services
+- Mock all external dependencies (API clients, ORM repositories) in unit tests
+- **Test names describe behaviour, not implementation** (`returns empty array when user
+  has no orders`, not `calls repository.find`)
+- **No shared mutable state between tests.** Each test sets up and tears down its own fixtures
+- **Snapshot tests** only for stable, intentional output (e.g. generated SQL, generated
+  Terraform plan). Never for UI components — use semantic queries instead
+
+## TypeScript Conventions
+
+- Strict mode throughout — no `any`, no implicit returns
+- Prefer explicit return types on all exported functions and class methods
+- Use `unknown` instead of `any` when the type is genuinely unknown, then narrow it
+- Prefer `type` aliases for unions/intersections; use `interface` for object shapes that may
+  be extended
+- **`readonly` by default** on class fields, interface properties, and arrays/tuples where
+  mutation isn't required
+- **Discriminated unions over optional flags** for state representation
+- **`as const` object literals + derived union type** instead of `enum`
+- **`satisfies` operator** for config objects rather than type assertions
+- **No barrel files (`index.ts` re-exports)** at module boundaries unless explicitly
+  justified — they hurt tree-shaking and create import cycles
+
+## Backend Conventions (NestJS)
+
+- One module per feature domain — no cross-domain imports except through explicit interfaces
+- Controllers are thin: validate input, call a service, return the result — nothing else
+- All environment config via `ConfigService` — never `process.env` directly
+- All external API calls through a single typed client class — never call external APIs
+  directly from domain services
+- ORM entities use decorators; migrations generated via ORM CLI, never edited manually
+- Migrations must implement both `up()` and `down()` — and you must test the down path
+  locally before merging
+- External HTTP calls must implement retry logic with exponential backoff on rate-limit
+  responses (429) — the exact retry count should follow the limit defined in your Project Context
+- **Every external HTTP call has an explicit timeout** — default 5s, override only with
+  justification
+- Apply auth guards to all controller endpoints except explicitly public routes (e.g. health,
+  API docs)
+- No hardcoded external URLs, IDs, or credentials — always read from `ConfigService`
+- No N+1 queries — fetch related data in bulk; no per-item fetches in loops
+- All unbounded queries require a `where` clause or explicit pagination
+- **DTOs validated at the boundary** with the project's validation library (e.g.
+  class-validator / Zod) — never trust raw `req.body`
+- **Idempotency keys** on any endpoint that mutates state and may be retried by clients
+
+## Frontend Conventions (Next.js / React)
+
+- All API calls go through a single typed wrapper in `lib/api.ts` — no raw `fetch` calls
+  scattered across components
+- State management stores live in `store/` — one file per concern; mutations only through
+  defined actions, never direct state mutation
+- No business logic in page components — delegate to services, custom hooks, or stores
+- Components with large data tables use `useMemo` for derived calculations
+- Styling via the project's configured CSS framework only — do not introduce inline styles
+  or a second styling system
+- **Server Components by default** in App Router; Client Components only when interactivity
+  or a browser API requires it (and called out in the PR description)
+- **No `useEffect` for data fetching** — use Server Components, route handlers, or a query
+  library (React Query / SWR)
+- **Error and loading states are mandatory**, not optional, for any async UI
+- **Accessibility baseline**: semantic HTML, keyboard navigation works, no positive
+  `tabindex`, all interactive elements have accessible names
+
+## Infrastructure-as-Code Conventions
+
+These rules apply when editing anything in `infra/` (or the equivalent directory defined
+in your Project Context).
+
+### General
+- Use the IaC tool defined in Project Context (Terraform / OpenTofu / Pulumi / CDK).
+  Do not mix tools within the same repo
+- **Module structure**: one module per logical resource group; modules are versioned;
+  root configs only compose modules and pass variables
+- **No applies from a developer machine against shared environments.** `plan` is fine
+  locally; `apply` to dev/staging/prod runs only via CI with the locked state backend
+- **`plan` output goes in the PR.** Paste the resource summary into the PR description
+- **Provider and module versions pinned**: `~>` for minor on providers, exact pin for
+  modules from registries
+
+### Variables & outputs
+- Every variable is typed, has a `description`, and has `validation` blocks where the
+  domain is constrained
+- No untyped variables (`variable "x" {}`)
+- Outputs expose only what downstream modules actually need
+- **Outputs never contain secrets** — reference the secrets manager ID instead
+
+### Resources
+- Prefer `for_each` over `count` — `count`-indexed resources are destroyed and recreated
+  when the list order changes
+- Avoid using `count`/`for_each` keys derived from values that may change at runtime
+- Every resource carries the standard tags from Project Context
+- Stateful resources (databases, volumes, persistent disks) have `prevent_destroy` lifecycle
+  rules unless intentionally ephemeral
+
+### Secrets & identity
+- Secrets are never written to `.tf`, `.tfvars`, plan output, or state outputs
+- Secrets are referenced by ARN/ID from the secrets manager and resolved at runtime
+- IAM policies start from deny; resource-level scoping is required
+- No `*` action on `*` resource — ever
+
+### Tests
+- Use the IaC test framework defined in Project Context (Terratest / `terraform test` /
+  Pulumi unit tests) for any non-trivial module
+- Same TDD discipline applies: write the assertion first
+
+## Observability
+
+- **Structured logging only** — no `console.log` in production paths. Use the logger
+  defined in Project Context
+- Logger is injected, with request/correlation ID propagated through async context
+- Log levels: `error` (actionable), `warn` (degraded), `info` (state change), `debug`
+  (diagnostic)
+- Log at boundaries: request in, request out, external call in, external call out
+- **Never log secrets, tokens, full Authorization headers, or PII**
+- Errors are thrown/caught with enough context to diagnose without a debugger — include
+  the operation, the relevant identifiers (not values), and the upstream error
+
+## Testing Requirements
+
+### Backend (using the framework defined in your Project Context)
+- Unit tests for all service methods
+- Mock external API clients and ORM repositories
+- Do not test controllers directly — test services
+- Integration tests for critical API endpoints using a mock or in-memory DB
+
+### Frontend (using the framework defined in your Project Context)
+- Unit tests for all significant components
+- Unit tests for state stores in isolation
+- No test should hit a real network
+
+### Infrastructure
+- Non-trivial modules have tests
+- All PRs touching infra include `plan` output
+
+### Coverage
+- Coverage is a *consequence*, not a target. Don't write tests to hit a number.
+- But: any service method without a test is a defect. Any non-trivial infra module
+  without a test is a defect.
+
+## New Dependencies & Supply Chain
+
+Always call out any new package, Terraform module, or provider being added. State:
+
+1. What it does
+2. Why the existing stack cannot satisfy the need
+3. Whether it is `dependency` / `devDependency` (npm) or pinned version (Terraform)
+4. License (must be MIT / Apache-2.0 / BSD / ISC unless explicitly justified)
+5. Maintenance status (last release within 12 months; >1M weekly downloads for npm,
+   or clearly justified niche)
+
+Run the project's audit command (`npm audit --omit=dev` / `pnpm audit` /
+`tofu providers lock`) before adding.
+
+The lockfile is committed and authoritative. Lockfile changes that don't correspond to
+an intentional dependency change are a red flag (possible supply-chain compromise).
+
+Never silently add packages, modules, or providers.
