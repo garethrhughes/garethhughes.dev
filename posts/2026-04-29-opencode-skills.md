@@ -33,3 +33,34 @@ The core workflow I use on Fragile follows this chain: **Architect → Developer
 The `project-bootstrap` and `project-onboard` skills handle the setup side — configuring the right context for new projects or bringing existing codebases into the workflow. I initially built this blog and my photography site with minimal process, which made them a useful proving ground for the onboarding skill.
 
 For personal projects at least, this approach with OpenCode is working well.
+
+## The Dev Workflow
+
+The `dev-workflow` skill orchestrates the full feature development cycle — from proposal to merged PR — by sequencing the other skills in the right order and defining exactly when to loop back.
+
+```mermaid
+flowchart TD
+    Start([New work item]) --> trivial{Trivial change?}
+    trivial -- Yes --> S2
+    trivial -- No --> S1
+
+    S1["Step 1 — Design\narchitect skill\nWrite & get proposal accepted"]
+    S2["Step 2 — Implementation\ndeveloper skill\nBranch → code → tests pass"]
+    S3["Step 3 — Code Review\nreviewer skill\nPASS / PASS WITH COMMENTS / BLOCK"]
+    S4{"Infosec\nrelevant?"}
+    S4Y["Step 4 — Infosec Sign-Off\ninfosec skill\nAPPROVED / REQUIRES CHANGES"]
+    S5["Step 5 — Decision Log\ndecision-log skill\nWrite ADRs, update proposal status"]
+    S6["Step 6 — Pull Request\nPush branch, open PR,\nlink proposal & ADRs"]
+    Done([Merged ✓])
+
+    S1 --> S2
+    S2 --> S3
+    S3 -- BLOCK --> S2
+    S3 -- PASS / PASS WITH COMMENTS --> S4
+    S4 -- No --> S5
+    S4 -- Yes --> S4Y
+    S4Y -- REQUIRES CHANGES --> S2
+    S4Y -- APPROVED --> S5
+    S5 --> S6
+    S6 --> Done
+```
