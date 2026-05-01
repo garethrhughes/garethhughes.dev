@@ -46,7 +46,42 @@ and correct ambiguous findings.
 
 ## Phase 0 — Orientation
 
-Before doing anything else, tell the user:
+### Step 0.1 — Detect existing AI setup
+
+Before saying anything else, scan the project root for existing AI configuration files
+and directories:
+
+- `CLAUDE.md`
+- `AGENTS.md`
+- `.claude/` (Claude Code agents, commands, settings)
+- `.github/agents/` (GitHub Copilot agents)
+- `.github/copilot-instructions.md`
+- `.opencode/` (OpenCode skills, agents, commands)
+- `cursor/` or `.cursor/` (Cursor rules)
+- Any other AI assistant instruction files (`.aider*`, `codeium*`, etc.)
+
+If **any** are found, list them to the user and ask:
+
+> "I found the following existing AI configuration in this project:
+>
+> - [list each file/directory found]
+>
+> Would you like me to remove any of these before we start? This is useful if you're
+> replacing an existing setup with these skills.
+>
+> Reply with the numbers or names of items to remove, or 'none' to keep everything
+> as-is."
+
+Wait for the user's response. Remove only the items they confirm. If they confirm
+removal, delete the files/directories and tell the user what was removed.
+
+If **nothing** is found, skip this step silently and proceed.
+
+---
+
+### Step 0.2 — Orientation
+
+Tell the user:
 
 > "I'll onboard this existing codebase by reading it first. There are **8 phases**
 > covering project identity, application stack, infrastructure-as-code, repository
@@ -627,7 +662,7 @@ the `---` rule that follows it — with the generated Project Context block from
 Output 2. Do this for every skill file present.
 
 Confirm to the user which files were updated, e.g.:
-> "Updated Project Context in: architect, developer, reviewer, infosec, dev-workflow"
+> "Updated Project Context in: architect, developer, reviewer, infosec, create-feature"
 
 If `.opencode/skills/` does not exist, tell the user:
 
@@ -639,14 +674,24 @@ If `.opencode/skills/` does not exist, tell the user:
 > automatically, copy the skills into `.opencode/skills/` — see the skills
 > README for instructions."
 
-### Step 3 — Finish
+### Step 3 — MCP Setup
+
+Invoke the `mcp-setup` skill to let the user choose which MCP servers to add to
+this project. The mcp-setup skill will handle reading/writing `opencode.json` and
+explaining each option.
+
+After mcp-setup completes, continue to Step 4.
+
+---
+
+### Step 4 — Finish
 
 Tell the user:
 
 > "Your CLAUDE.md is ready to commit to the root of your repository.
 >
 > Suggested next steps:
-> 1. Commit `CLAUDE.md` and any updated skill files to version control
+> 1. Commit `CLAUDE.md`, `opencode.json`, and any updated skill files to version control
 > 2. Review the **Onboarding Notes** section — each bullet is a candidate for a
 >    proposal via the `architect` skill, or a backlog ticket
 > 3. If `docs/proposals/` and `docs/decisions/` don't exist yet, scaffold them
@@ -655,4 +700,4 @@ Tell the user:
 >    `use the decision-log skill to import the existing ADRs into the index`
 > 5. For a deeper security pass on the gaps surfaced in Phase 7, run:
 >    `use the infosec skill to audit this codebase`
-> 6. For your first new feature, run: `use the dev-workflow skill`"
+> 6. For your first new feature, run: `use the create-feature skill`"

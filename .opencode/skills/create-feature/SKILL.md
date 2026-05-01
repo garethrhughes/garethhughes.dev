@@ -1,51 +1,21 @@
 ---
-name: dev-workflow
+name: create-feature
 description: The full feature development cycle as a numbered checklist — from proposal through implementation, review, infosec sign-off, decision logging, and PR. Defines when each agent handoff happens, the dedicated path for infrastructure changes, and how to handle iteration loops.
 compatibility: opencode
 ---
 
-# Dev Workflow Skill
+# Create Feature Skill
 
 This skill describes the complete feature development cycle used in this project. Follow
 these steps in order for any non-trivial piece of work. Each step maps to a specific skill.
 
 ## Project Context
 
-**Project:** garethhughes.dev — Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).
-
-**Frontend:** Next.js 16.2.1 App Router (static export) / TypeScript 5 strict / Tailwind CSS v4 + Geist font
-**Auth:** None — fully public site
-**Content:** gray-matter + react-markdown + remark-gfm + rehype-highlight + rehype-raw; mermaid diagrams rendered at build time via @mermaid-js/mermaid-cli
-**Search:** Fuse.js client-side fuzzy search
-**Testing:** None — intentionally test-free for a static blog
-**Data fetching:** Build-time filesystem reads only (lib/posts.ts); no runtime server, no API routes
-
-**Infra:** No IaC; primary deployment GitHub Pages (GitHub Actions); secondary deployment AWS S3 + CloudFront (manual Makefile)
-**Local dev:** npm run dev — no Docker required
-**CI/CD:** GitHub Actions (.github/workflows/deploy.yml) — build + deploy-pages jobs
-
-**Compliance:** None
-**Data classes:** Not applicable — no user data collected
-**Encryption:** Managed by hosting infrastructure
-
-**Repo structure:** app/ (routes), components/ (UI), lib/ (data/build utilities), posts/ (markdown), public/ (static assets), docs/proposals/, docs/decisions/
-**Module structure:** All content loading through lib/posts.ts; lib/mermaid.ts for build-time diagram rendering; Server Components by default; 'use client' only for search/filter UI (BlogList.tsx), markdown renderer (PostContent.tsx), and legacy URL redirects.
-
-**Key rules:**
-- Static export — no server runtime; never add API routes or server-side redirects
-- All data loading at build time via lib/posts.ts — no fetch() in components
-- Post files: YYYY-MM-DD-slug.md with ISO-8601 datePublished and matching slug frontmatter
-- Canonical tag taxonomy defined in DECISIONS.md 2026-04-19
-- /avatar.jpeg is the stable social image fallback — do not change this path
-- Legacy URL redirects use thin 'use client' pages (useRouter().replace()); next.config.ts redirects() unavailable in static export
-- TypeScript strict: true — no as any or : any
-- No barrel index.ts files
-- Write a proposal in docs/proposals/ before significant changes; record decisions in docs/decisions/ and DECISIONS.md
-
-**External integrations:** None
-**Key entities:** Post (public markdown content), PostMeta (parsed frontmatter + excerpt)
-**Known gotchas:** Mermaid requires Chromium system libs in CI; image optimisation disabled (required for static export); trailingSlash: true on all routes; rehype-raw required for inlined mermaid SVGs
-**Open onboarding gaps:** 5 items — see CLAUDE.md ## Onboarding Notes
+> Fill in before use: Replace this section with your project's conventions, repository
+> locations for proposals and decisions, and any team-specific workflow notes.
+>
+> Example: "Proposals: docs/proposals/. Decisions: docs/decisions/. Branches: feature/NNNN-short-title.
+> PRs target main. CI runs Jest + Vitest + `tofu plan`. Compliance: ISO27001."
 
 ---
 
@@ -186,6 +156,24 @@ to `Accepted`, linking the ADR numbers.
    - For infra changes: the `terraform plan` (or equivalent) summary
    - Infosec verdict (APPROVED / APPROVED WITH EXCEPTION + ADR link)
 4. Ensure CI passes (including infra `plan` and any IaC tests)
+
+---
+
+## MCP Tools Available Across the Cycle
+
+The following MCP servers are available to the skills invoked during this workflow. This
+section summarises where each is most relevant:
+
+| MCP Server | Most relevant steps | Primary use |
+|---|---|---|
+| **context7** | Step 1, Step 2 | Look up live framework/provider docs before designing or coding |
+| **github** | Step 2, Step 3, Step 6 | Branch/PR operations, CI status checks, diff access for review |
+| **filesystem** | Step 1, Step 2, Step 5 | Read/write proposals, ADRs, and source files |
+| **semgrep** | Step 2, Step 3, Step 4 | Static analysis — run before handoff at each gate |
+
+Each skill in the cycle is responsible for using these tools appropriately — the guidance
+above is a cross-step reference to avoid duplication. See each individual skill for
+step-specific instructions.
 
 ---
 

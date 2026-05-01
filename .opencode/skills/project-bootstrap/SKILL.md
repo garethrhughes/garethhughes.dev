@@ -465,7 +465,7 @@ follows it — with the generated Project Context block from Output 2. Do this f
 skill file present.
 
 Confirm to the user which files were updated, e.g.:
-> "Updated Project Context in: architect, developer, reviewer, infosec, dev-workflow"
+> "Updated Project Context in: architect, developer, reviewer, infosec, create-feature"
 
 If `.opencode/skills/` does not exist, tell the user:
 
@@ -476,15 +476,25 @@ If `.opencode/skills/` does not exist, tell the user:
 > To version skills inside this project and have the context inserted automatically,
 > copy the skills into `.opencode/skills/` — see the skills README for instructions."
 
-### Step 3 — Finish
+### Step 3 — MCP Setup
+
+Invoke the `mcp-setup` skill to let the user choose which MCP servers to add to
+this project. The mcp-setup skill will handle reading/writing `opencode.json` and
+explaining each option.
+
+After mcp-setup completes, continue to Step 4.
+
+---
+
+### Step 4 — Finish
 
 Tell the user:
 
 > "Your CLAUDE.md is ready to commit to the root of your repository.
 >
 > Suggested next steps:
-> 1. Commit `CLAUDE.md` and any updated skill files to version control
+> 1. Commit `CLAUDE.md`, `opencode.json`, and any updated skill files to version control
 > 2. Scaffold `infra/modules/`, `infra/envs/{dev,staging,prod}/`, `docs/proposals/`,
 >    and `docs/decisions/` directories
 > 3. If you have existing architectural decisions, run: `use the decision-log skill to seed the initial ADRs`
-> 4. For your first feature, run: `use the dev-workflow skill`"
+> 4. For your first feature, run: `use the create-feature skill`"
