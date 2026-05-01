@@ -4,18 +4,34 @@ Personal blog built with Next.js (static export), deployed to S3.
 
 ## Writing a post
 
-1. Create a markdown file in `posts/`:
+### Using the AI writer skill (recommended)
+
+Keep drafts in the **Blog** collection in Squirrel Notes, then run:
+
+```
+Use the writer skill to publish the draft post about <topic>.
+```
+
+The skill will load the draft, proofread and improve it, convert it to the correct format with the current UTC publish time, write the file to `posts/`, and mark the draft as published in Squirrel Notes.
+
+### Manually
+
+1. Create a markdown file in `posts/` named `YYYY-MM-DD-slug.md`:
 
 ```yaml
 ---
 title: "Your Post Title"
-datePublished: Mon Jan 01 2026 12:00:00 GMT+0000
+datePublished: "2026-01-01T12:00:00Z"
 slug: your-post-slug
-tags: tag-one, tag-two
+tags: [tag-one, tag-two]
 ---
 
 Post content here…
 ```
+
+- `datePublished` must be ISO-8601 (`YYYY-MM-DDTHH:MM:SSZ`) — RFC-2822 is not supported
+- The filename date and slug must match the frontmatter values
+- Tags must come from the canonical set in `DECISIONS.md`
 
 2. Add any images to `public/images/` and reference them in markdown as `/images/my-image.png`.
 
