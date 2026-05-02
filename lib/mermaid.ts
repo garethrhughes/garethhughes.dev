@@ -8,9 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MMDC = path.resolve(__dirname, "../node_modules/.bin/mmdc");
 const PUPPETEER_CONFIG = path.resolve(__dirname, "puppeteer-config.json");
 const MERMAID_CONFIG = path.resolve(__dirname, "mermaid-config.json");
-// GitHub Actions (and most CI environments) set CI=true. Pass --no-sandbox
-// via a Puppeteer config so Chromium can launch without user namespaces.
-const PUPPETEER_FLAG = process.env.CI ? `-p "${PUPPETEER_CONFIG}"` : "";
+// Always pass the Puppeteer config so Chromium launches without user namespaces.
+// Required on Ubuntu 23.10+ (AppArmor) both locally and in CI.
+const PUPPETEER_FLAG = `-p "${PUPPETEER_CONFIG}"`;
 
 /**
  * Render a single mermaid diagram string to an SVG string using mmdc.
