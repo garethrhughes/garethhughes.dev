@@ -22,9 +22,13 @@ The workflow I developed while building Fragile clicked for me, so I extracted i
 | [reviewer](https://github.com/garethrhughes/skills/blob/main/reviewer/SKILL.md) | Reviews staged changes for security, correctness, performance, IaC safety, observability, and convention adherence; returns a PASS / PASS WITH COMMENTS / BLOCK verdict with Acceptance Criteria traceability |
 | [infosec](https://github.com/garethrhughes/skills/blob/main/infosec/SKILL.md) | Read-only security and compliance audit (ISO27001-aligned by default). Audits encryption, access control, audit logging, secrets, IAM, network exposure, and supply chain. Returns APPROVED / REQUIRES CHANGES / APPROVED WITH EXCEPTION |
 | [decision-log](https://github.com/garethrhughes/skills/blob/main/decision-log/SKILL.md) | Captures and maintains architectural decisions (ADRs) in `docs/decisions/` with a running index |
-| [dev-workflow](https://github.com/garethrhughes/skills/blob/main/dev-workflow/SKILL.md) | Full feature development cycle: proposal → implementation → review → infosec sign-off → decision logging → PR |
-| [project-bootstrap](https://github.com/garethrhughes/skills/blob/main/project-bootstrap/SKILL.md) | Interactive bootstrap that asks a structured set of questions (app stack, IaC, observability, security/compliance, domain) and produces a complete CLAUDE.md and Project Context block |
-| [project-onboard](https://github.com/garethrhughes/skills/blob/main/project-onboard/SKILL.md) | Interactive onboarding for an existing codebase — investigates the repo to fill in CLAUDE.md and the Project Context block, asking the user only what the code can't answer |
+| [create-feature](https://github.com/garethrhughes/skills/blob/main/create-feature/SKILL.md) | Full feature development cycle: proposal → implementation → review → infosec sign-off → decision logging → PR |
+| [jira-feature](https://github.com/garethrhughes/skills/blob/main/jira-feature/SKILL.md) | Loads a Jira ticket by URL or issue key, extracts description and acceptance criteria, and drives the full create-feature cycle with that ticket as the requirement source |
+| [project-bootstrap](https://github.com/garethrhughes/skills/blob/main/project-bootstrap/SKILL.md) | Interactive bootstrap for new projects — asks structured questions covering app stack, IaC, observability, security/compliance, domain, and Jira integration, then produces a complete `CLAUDE.md` and populates the Project Context block in all local skills |
+| [project-onboard](https://github.com/garethrhughes/skills/blob/main/project-onboard/SKILL.md) | Interactive onboarding for an existing codebase — investigates the repo to fill in `CLAUDE.md` and the Project Context block, asking the user only what the code can't answer; covers the same 9 phases as project-bootstrap including optional Jira integration |
+| [mcp-setup](https://github.com/garethrhughes/skills/blob/main/mcp-setup/SKILL.md) | Interactive MCP server setup — presents a menu of available MCP servers (Context7, GitHub, Filesystem, Memory, Squirrel Notes, Semgrep, Jira) and writes the chosen config into `opencode.json`; invoked automatically by `project-bootstrap` and `project-onboard` |
+| [create-skill](https://github.com/garethrhughes/skills/blob/main/create-skill/SKILL.md) | Interactively creates or updates OpenCode skills — asks structured questions about purpose, workflow, MCP tools, and output format, then produces a complete SKILL.md and updates the README |
+| [update-skills](https://github.com/garethrhughes/skills/blob/main/update-skills/SKILL.md) | Pulls the latest skills from the upstream repository and reports what changed (added, removed, modified) with a unified diff per skill |
 
 ## How It Fits Together
 
@@ -34,9 +38,9 @@ The `project-bootstrap` and `project-onboard` skills handle the setup side — c
 
 For personal projects at least, this approach with OpenCode is working well.
 
-## The Dev Workflow
+## The Create-Feature Workflow
 
-The `dev-workflow` skill orchestrates the full feature development cycle — from proposal to merged PR — by sequencing the other skills in the right order and defining exactly when to loop back.
+The `create-feature` skill orchestrates the full feature development cycle — from proposal to merged PR — by sequencing the other skills in the right order and defining exactly when to loop back.
 
 ```mermaid
 flowchart TD
@@ -64,3 +68,7 @@ flowchart TD
     S5 --> S6
     S6 --> Done
 ```
+
+---
+
+*Last modified: 2026-05-05*
