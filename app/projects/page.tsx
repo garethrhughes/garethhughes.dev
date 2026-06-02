@@ -56,6 +56,17 @@ const projects = [
     blogSlug: null as string | null,
     image: '/images/gareth-photography-preview.jpg',
   },
+  {
+    name: 'opencode-bedrock-openai-token',
+    description:
+      'An OpenCode plugin that authenticates requests to AWS Bedrock\'s OpenAI-compatible endpoint using short-lived tokens from the Bedrock Token Generator. Supports SSO, IAM roles, and AWS credential profiles with automatic token refresh.',
+    url: null,
+    appUrl: null,
+    githubUrl: 'https://github.com/garethrhughes/opencode-bedrock-openai-token',
+    tags: ['AWS Bedrock', 'OpenCode', 'Plugin', 'TypeScript'],
+    blogSlug: 'opencode-and-gpt-5-5-on-bedrock' as string | null,
+    image: null as string | null,
+  },
 ];
 
 export default function ProjectsPage() {
