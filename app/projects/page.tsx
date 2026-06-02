@@ -21,19 +21,15 @@ const projects = [
     githubUrl: 'https://github.com/garethrhughes/opencode-bedrock-openai-token',
     npmUrl: 'https://www.npmjs.com/package/opencode-bedrock-openai-token',
     tags: ['AWS Bedrock', 'OpenCode', 'Plugin', 'TypeScript'],
-    blogSlug: 'opencode-and-gpt-5-5-on-bedrock' as string | null,
-    image: null as string | null,
+    blogSlug: 'opencode-and-gpt-5-5-on-bedrock'
   },
   {
     name: 'OpenCode Skills',
     description:
       'A collection of reusable OpenCode skills for structured AI-assisted software development. Includes skills for architecture design, TDD-based development, security reviews, decision logging, and full feature dev-workflow orchestration.',
-    url: null,
-    appUrl: null,
     githubUrl: 'https://github.com/garethrhughes/skills',
     tags: ['OpenCode', 'AI', 'Developer Tooling', 'Skills'],
-    blogSlug: 'opencode-skills' as string | null,
-    image: null as string | null,
+    blogSlug: 'opencode-skills'
   },
   {
     name: 'Squirrel Notes',
@@ -41,20 +37,17 @@ const projects = [
       'A zero-knowledge, end-to-end encrypted notes app built for people who struggle to focus. Your passphrase never leaves your browser — the server stores only ciphertext. Features markdown editing, collections, tags, file attachments, and an MCP integration for Claude.',
     url: 'https://squirrelnotes.app',
     appUrl: 'https://my.squirrelnotes.app',
-    githubUrl: null as string | null,
     tags: ['Zero-Knowledge', 'E2EE', 'Notes', 'MCP'],
-    blogSlug: 'introducing-squirrel-notes' as string | null,
+    blogSlug: 'introducing-squirrel-notes',
     image: '/images/screenshot2.png',
   },
   {
     name: 'Fragile',
     description:
       'A lightweight engineering metrics tool that syncs with Jira to surface DORA metrics, planning accuracy, cycle time, and roadmap accuracy — without the maintenance overhead of expensive SaaS alternatives. Built to give teams an honest snapshot of their sprints and planning.',
-    url: null,
-    appUrl: null,
     githubUrl: 'https://github.com/garethrhughes/fragile',
     tags: ['DORA', 'Jira', 'Engineering Metrics'],
-    blogSlug: 'introducing-fragile' as string | null,
+    blogSlug: 'introducing-fragile',
     image: '/images/screencapture-localhost-3000-dora-2026-04-15-12_10_43.png',
   },
   {
@@ -62,10 +55,8 @@ const projects = [
     description:
       'A photography portfolio showcasing landscapes, wildlife, and nature across Australia. Built as a statically-exported Next.js site with album-based organisation and a clean, minimal gallery experience.',
     url: 'https://gareth.photography',
-    appUrl: null,
     githubUrl: 'https://github.com/garethrhughes/gareth.photography',
     tags: ['Photography', 'Portfolio', 'Next.js'],
-    blogSlug: null as string | null,
     image: '/images/gareth-photography-preview.jpg',
   },
 ];
@@ -156,8 +147,9 @@ export default function ProjectsPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-text-tertiary hover:bg-surface-hover hover:text-text-primary transition-colors"
                   >
-                    <svg viewBox="0 0 24 24" width={16} height={16} fill="#CB3837" aria-hidden="true">
-                      <path d="M0 7.334v8h6.666v1.332H12v-1.332h12V7.334H0zM12 14h-2.667V9.334H8v4.667H5.333V8h6.667v6zm2.667 0H12V8h6.667v6z" />
+                    <svg viewBox="0 0 16 16" width={16} height={16} aria-hidden="true">
+                      <rect width="16" height="16" rx="2" fill="currentColor"/>
+                      <text x="8" y="11.5" textAnchor="middle" fill="white" fontSize="7" fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" fontWeight="900">npm</text>
                     </svg>
                     npm
                   </a>
