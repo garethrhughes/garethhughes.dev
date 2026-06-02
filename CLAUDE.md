@@ -1,5 +1,16 @@
 # CLAUDE.md — garethhughes.dev
 
+## Active Skillset: typescript
+
+This project follows the language-agnostic core rules in
+[`.opencode/skills/RULES.md`](.opencode/skills/RULES.md) plus the **typescript**
+stack overlay in
+[`.opencode/skills/rules/typescript.md`](.opencode/skills/rules/typescript.md).
+Skills (`developer`, `reviewer`, `architect`, `infosec`) read both when applying
+conventions to this project.
+
+---
+
 ## Project Overview
 
 Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).

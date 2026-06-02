@@ -22,21 +22,39 @@ into their project.
 
 ---
 
+## Authoritative Rules
+
+The defaults proposed throughout this interview reflect the project-wide engineering
+conventions in [`RULES.md`](../RULES.md) (language-agnostic core) plus the active
+**stack overlay** in [`rules/`](../rules/) and the matching **profile** in
+[`profiles/`](../profiles/). When a user accepts the defaults, they are accepting
+`RULES.md` + the chosen overlay verbatim. Where a user overrides a default in a way
+that conflicts, capture the override in their generated `CLAUDE.md` and call it out
+explicitly so future skill runs know the project deviates.
+
+Available profiles (extensible — drop another directory under `profiles/` to add one):
+
+| Identifier | Overlay | Summary |
+|---|---|---|
+| `typescript` | [`rules/typescript.md`](../rules/typescript.md) | NestJS + Next.js + TypeORM + pino + Jest/Vitest |
+| `dotnet` | [`rules/dotnet.md`](../rules/dotnet.md) | ASP.NET Core + EF Core + Serilog + xUnit |
+
+---
+
 ## Phase 0 — Orientation
 
 Before asking any questions, tell the user:
 
 > "I'll ask you a series of short questions to bootstrap your project's CLAUDE.md
-> and skill context block. There are **9 phases** covering project identity, application
-> stack, infrastructure-as-code, repository structure, conventions, observability,
-> security/compliance, domain, and Jira integration (optional). Answer as much or as little as you know — I'll mark
-> anything unknown as `[TBD]` and you can fill it in later.
+> and skill context block. There are **10 phases** covering project identity, **skillset
+> profile**, application stack, infrastructure-as-code, repository structure,
+> conventions, observability, security/compliance, domain, and Jira integration
+> (optional). Answer as much or as little as you know — I'll mark anything unknown as
+> `[TBD]` and you can fill it in later.
 >
-> For most questions I'll show a **default** in bold brackets — this is the approach
-> used in the reference stack (NestJS 11 + TypeScript / Next.js 16 App Router /
-> PostgreSQL + TypeORM / pino logging / OpenTofu on AWS / GitHub Actions / Docker
-> Compose for local dev / no formal compliance framework). To accept a default,
-> just say **'yes'**, **'default'**, or press Enter. Override it by giving a different answer.
+> For most questions I'll show a **default** in bold brackets — these come from the
+> profile you pick in Phase 1.5. To accept a default, just say **'yes'**, **'default'**,
+> or press Enter. Override it by giving a different answer.
 >
 > Let's start."
 
@@ -57,27 +75,55 @@ After receiving answers, reflect back: "Got it — [name]: [one-line summary]. M
 
 ---
 
+## Phase 1.5 — Skillset Profile
+
+Ask:
+
+> "Which skillset profile should drive the defaults?
+>
+> - **`typescript`** [default] — NestJS + Next.js + TypeORM + pino + Jest/Vitest
+> - **`dotnet`** — ASP.NET Core + EF Core + Serilog + xUnit
+> - **other** — pick the closest profile then plan to override defaults manually
+>
+> Reply with the identifier, or 'default' for `typescript`."
+
+Record the chosen identifier as `{profile}`. For every subsequent question that
+proposes a default, **read the default value from
+`profiles/{profile}/bootstrap.md`** rather than from this skill file. Do not
+hard-code stack-specific defaults below — the question text is profile-agnostic, the
+answer in brackets comes from the profile.
+
+The chosen profile also determines:
+
+- The **stack overlay** (`rules/{profile}.md`) referenced by the generated `CLAUDE.md`
+- The **scaffolder commands** (`profiles/{profile}/scaffolders.md`) used in Step 3.1
+- The **smoke-test commands** (`profiles/{profile}/scaffolders.md`) used in Step 5
+
+---
+
 ## Phase 2 — Application Tech Stack
 
-Ask about each concern in turn. Group them into two rounds.
+Ask about each concern in turn. Group them into two rounds. Defaults below are
+*placeholders* — replace each `[**…**]` at runtime with the corresponding row from
+`profiles/{profile}/bootstrap.md` Phase 2.
 
 **Round A — Backend (ask as one message):**
-- What backend framework and language? [**NestJS 11 + TypeScript strict mode**]
-- What database and ORM/data layer? [**PostgreSQL 16 + TypeORM** (CLI migrations)]
-- How is authentication handled? [**JWT bearer tokens with 15-minute access + refresh token rotation**; for internal-only tools, override with "None at application level — CORS / WAF as sole access control"]
-- Are there API docs? [**Swagger via `@nestjs/swagger`** — served at `/api-docs`, unguarded]
-- Backend testing framework? [**Jest + Supertest**]
-- How are schema migrations managed? [**TypeORM CLI** — `npm run migration:run`; migrations must implement both `up()` and `down()`]
-- DTO validation library? [**class-validator + class-transformer**]
-- Logging library? [**pino** — JSON structured logs, request-scoped child loggers with correlation ID]
+- What backend framework and language? [**from profile 2A.1**]
+- What database and ORM/data layer? [**from profile 2A.2**]
+- How is authentication handled? [**from profile 2A.3**; for internal-only tools, override with "None at application level — CORS / WAF as sole access control"]
+- Are there API docs? [**from profile 2A.4**]
+- Backend testing framework? [**from profile 2A.5**]
+- How are schema migrations managed? [**from profile 2A.6**]
+- DTO validation library? [**from profile 2A.7**]
+- Logging library? [**from profile 2A.8**]
 
 **Round B — Frontend (ask as one message, or skip if backend-only):**
-- Is there a frontend? If yes: what framework? [**Next.js 16 (App Router) + React 19**]
-- Styling approach? [**Tailwind CSS v4 — CSS-first config via `@theme` in `globals.css`; no `tailwind.config.js`**]
-- State management? [**Zustand** — one store file per concern in `store/`]
-- Frontend testing framework? [**Vitest + React Testing Library**]
-- How does the frontend call the backend? [**Typed `fetch` wrappers in `lib/api.ts`** — no direct fetch calls outside this file]
-- Data fetching pattern? [**Server Components by default; client-side data fetching via React Query when interactivity requires it; never `useEffect` for data fetching**]
+- Is there a frontend? If yes: what framework? [**from profile 2B.1**]
+- Styling approach? [**from profile 2B.2**]
+- State management? [**from profile 2B.3**]
+- Frontend testing framework? [**from profile 2B.4**]
+- How does the frontend call the backend? [**from profile 2B.5**]
+- Data fetching pattern? [**from profile 2B.6** if present; otherwise from `RULES.md`]
 
 After both rounds, print a confirmation table:
 
@@ -96,18 +142,20 @@ Ask: "Does this look right? Any corrections?"
 
 ## Phase 3 — Infrastructure-as-Code & Deployment
 
-Ask as a single message:
+Ask as a single message. Defaults come from `profiles/{profile}/bootstrap.md` Phase 3
+(rows 3.1–3.10). Substitute each `[**from profile 3.x**]` placeholder with the
+corresponding row at runtime.
 
-- How is the local dev environment set up? [**Docker Compose** — PostgreSQL 16, port 5432]
-- Where does it deploy? [**AWS** — ECS Fargate behind CloudFront + WAF, ECR for images, RDS for PostgreSQL]
-- Which IaC tool? [**OpenTofu 1.8** (Terraform-compatible, open-source, no licence concerns)]
-- IaC state backend? [**S3 bucket with DynamoDB lock table**, one state file per environment, separate AWS accounts for prod where feasible]
-- Where do IaC modules live? [**`infra/modules/` for reusable modules; `infra/envs/{dev,staging,prod}/` for environment root configs**]
-- Secrets manager? [**AWS Secrets Manager** — referenced by ARN; no secret values in `.tf`/`.tfvars`/state]
-- CI/CD pipeline? [**GitHub Actions** — `lint + test + plan` on PR; `apply` on merge to `main` for dev, manual approval for staging/prod]
-- Standard resource tags? [**`owner`, `env`, `service`, `cost-center`, `managed-by=opentofu`**]
-- How is config/env managed? [**`.env` files** (never committed); `.env.example` provided; backend reads via NestJS `ConfigService` only; production env vars sourced from Secrets Manager via task definition]
-- Is there a task runner? [**Makefile** — targets: `up`, `down`, `migrate`, `dev-api`, `dev-web`, `test-api`, `test-web`, `plan`, `apply`]
+- How is the local dev environment set up? [**from profile 3.1**]
+- Where does it deploy? [**from profile 3.2**]
+- Which IaC tool? [**from profile 3.3**]
+- IaC state backend? [**from profile 3.4**]
+- Where do IaC modules live? [**from profile 3.5**]
+- Secrets manager? [**from profile 3.6**]
+- CI/CD pipeline? [**from profile 3.7**]
+- Standard resource tags? [**from profile 3.8** — defaults from `RULES.md#infrastructure-as-code`]
+- How is config/env managed? [**from profile 3.9**]
+- Is there a task runner? [**from profile 3.10**]
 
 After this round, confirm:
 
@@ -125,13 +173,12 @@ Ask: "Does this look right?"
 
 ## Phase 4 — Repository Structure
 
-Defaults (shown in brackets) are based on the reference stack.
+Defaults come from `profiles/{profile}/bootstrap.md` Phase 4 (rows 4.1–4.6). Ask:
 
-Ask:
-- Is this a monorepo or a single-app repo? [**Monorepo**]
-- What are the top-level directories? [**`backend/`, `frontend/`, `infra/modules/`, `infra/envs/`, `docs/`, `scripts/`** — plus `apps/` for any auxiliary services (e.g. MCP server)]
-- For each main app directory: what is the internal module/folder structure? [**Backend: one NestJS module per feature domain, each containing `*.controller.ts`, `*.service.ts`, `*.module.ts`, and `dto/`. Shared: `database/entities/`, `database/migrations/`, `config/`, `common/`. Frontend: `app/` (App Router pages), `components/ui/`, `components/layout/`, `store/`, `lib/`, `hooks/`. Infra: `modules/{network,compute,data,observability}/`, `envs/{dev,staging,prod}/`**]
-- Where do docs, proposals, and ADRs live? [**`docs/proposals/` and `docs/decisions/`**]
+- Is this a monorepo or a single-app repo? [**from profile 4.1**]
+- What are the top-level directories? [**from profile 4.2**]
+- For each main app directory: what is the internal module/folder structure? [**combined from profile 4.3 + 4.4 (if frontend) + 4.5**]
+- Where do docs, proposals, and ADRs live? [**from profile 4.6**]
 
 Use the answers to build a file tree. If the user doesn't know the exact structure yet,
 produce a skeleton with `[fill in]` placeholders for the module names.
@@ -140,56 +187,61 @@ produce a skeleton with `[fill in]` placeholders for the module names.
 
 ## Phase 5 — Architecture Rules & Conventions
 
-Defaults (shown in brackets) are based on the reference stack.
-Ask as a single message — the user can answer briefly for each:
+The default architecture rules are defined in [`RULES.md`](../RULES.md)
+(language-agnostic core) plus the active stack overlay
+[`rules/{profile}.md`](../rules/). By accepting the defaults the user is accepting
+both verbatim. Ask:
 
-- Are controllers thin (logic in services)? [**Yes — controllers are thin; all business logic lives in services**]
-- Is there a single typed client for all calls to external APIs/services? What is it called and where does it live? [**Yes — a single `[ServiceName]ClientService` in its own module; domain services never call external APIs directly; all external calls have a 5s timeout and exponential-backoff retry on 429**]
-- How is environment config accessed? [**NestJS `ConfigService` only — `process.env` must never be accessed outside of config module setup**]
-- Are there any hard rules around queries? [**No N+1 queries — related data fetched in bulk. All `find()` calls on large tables require a `where` clause or explicit pagination**]
-- Any frontend-specific rules? [**No logic in page components — delegate to services or custom hooks. All API calls through `lib/api.ts`. No direct state mutation outside Zustand store actions. Server Components by default; no `useEffect` for data fetching; explicit loading and error states for every async UI**]
-- TypeScript strictness rules? [**Strict mode throughout — no `any`, no implicit returns, `readonly` by default, `as const` + union over `enum`, discriminated unions over optional flags, no barrel `index.ts` files**]
-- Rate-limiting rules? [**`@nestjs/throttler` applied globally — 100 req/min/IP**, with stricter limits on auth and export endpoints]
-- Idempotency? [**Mutating endpoints that may be retried support an `Idempotency-Key` header**]
-- Any project-specific rules?
+> "I'll apply the standard architecture rules from `RULES.md` (configuration via a
+> typed config service, single typed client per external service with 5s timeout and
+> exponential backoff, structured logging with no secrets, IaC standard tags, no `*`
+> action on `*` resource, TDD, etc.) plus the **{profile}** stack overlay (language
+> conventions, framework rules, ORM rules, logger, test runner).
+>
+> Are there any project-specific rules to add on top? Are there any defaults you need
+> to **override** (and why)?"
 
-Tell the user: "These become the '## Architecture Rules' section of your CLAUDE.md.
-I'll include the standard defaults and add your project-specific ones."
+Capture project-specific additions and overrides. These become the
+"## Architecture Rules" section of `CLAUDE.md`, written as: `See RULES.md +
+rules/{profile}.md, plus the following project-specific rules: ...`.
 
 ---
 
 ## Phase 6 — Observability
 
-Ask as one message:
+Core principles (no secrets in logs, correlation IDs, JSON) are defined in
+[`RULES.md#logging--observability`](../RULES.md#logging--observability). Stack-specific
+logging library (`pino`, `Serilog`, etc.) is defined in the active overlay. Defaults
+below come from `profiles/{profile}/bootstrap.md` Phase 6.
 
-- Logging backend? [**CloudWatch Logs via container stdout/stderr** — pino JSON logs ingested as-is; 30-day retention for dev, 90 days for prod]
-- Metrics backend? [**CloudWatch Metrics** — emit custom metrics via embedded metric format (EMF); SLI dashboards in CloudWatch]
-- Tracing backend? [**AWS X-Ray** via OpenTelemetry instrumentation, sampling 10% of requests in prod, 100% in dev]
-- Required structured log fields? [**`timestamp`, `level`, `correlationId`, `service`, `env`, `userId` (if authenticated), `route`, `durationMs`**]
-- Forbidden log content? [**No secrets, tokens, full `Authorization` headers, or PII payloads**]
-- Key SLIs to track from day one? [**HTTP request latency (p50, p95, p99), error rate (4xx/5xx), saturation (CPU, memory), external dependency latency**]
-- Alerting? [**CloudWatch alarms on error rate >1% over 5min, p99 latency >2s over 5min, deployment failure**]
+- Logging backend? [**from profile 6.1**]
+- Metrics backend? [**from profile 6.2**]
+- Tracing backend? [**from profile 6.3**]
+- Required structured log fields? [defaults from `RULES.md#logging--observability`]
+- Forbidden log content? [defaults from `RULES.md#logging--observability`]
+- Key SLIs to track from day one? [**from profile 6.4**]
+- Alerting? [**from profile 6.5**]
 
 ---
 
 ## Phase 7 — Security & Compliance
 
-Defaults (shown in brackets) are based on the reference stack.
+Core secrets handling, IAM principles, IaC defaults, and external client patterns are
+in [`RULES.md`](../RULES.md). Defaults below come from `profiles/{profile}/bootstrap.md`
+Phase 7.
 
-Ask:
-
-- Compliance framework(s)? [**None by default**; common opt-ins: ISO27001, SOC2 Type 2, HIPAA, PCI-DSS]
-- Data classification scheme? [**`public` / `internal` / `confidential` / `pii`** — every entity tagged in its docstring or schema comment]
-- Encryption at rest? [**Provider-managed (AES-256) by default for RDS, S3, EBS; customer-managed KMS keys for any `confidential` or `pii` data class**]
-- Encryption in transit? [**TLS 1.2 minimum, TLS 1.3 preferred; HTTPS everywhere; HSTS header set**]
-- Are there external APIs or third-party services this project integrates with? For each: name, what it's used for, any rate-limiting or auth constraints. [**No default — list per project. For each: implement the typed client pattern with 5s timeout and exponential backoff on 429**]
-- Auth model details? [**JWT with 15min access + 7-day refresh; refresh rotation on use; revocation on logout/password change; rate limit 5 login attempts/min/IP**]
-- Public (unauthenticated) endpoints? [**`GET /health` and `GET /api-docs` are unguarded; everything else requires auth**]
-- Secrets handling? [**No secrets in code. No `process.env` outside config module. All production secrets from AWS Secrets Manager. No secrets in `.tf`/`.tfvars`/state. Lockfile committed and authoritative**]
-- IAM principle? [**Least privilege; no `*:*` policies; resource-level scoping required; long-lived access keys forbidden for humans (SSO/role-assumption only)**]
-- Network exposure rules? [**No `0.0.0.0/0` ingress except 443 on the public load balancer; databases never have public IPs; all internal services behind WAF**]
-- Vulnerability scanning? [**Dependabot for npm + Terraform providers; `npm audit --omit=dev` in CI; Trivy scan of container images on build**]
-- Audit logging requirements? [**Log: auth events (success + failure), API key create/rotate/delete, role changes, data exports, admin actions, soft/hard deletes. Retain audit logs for 1 year minimum**]
+- Compliance framework(s)? [**from profile 7.1**]
+- Data classification scheme? [**from profile 7.2**]
+- Encryption at rest? [**from profile 7.3**]
+- Encryption in transit? [**from profile 7.4**]
+- External APIs / third-party services? For each: name, purpose, rate-limit / auth constraints. [**No default — list per project. Client implementation follows `RULES.md#external-http-clients` + the active overlay**]
+- Auth model details? [**from profile 7.5**]
+- Public (unauthenticated) endpoints? [**from profile 7.6**]
+- Secrets handling? [defaults from `RULES.md#configuration--secrets`]
+- IAM principle? [defaults from `RULES.md#infrastructure-as-code`]
+- Network exposure rules? [**from profile 7.7**]
+- Vulnerability scanning? [**from profile 7.8**]
+- Audit logging requirements? [**from profile 7.9**]
 
 After this round, confirm:
 
@@ -262,6 +314,17 @@ Include the settled decisions table populated with any decisions from Phase 8.
 ```markdown
 # CLAUDE.md — {project name}
 
+## Active Skillset: {profile}
+
+This project follows the language-agnostic core rules in
+[`RULES.md`](https://github.com/garethrhughes/skills/blob/main/RULES.md) plus the
+**`{profile}`** stack overlay in
+[`rules/{profile}.md`](https://github.com/garethrhughes/skills/blob/main/rules/{profile}.md).
+Skills (`developer`, `reviewer`, `architect`, `infosec`) read both when applying
+conventions to this project.
+
+---
+
 ## Project Overview
 
 {project overview from Phase 1}
@@ -328,36 +391,29 @@ Include the settled decisions table populated with any decisions from Phase 8.
 
 ## Architecture Rules
 
-### Backend
-{rules from Phase 5, including standard defaults}
+This project follows:
 
-### Frontend
-*(omit if backend-only)*
-{frontend rules from Phase 5}
+- The language-agnostic rules in
+  [`RULES.md`](https://github.com/garethrhughes/skills/blob/main/RULES.md) (config &
+  secrets, external HTTP clients, observability principles, IaC, testing, git & PRs).
+- The **`{profile}`** stack overlay in
+  [`rules/{profile}.md`](https://github.com/garethrhughes/skills/blob/main/rules/{profile}.md)
+  (language conventions, framework rules, ORM, logger, test runner).
 
-### Infrastructure (IaC)
-{infra rules from Phase 3 — declarative, remote state, env-by-vars-only, tagging contract, pinned versions, secrets-by-reference, no `*:*` IAM, CI-only apply for shared envs}
-
-### TypeScript
-{typescript strictness rules}
-
-### Observability
-{observability rules from Phase 6}
+**Project-specific additions / overrides:**
+{additions and overrides captured in Phase 5; write "_(none)_" if empty}
 
 ---
 
 ## Security Rules (hard blocks)
 
-- No credentials, tokens, or secrets committed in any file (including test fixtures and `.tfvars`)
-- Environment config accessed only via the config service — never `process.env` directly
-- All controller endpoints require an auth guard, except: {list public routes}
-- No SQL built via string interpolation — use parameterised queries or ORM query builders
-- No hardcoded external service URLs or resource IDs in source code
-- No IAM policy with `*` action and `*` resource
-- No public network exposure without a documented justification in a proposal
-- No `dangerouslySetInnerHTML` (or framework equivalent) for user-supplied content
-- Lockfile changes must correspond to an intentional dependency change
-{any project-specific security rules from Phase 7}
+Standard security rules are in `RULES.md` (no secrets in code, `ConfigService`-only
+env access, parameterised queries, no `*` action on `*` resource, lockfile committed,
+etc.).
+
+**Project-specific additions:**
+- Public (unauthenticated) endpoints: {list public routes from Phase 7}
+- {any project-specific security rules from Phase 7, or "_(none)_"}
 
 ---
 
@@ -390,21 +446,12 @@ Include the settled decisions table populated with any decisions from Phase 8.
 
 ## Testing Requirements
 
-### Backend
-- Unit tests for all service methods — mock external clients and repositories
-- Do not test controllers directly — test services
-- Integration tests for critical API endpoints
-- Tests describe behaviour, not implementation, in their names
+See [`RULES.md#testing`](../RULES.md#testing) for the canonical testing rules
+(behaviour-focused names, no real network, services tested not controllers, IaC
+modules tested, plan summary in PR description).
 
-### Frontend
-*(omit if backend-only)*
-- Unit tests for all significant components
-- Unit tests for state stores in isolation
-- No test should hit a real network
-
-### Infrastructure
-- Non-trivial IaC modules have tests (Terratest / `terraform test` / Pulumi unit tests)
-- Every PR touching infra includes the `plan` summary in the PR description
+**Project-specific additions:**
+{additions captured in Phase 5/8, or "_(none)_"}
 
 ---
 
@@ -487,21 +534,23 @@ This should be a dense, scannable summary — not the full CLAUDE.md.
 
 ## After Output
 
+The post-output workflow has seven steps. Run them strictly in order. If any step fails,
+stop and report the failure to the user before continuing — do not paper over a broken
+scaffold by moving on.
+
 ### Step 1 — Detect local skills
 
-Before telling the user what to do, check whether skills are local to the project:
+Check whether skills are local to the project:
 
 - Look for `.opencode/skills/` in the project root
 - If it exists, list which SKILL.md files are present
 
 ### Step 2 — Insert Project Context into local skills
 
-If `.opencode/skills/` exists:
-
-For each SKILL.md found, replace the `## Project Context` placeholder block — the block
-that begins with the `> Fill in before use:` blockquote and ends at the `---` rule that
-follows it — with the generated Project Context block from Output 2. Do this for every
-skill file present.
+If `.opencode/skills/` exists, for each SKILL.md found, replace the `## Project Context`
+placeholder block — the block that begins with the `> Fill in before use:` blockquote
+and ends at the `---` rule that follows it — with the generated Project Context block
+from Output 2. Do this for every skill file present.
 
 Confirm to the user which files were updated, e.g.:
 > "Updated Project Context in: architect, developer, reviewer, infosec, create-feature"
@@ -515,25 +564,285 @@ If `.opencode/skills/` does not exist, tell the user:
 > To version skills inside this project and have the context inserted automatically,
 > copy the skills into `.opencode/skills/` — see the skills README for instructions."
 
-### Step 3 — MCP Setup
+### Step 3 — Scaffold the Project
 
-Invoke the `mcp-setup` skill to let the user choose which MCP servers to add to
-this project. The mcp-setup skill will handle reading/writing `opencode.json` and
-explaining each option.
+**Driving principle:** every file and directory created in this step must be derivable
+from an answer the user gave in Phases 1–8. Do not invent structure, dependencies, or
+config that the user did not select. Where the user accepted a default, use the expanded
+default value (not the literal word "default").
 
-After mcp-setup completes, continue to Step 4.
+**Inputs you must read before doing anything else:**
 
----
+| Decision | Source |
+|---|---|
+| Repo layout (monorepo vs single-app, top-level dirs) | Phase 4 |
+| Backend framework, language, ORM, validation, logger, test runner, auth | Phase 2 Round A |
+| Frontend present? If so framework, styling, state, test runner | Phase 2 Round B |
+| Local dev approach (Docker Compose? what services?) | Phase 3 |
+| IaC tool, state backend, environments | Phase 3 |
+| Task runner (Makefile, just, npm scripts only, etc.) | Phase 3 |
+| Internal module structure (per-app folder layout) | Phase 4 |
 
-### Step 4 — Finish
+State these inputs back to the user as a one-line summary before scaffolding, e.g.
+"Scaffolding: monorepo with `backend/` (NestJS) and `frontend/` (Next.js); Docker Compose
+for Postgres; OpenTofu under `infra/`; Makefile as task runner."
+
+#### 3.1 Prefer official scaffolders
+
+Where the chosen framework ships a first-party scaffolder, use it instead of
+hand-writing files — it produces a known-good project file, linter config, and entry
+point that the framework will keep in sync over time.
+
+The exact command list lives in **`profiles/{profile}/scaffolders.md`**. Read the
+table for the active profile and run the commands matching the framework choices
+captured in Phase 2.
+
+For convenience, the typical commands per profile:
+
+**`typescript`** (full table in [`profiles/typescript/scaffolders.md`](../profiles/typescript/scaffolders.md)):
+
+| Framework | Command |
+|---|---|
+| NestJS | `nest new <dir> --package-manager npm --skip-git` |
+| Next.js | `npx create-next-app@latest <dir> --typescript --eslint --app --src-dir=false --tailwind=<yes\|no> --import-alias='@/*'` |
+| Vite + React | `npm create vite@latest <dir> -- --template react-ts` |
+| SvelteKit | `npx sv create <dir>` |
+
+**`dotnet`** (full table in [`profiles/dotnet/scaffolders.md`](../profiles/dotnet/scaffolders.md)):
+
+| Asset | Command |
+|---|---|
+| Solution | `dotnet new sln -n <Project>` |
+| Web API (controllers) | `dotnet new webapi -n <Project>.Api --use-controllers` |
+| Class library | `dotnet new classlib -n <Project>.<Layer>` |
+| xUnit test project | `dotnet new xunit -n <Project>.Tests` |
+| Blazor Server | `dotnet new blazorserver -n <Project>.Web` |
+
+If the user chose something not listed, search the framework docs for an official
+scaffolder before falling back to hand-written files.
+
+After the scaffolder runs, **only then** layer on project-specific additions
+(extra dependencies, the chosen ORM, the chosen logger, the chosen state library,
+etc.) on top of the scaffolded baseline.
+
+#### 3.2 Repo layout
+
+Create the top-level structure exactly as captured in Phase 4. Do not assume
+`backend/` + `frontend/` — a single-app repo has no such split, and a different
+monorepo layout (e.g. `apps/api`, `apps/web`, `packages/shared`) must be honoured.
+
+#### 3.3 IaC layout
+
+Only create IaC directories if Phase 3 specified an IaC tool. If yes:
+
+- Create the directory structure the user described (default: `infra/modules/` and
+  one directory under `infra/envs/` per environment they listed)
+- Create `infra/.gitignore` with patterns for the chosen tool:
+  - OpenTofu / Terraform: `.terraform/`, `*.tfstate`, `*.tfstate.backup`, `*.tfvars` (except `*.example.tfvars`), `.terraform.lock.hcl` is **kept** (committed)
+  - Pulumi: `Pulumi.*.yaml` secrets, `node_modules/`
+  - AWS CDK: `cdk.out/`, `*.js` (if TypeScript), `node_modules/`
+- Pin provider versions where the chosen tool supports it (per `RULES.md#infrastructure-as-code`)
+
+#### 3.4 Local dev
+
+Only create `docker-compose.yml` if the user said Docker Compose in Phase 3. The
+services in it must exactly match what the user said they need (e.g. only Postgres
+if no Redis was mentioned). For non-Docker local dev (Devbox, Nix, native install),
+follow whatever the user described.
+
+#### 3.5 Task runner
+
+Generate task-runner files **only for the runner the user chose** in Phase 3:
+
+- **Makefile**: create one Makefile per app directory plus a root Makefile that delegates
+- **just**: create a `justfile` instead of a Makefile
+- **npm scripts only**: put everything in `package.json` `scripts`, no Makefile
+
+Targets must be derived from what actually exists in the project. Don't include
+`migrate` if there's no ORM with migrations. Don't include `dev-web` if there's no
+frontend. Don't include `plan`/`apply` if there's no IaC. A reasonable default set
+for a backend with a database and IaC is:
+
+```
+up        # start local dependencies (compose up -d, etc.)
+down      # stop local dependencies
+dev       # run the app in dev mode
+test      # run the test suite
+lint      # run linter + formatter check
+build     # produce a production build
+migrate   # only if migrations exist
+plan      # only if IaC exists
+apply     # only if IaC exists
+```
+
+In a monorepo, prefix targets with the app name (`dev-api`, `test-web`, etc.) and
+make the root targets fan out.
+
+#### 3.6 Lint & format config
+
+Lint/format setup is profile-specific. See `profiles/{profile}/scaffolders.md` for the
+exact tooling.
+
+**`typescript`:**
+
+- **ESLint**: flat-config format (`eslint.config.mjs`), not `.eslintrc.*`. If the
+  framework's scaffolder produced a config, leave it in place and only add rules. At
+  minimum, enable `@typescript-eslint` strict + the framework's recommended preset.
+- **Prettier**: `.prettierrc.json` with `singleQuote: true`, `trailingComma: "all"`,
+  `printWidth: 100`. Add `prettier-plugin-tailwindcss` only if Tailwind is in the stack.
+  `.prettierignore` should list `dist/`, `build/`, `coverage/`, `.next/`,
+  `node_modules/`.
+
+**`dotnet`:**
+
+- `.editorconfig` at the repo root enabling the .NET analyzers ruleset and code style
+  rules.
+- `dotnet format` (built-in) as the canonical formatter — wired into CI as
+  `dotnet format --verify-no-changes`.
+- `Directory.Build.props` with `<Nullable>enable</Nullable>` and
+  `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`.
+- Optional: `Roslynator.Analyzers` and `Microsoft.CodeAnalysis.NetAnalyzers`.
+
+If the user has overridden any formatting choice in Phase 5, honour the override.
+
+#### 3.7 Config & env
+
+For each app:
+
+- Create `.env.example` listing every env var the app needs, with safe placeholder
+  values and a one-line comment per var. Variables come from the user's answers
+  (database URL if there's a database, JWT secret if auth was selected, third-party
+  API keys from Phase 7, etc.) — do not invent variables.
+- Add `.env`, `.env.local`, `.env.*.local` to `.gitignore` per `RULES.md#configuration--secrets`.
+- Wire env access through the typed config mechanism specified by the active overlay
+  (`rules/{profile}.md` § *Configuration & Secrets*) — e.g. `ConfigService` for NestJS,
+  a Zod-validated `config/` module for Next.js, `IOptions<T>` bound from
+  `IConfiguration` for ASP.NET Core. Raw env-var access (`process.env`,
+  `Environment.GetEnvironmentVariable`, etc.) must not happen outside that module.
+
+#### 3.8 Docs directories
+
+Create `docs/proposals/` and `docs/decisions/` regardless of stack — these are required
+by the proposal/ADR workflow that all generated `CLAUDE.md` files reference. Add a
+single `.gitkeep` in each so git tracks them while empty.
+
+#### 3.9 Install / restore dependencies
+
+Run the install command appropriate to the active profile:
+
+- **`typescript`:** `npm install` (or `pnpm install` / `yarn install` / `bun install`)
+  in each app directory, or once at the root for a workspace-style monorepo.
+- **`dotnet`:** `dotnet restore --use-lock-file` at the solution root to generate and
+  commit `packages.lock.json`, then `dotnet restore --locked-mode` for subsequent
+  installs.
+
+Capture the output. If install/restore fails, stop and report the error — do not
+proceed to the README or smoke test.
+
+### Step 4 — Create Project README
+
+Generate `README.md` at the repo root, populated from the user's actual answers and
+the files just scaffolded. Do **not** invent commands — read the generated `Makefile` /
+`justfile` / `package.json` `scripts` and document only what exists.
+
+Sections (omit any that don't apply):
+
+```markdown
+# {project name}
+
+{one-line description from Phase 1.2}
+
+## Prerequisites
+
+- Node {version pinned in package.json `engines.node`, or current LTS}
+- {package manager} {version}
+- Docker + Docker Compose *(only if Phase 3 uses it)*
+- {IaC tool} {version} *(only if Phase 3 uses one)*
+- {cloud CLI, e.g. AWS CLI v2} *(only if deploying to that cloud)*
+
+## Quick Start
+
+\```bash
+# 1. Copy environment template
+cp .env.example .env  # then fill in any [REQUIRED] values
+
+# 2. Start local dependencies
+{the actual command from the generated task runner, e.g. `make up`}
+
+# 3. Install dependencies (skip if already done)
+{the actual install command}
+
+# 4. Run database migrations  *(only if ORM with migrations)*
+{the actual migrate command}
+
+# 5. Start the app(s)
+{the actual dev command(s)}
+\```
+
+The {backend|app} will be available at http://localhost:{port from config}.
+{If frontend: The frontend will be available at http://localhost:{frontend port}.}
+
+## Available Commands
+
+{Render a table of every target in the generated Makefile/justfile/scripts with
+its one-line description.}
+
+## Architecture
+
+{1–2 sentences derived from the Project Context block.}
+
+## Documentation
+
+- [`CLAUDE.md`](./CLAUDE.md) — authoritative project context, conventions, and rules
+- [`docs/proposals/`](./docs/proposals/) — design proposals
+- [`docs/decisions/`](./docs/decisions/) — architecture decision records (ADRs)
+
+## Contributing
+
+This project follows the conventions in [`CLAUDE.md`](./CLAUDE.md), which references
+the canonical engineering rules. Please read it before opening a PR.
+```
+
+### Step 5 — Smoke test the scaffold
+
+Verify the scaffold actually works before handing back to the user. Use the smoke-test
+commands listed in `profiles/{profile}/scaffolders.md`. Run, in order, and stop at the
+first failure:
+
+1. **Typecheck / build:** for `typescript`, `npm run typecheck` (or `tsc --noEmit`)
+   per app; for `dotnet`, `dotnet build --configuration Release --no-restore` at the
+   solution root.
+2. **Lint / format check:** for `typescript`, `npm run lint`; for `dotnet`,
+   `dotnet format --verify-no-changes`.
+3. **Build artefact** (if applicable): for `typescript`, `npm run build` per app. For
+   `dotnet`, this is covered by step 1.
+4. **Start local dependencies**: run the equivalent of `make up` (only if a local
+   dependency stack exists). Wait for services to become healthy.
+5. **Run migrations** (only if migrations exist) against the local database — for
+   `typescript`, the TypeORM CLI command; for `dotnet`,
+   `dotnet ef database update --project src/<Project>.Infrastructure --startup-project src/<Project>.Api`.
+6. **Start the app(s)** in dev mode in the background, wait up to 30 seconds for
+   readiness (e.g. poll `GET /health` for a backend with that endpoint, or watch
+   for the framework's "ready on port X" log line). Then stop them.
+
+Report each step's outcome to the user. If a step fails, surface the exact error
+output and ask the user how they want to proceed (fix-and-retry vs. accept-and-move-on)
+— do not silently continue.
+
+### Step 6 — MCP Setup
+
+Now that the project exists on disk, invoke the `mcp-setup` skill to let the user
+choose which MCP servers to add. The mcp-setup skill will handle reading/writing
+`opencode.json` and explaining each option.
+
+### Step 7 — Finish
 
 Tell the user:
 
-> "Your CLAUDE.md is ready to commit to the root of your repository.
+> "Your project is bootstrapped, installed, and verified.
 >
 > Suggested next steps:
-> 1. Commit `CLAUDE.md`, `opencode.json`, and any updated skill files to version control
-> 2. Scaffold `infra/modules/`, `infra/envs/{dev,staging,prod}/`, `docs/proposals/`,
->    and `docs/decisions/` directories
+> 1. Commit `CLAUDE.md`, `README.md`, `opencode.json`, and any updated skill files to version control
+> 2. Start developing — the dev command is `{actual dev command from the scaffold}`
 > 3. If you have existing architectural decisions, run: `use the decision-log skill to seed the initial ADRs`
 > 4. For your first feature, run: `use the create-feature skill`"
