@@ -13,7 +13,7 @@ I wanted to get GPT-5.5 working with OpenCode, which mostly works out of the box
 
 What I really wanted was what I already had with the `amazon-bedrock` provider: specify an SSO profile and have it work automagically.
 
-A workaround was to create a script using `@aws/bedrock-token-generator`, which worked well enough but was clunky and relied on the token staying available.
+A workaround was to create a script using `@aws/bedrock-token-generator`, which worked well enough but was clunky and relied on the token staying available. This also needed to run OpenCode with a script for it to work which added a layer of complexity and maintenance.
 
 Once I got that working I figured a proper OpenCode plugin would be a better approach. So introducing the `opencode-bedrock-openai-token` plugin:
 
