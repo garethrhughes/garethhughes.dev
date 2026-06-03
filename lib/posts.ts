@@ -102,3 +102,25 @@ export function getAllSlugs(): string[] {
   return getAllPostMeta().map((p) => p.slug);
 }
 
+export function getRelatedPosts(
+  slug: string,
+  tags: string[],
+  limit = 3
+): PostMeta[] {
+  if (tags.length === 0) return [];
+  const tagSet = new Set(tags);
+  return getAllPostMeta()
+    .filter((p) => p.slug !== slug)
+    .map((p) => ({
+      post: p,
+      score: p.tags.reduce((n, t) => (tagSet.has(t) ? n + 1 : n), 0),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return new Date(b.post.datePublished).getTime() - new Date(a.post.datePublished).getTime();
+    })
+    .slice(0, limit)
+    .map((entry) => entry.post);
+}
+
