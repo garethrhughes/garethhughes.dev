@@ -2,7 +2,7 @@
 title: "OpenCode & GPT-5.5 on Bedrock"
 datePublished: "2026-06-02T12:24:27Z"
 slug: "opencode-and-gpt-5-5-on-bedrock"
-tags: ["ai", "aws", "typescript", "software-development"]
+tags: ai, aws, typescript, software-development, open-source
 coverImage: "/images/opencode-openai-plugin.png"
 ---
 

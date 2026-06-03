@@ -2,7 +2,7 @@
 title: "Why Your Developer Interview Process Is Shit"
 datePublished: 2025-12-20T05:43:44Z
 slug: why-your-developer-interview-process-is-shit
-tags: interviewing, software-development
+tags: interviewing, software-development, leadership
 ---
 
 The year 2026 marks my 20th anniversary as a Software Developer. I started in 2006 at a company called TechnoPhobia in Sheffield.

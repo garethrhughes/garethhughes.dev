@@ -2,7 +2,7 @@
 title: "How to Build Your Interview Process"
 datePublished: 2025-12-21T23:49:34Z
 slug: how-to-build-your-interview-process
-tags: interviewing, software-development
+tags: interviewing, software-development, leadership
 ---
 
 In this post, I will outline processes that I believe will enhance your interviewing procedures. This is based on 20 years of experience, 10 of which have been in leadership roles involving interviewing.

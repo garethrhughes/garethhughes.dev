@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-06-03
+
+### Tag taxonomy audit and expansion
+- Decision: Re-audited every post's tags for relevance. Added three new canonical tags (`cost-optimisation`, `open-source`, `leadership`) to capture recurring themes that were under-tagged. Dropped one non-canonical noise tag (`github-pages`). Normalised the YAML-array tag format on the OpenCode/Bedrock post to comma-separated for consistency with the rest of the corpus. Per-post additions: `software-development` to the PDF generator post; `architecture` to both shared-API-Gateway posts (series consistency); `web` to the Jekyll→Hashnode post; `serverless` to the cutting-cloud-costs post; `leadership` to the rebuilding-software, interview-series, and Fragile posts; `security` to the Squirrel Notes intro; `notes` to the Squirrel data-privacy and Claude-interface posts. Removed `ai` from the Squirrel data-privacy post (the post is overwhelmingly about E2EE/security, not AI). Added `open-source` and `developer-setup` to the OpenCode Skills post; added `open-source` to the OpenCode/Bedrock post.
+- Why: The previous taxonomy (set 2026-04-19) was solid but a handful of posts were under-tagged, one used a non-canonical tag, and three recurring themes (cost-optimisation, open-source, leadership) lacked dedicated tags despite being clearly applicable to multiple posts. Related-post suggestions on the post view rely on tag overlap, so better tag coverage directly improves discovery.
+- Scope: All files in `posts/`.
+- Notes: Current canonical tag set: `software-development`, `aws`, `ai`, `productivity`, `security`, `interviewing`, `architecture`, `linux`, `dotnet`, `typescript`, `cdk`, `terraform`, `serverless`, `devops`, `developer-setup`, `blogging`, `photography`, `engineering-metrics`, `javascript`, `web`, `notes`, `cost-optimisation`, `open-source`, `leadership`.
+
 ## 2026-04-26
 
 ### Build-time mermaid diagram rendering via @mermaid-js/mermaid-cli

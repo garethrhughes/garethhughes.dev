@@ -2,7 +2,7 @@
 title: "Introducing Squirrel Notes"
 datePublished: 2026-03-26T00:00:00Z
 slug: introducing-squirrel-notes
-tags: ai, software-development, productivity, notes
+tags: ai, software-development, productivity, notes, security
 coverImage: /images/screenshot2.png
 ---
 

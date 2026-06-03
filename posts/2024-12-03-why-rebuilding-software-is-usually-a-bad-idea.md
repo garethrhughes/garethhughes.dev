@@ -2,7 +2,7 @@
 title: "Why rebuilding software is (usually) a bad idea"
 datePublished: 2024-12-03T03:00:45Z
 slug: why-rebuilding-software-is-usually-a-bad-idea
-tags: software-development, architecture
+tags: software-development, architecture, leadership
 coverImage: /images/975184ce-fe4d-4195-8dfe-2f2863302043.png
 ---
 

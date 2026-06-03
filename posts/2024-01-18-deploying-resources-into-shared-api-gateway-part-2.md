@@ -2,7 +2,7 @@
 title: "Deploying Resources Into Shared API Gateway - Part 2"
 datePublished: 2024-01-18T01:00:00Z
 slug: deploying-resources-into-shared-api-gateway-part-2
-tags: aws, typescript, cdk
+tags: aws, typescript, cdk, architecture
 ---
 
 The previous post on this topic didn’t quite work, the resources were deployed into the API however the deployment didn’t work correctly and update the stage. As we hadn’t gone far into the dev process I didn’t test the API calls outside of the API Gateway console.
