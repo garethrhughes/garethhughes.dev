@@ -22,6 +22,51 @@ Living log of implementation and architecture decisions for this repository.
 
 ## 2026-06-03
 
+### Widen landing pages to `max-w-7xl`
+- Decision: Bumped the container width on Blog index, Projects, About, and Post pages from `max-w-4xl` (896px) to `max-w-7xl` (1280px). Post body content remains constrained internally for readable line length.
+- Why: The previous width felt cramped on modern displays and read as a single reading column on pages that are really discovery/landing pages. Wider landing pages allow multi-column grids of posts/projects/skills without crowding.
+- Scope: `app/page.tsx`, `app/projects/page.tsx`, `app/about/page.tsx`, `app/posts/[slug]/page.tsx`.
+- Notes: Driving proposal: `docs/proposals/0001-wider-blog-layouts.md`. The style guide's `max-w-4xl` content default is preserved as the reading column for prose.
+
+### Card-motif guidelines: selective use, not universal
+- Decision: Cards (`rounded-xl border border-border bg-surface shadow-sm`) remain the standard component for repeatable units (post cards, project tiles, skill clusters, table wrappers, hero blocks) but should NOT be used for narrative prose, chronological timelines (experience), or single short facts (education footnote). Added a "When to use cards (and when not to)" section to the local copy of the style guide that codifies this with worked examples.
+- Why: An earlier sweep that wrapped every section of the About page in a card made it read as an admin dashboard. The over-correction (dropping cards entirely) produced flat, hard-to-scan grids. The middle ground — cards for repeatable/interactive units only — matches the existing PostCard / project tile pattern and keeps prose unwrapped.
+- Scope: `docs/STYLE_GUIDE.md`, `app/about/page.tsx`, `components/PostCard.tsx`, `app/projects/page.tsx`, `CLAUDE.md` (reference added).
+- Notes: Style guide is also mirrored in the shared Gist (`ee15745a3c966d9573a9f84735a215f3`) for cross-project reuse.
+
+### About page: rewrite from markdown to typed JSX
+- Decision: Replaced the markdown-backed About page (`about.md` + `getAboutContent()` + `react-markdown`) with a structured `app/about/page.tsx` containing typed `roles`, `sideProjects`, `skills`, and `earlierRoles` arrays. Skills render as grouped chip clusters in cards; role/project stacks render via a shared `StackChips` helper that splits the `·` separator into pills (matching the Skills section).
+- Why: The markdown approach forced uniform prose styling on what is structurally CV/portfolio data. Typed data lets each section choose the right component (cards for skills/projects, divide-y timeline for experience, table-in-card for earlier roles, plain prose for intro/education) and keeps presentation consistent with the rest of the site.
+- Scope: `app/about/page.tsx` (rewritten), `lib/posts.ts` (removed `getAboutContent`), `about.md` (deleted).
+- Notes: All previous content preserved verbatim in the new structure.
+
+### Blog index: 9-per-page grid + hero on page 1
+- Decision: `PAGE_SIZE` lowered from 10 to 9 so post cards fit cleanly in a 3-column grid on `lg+`. On page 1 (unfiltered) the first post renders as a full-width hero card *in addition to* 9 grid items, for 10 cards total. Subsequent pages show 9. Also fixed a pre-existing off-by-one where the old logic double-subtracted for the hero and made post-9 appear on both page 1 and page 2.
+- Why: 9 divides cleanly into the responsive grid (`md:grid-cols-2 lg:grid-cols-3`); the hero treatment makes the latest post the visual anchor of the index.
+- Scope: `components/BlogList.tsx`.
+
+### Featured post card: side-by-side when cover image present
+- Decision: The `featured` variant of `PostCard` now splits 50/50 image-left / content-right on `md+` when `coverImage` is set (stacks on mobile). When the post has no cover image, the text block stretches the full card width.
+- Why: The previous full-bleed cover-above-text treatment made the hero too tall on wide displays and felt wasteful for posts without images. Side-by-side balances the card and keeps it scannable.
+- Scope: `components/PostCard.tsx`.
+
+### Post view: related-posts sidebar on the right
+- Decision: Post page is now a two-column layout on `lg+` — article on the left (`min-w-0` to contain code blocks), a `320px` sidebar on the right showing up to 3 related posts. The sidebar is `sticky top-20` so it stays visible while scrolling long posts and is hidden when no related posts match. Related-post cards include the cover image at 16:9 when present, otherwise a text-only treatment.
+- Why: Brings the post view into width-parity with the home page and creates an in-flow discovery surface without bolting on a footer module.
+- Scope: `app/posts/[slug]/page.tsx`, `lib/posts.ts` (added `getRelatedPosts`).
+- Notes: Related-post scoring counts shared tags; ties are broken by `datePublished` descending. The recently-completed tag audit (entry below) directly improves the quality of these recommendations.
+
+### Backfill `coverImage` for posts with inline images
+- Decision: For any post lacking a `coverImage` frontmatter field, set it to the first markdown image referenced in the body (only when the path is a real local image — Handlebars-template `<img>` snippets are excluded).
+- Why: PostCard and the related-posts sidebar both render `coverImage` when present; without one, those cards fall back to text-only, which leaves visually rich posts looking flatter than necessary on the index.
+- Scope: `posts/2024-11-18-cutting-cloud-costs-...md` (set to `/images/e8d22d85-2f37-487a-87ec-9e92c0e30978.png`), `posts/2024-12-03-why-rebuilding-software-is-usually-a-bad-idea.md` (set to `/images/975184ce-fe4d-4195-8dfe-2f2863302043.png`).
+- Notes: All other untagged-cover posts have no inline images at all, so no further action was needed. Posts using mermaid SVG diagrams cannot currently feed a cover image (SVGs are inlined into the post HTML at build time, not written to disk as files) — flagged as a follow-up if/when needed.
+
+### Local copy of style guide under `docs/`
+- Decision: Copied the shared design/style-guide Gist into `docs/STYLE_GUIDE.md` so the project has a versioned, in-repo source of truth for visual conventions. Added a new "When to use cards (and when not to)" subsection covering: use-when / do-not-use-when rules, a worked example mapping every About-page section to its correct container, and failure-mode checklists. Updated `CLAUDE.md` to point at the new doc so future sessions consult it before restyling.
+- Why: A drift between this project's actual conventions and the style guide caused a multi-step over-correction during today's design work. Having the guide in-repo (and updating it with the lessons learned) makes the rules immediately visible to anyone — human or agent — working on UI.
+- Scope: `docs/STYLE_GUIDE.md` (new, copied from Gist), `CLAUDE.md` (reference added), Gist `ee15745a3c966d9573a9f84735a215f3` (synced with the new cards section).
+
 ### Tag taxonomy audit and expansion
 - Decision: Re-audited every post's tags for relevance. Added three new canonical tags (`cost-optimisation`, `open-source`, `leadership`) to capture recurring themes that were under-tagged. Dropped one non-canonical noise tag (`github-pages`). Normalised the YAML-array tag format on the OpenCode/Bedrock post to comma-separated for consistency with the rest of the corpus. Per-post additions: `software-development` to the PDF generator post; `architecture` to both shared-API-Gateway posts (series consistency); `web` to the Jekyll→Hashnode post; `serverless` to the cutting-cloud-costs post; `leadership` to the rebuilding-software, interview-series, and Fragile posts; `security` to the Squirrel Notes intro; `notes` to the Squirrel data-privacy and Claude-interface posts. Removed `ai` from the Squirrel data-privacy post (the post is overwhelmingly about E2EE/security, not AI). Added `open-source` and `developer-setup` to the OpenCode Skills post; added `open-source` to the OpenCode/Bedrock post.
 - Why: The previous taxonomy (set 2026-04-19) was solid but a handful of posts were under-tagged, one used a non-canonical tag, and three recurring themes (cost-optimisation, open-source, leadership) lacked dedicated tags despite being clearly applicable to multiple posts. Related-post suggestions on the post view rely on tag overlap, so better tag coverage directly improves discovery.
