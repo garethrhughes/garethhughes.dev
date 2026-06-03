@@ -3,6 +3,7 @@ title: "OpenCode Skills"
 datePublished: 2026-04-29T22:00:00Z
 slug: opencode-skills
 tags: ai, software-development, productivity
+coverImage: /images/skills.png
 ---
 
 ## OpenCode Skills

@@ -3,6 +3,7 @@ title: "OpenCode & GPT-5.5 on Bedrock"
 datePublished: "2026-06-02T12:24:27Z"
 slug: "opencode-and-gpt-5-5-on-bedrock"
 tags: ["ai", "aws", "typescript", "software-development"]
+coverImage: "/images/opencode-openai-plugin.png"
 ---
 
 We use Amazon Bedrock with Claude Code at MyPass, and we're trialling GPT-5.5 and Codex via Bedrock too.

@@ -32,22 +32,24 @@ export function PostCard({ post, featured = false }: PostCardProps) {
   if (featured) {
     return (
       <article className="group mb-6 overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md">
-        <Link href={`/posts/${post.slug}/`} className="block">
+        <Link
+          href={`/posts/${post.slug}/`}
+          className={post.coverImage ? 'flex flex-col md:flex-row' : 'block'}
+        >
           {post.coverImage && (
-            <div className="w-full overflow-hidden">
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-alt md:aspect-auto md:w-1/2 md:shrink-0">
               <Image
                 src={post.coverImage}
                 alt={post.title}
-                width={0}
-                height={0}
-                sizes="100vw"
-                className="h-auto w-full transition-transform duration-300 group-hover:scale-[1.02]"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 priority
               />
             </div>
           )}
-          <div className="p-6 md:p-8">
-            <span className="mb-3 inline-block rounded-full bg-squirrel-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-squirrel-700">
+          <div className="flex flex-col justify-center p-6 md:p-8">
+            <span className="mb-3 inline-block w-fit rounded-full bg-squirrel-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-squirrel-700">
               Latest post
             </span>
             <h2 className="mb-3 text-2xl font-bold leading-snug text-text-primary transition-colors group-hover:text-squirrel-700 md:text-3xl">

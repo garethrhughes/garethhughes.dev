@@ -3,6 +3,7 @@ title: "Cutting Cloud Costs: Transforming Legacy Systems with Event-Driven Archi
 datePublished: 2024-11-18T12:58:08Z
 slug: cutting-cloud-costs-transforming-legacy-systems-with-event-driven-architecture
 tags: aws, architecture, cost-optimisation
+coverImage: /images/e8d22d85-2f37-487a-87ec-9e92c0e30978.png
 ---
 
 I previously worked for A-League, and during my time there we launched [aleagues.com.au](https://aleagues.com.au) and migrated all the club websites to a WordPress platform developed by a third party.

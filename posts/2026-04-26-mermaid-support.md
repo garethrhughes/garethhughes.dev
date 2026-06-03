@@ -3,6 +3,7 @@ title: "Adding Mermaid Support"
 datePublished: 2026-04-26T00:00:00Z
 slug: mermaid-support
 tags: software-development, web
+coverImage: /images/mermaid.png
 ---
 
 This site supports [Mermaid](https://mermaid.js.org) diagrams in blog posts. Diagrams are written as fenced code blocks with the `mermaid` language tag and rendered to SVG at build time — no JavaScript is shipped to the browser.
