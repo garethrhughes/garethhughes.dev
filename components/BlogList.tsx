@@ -7,7 +7,7 @@ import { PostMeta } from '@/lib/posts';
 import { PostCard } from './PostCard';
 import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 9;
 
 interface BlogListProps {
   posts: PostMeta[];
@@ -55,22 +55,19 @@ export function BlogList({ posts }: BlogListProps) {
     return results;
   }, [query, activeTag, fuse, posts]);
 
-  // Reset to page 1 when search/filter changes
+  // When not filtering, page 1 includes the featured hero post (filtered[0])
+  // followed by a grid of PAGE_SIZE posts. Subsequent pages show PAGE_SIZE posts.
   const isFiltering = query.trim() !== '' || activeTag !== null;
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const currentPage = isFiltering ? 1 : Math.min(page, totalPages || 1);
-
-  // Separate featured (first of all posts, page 1 only) from the paginated list
-  const showFeatured = !isFiltering && currentPage === 1 && filtered.length > 0;
-  const featuredPost = showFeatured ? filtered[0] : null;
-  const remainingPosts = showFeatured ? filtered.slice(1) : filtered;
-
-  const pageStart = (currentPage - 1) * PAGE_SIZE - (showFeatured ? 1 : 0);
-  const pageEnd = pageStart + PAGE_SIZE - (showFeatured ? 1 : 0);
-  const pagePosts = remainingPosts.slice(
-    Math.max(0, pageStart),
-    Math.max(0, pageEnd)
+  const heroOffset = isFiltering ? 0 : 1;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(Math.max(0, filtered.length - heroOffset) / PAGE_SIZE)
   );
+  const currentPage = isFiltering ? 1 : Math.min(page, totalPages);
+
+  const featuredPost = !isFiltering && currentPage === 1 && filtered.length > 0 ? filtered[0] : null;
+  const gridStart = (currentPage - 1) * PAGE_SIZE + heroOffset;
+  const pagePosts = filtered.slice(gridStart, gridStart + PAGE_SIZE);
 
   function handleTagClick(tag: string) {
     updateParams({ tag: activeTag === tag ? null : tag, page: null });
@@ -83,8 +80,8 @@ export function BlogList({ posts }: BlogListProps) {
   return (
     <div>
       {/* Search */}
-      <div className="mb-5 flex items-center gap-2 rounded-lg border border-border bg-surface-alt px-3 py-2">
-        <Search size={16} className="shrink-0 text-text-faint" />
+      <div className="mb-5 flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 transition focus-within:border-squirrel-400 focus-within:ring-1 focus-within:ring-squirrel-400">
+        <Search size={16} className="shrink-0 text-text-muted" />
         <input
           type="search"
           value={query}
@@ -93,7 +90,11 @@ export function BlogList({ posts }: BlogListProps) {
           className="flex-1 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-faint"
         />
         {query && (
-          <button onClick={() => handleQueryChange('')} className="text-text-faint hover:text-text-muted">
+          <button
+            onClick={() => handleQueryChange('')}
+            className="cursor-pointer text-text-faint hover:text-text-muted"
+            aria-label="Clear search"
+          >
             <X size={14} />
           </button>
         )}
@@ -106,7 +107,7 @@ export function BlogList({ posts }: BlogListProps) {
             <button
               key={tag}
               onClick={() => handleTagClick(tag)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeTag === tag
                   ? 'bg-squirrel-500 text-white'
                   : 'bg-squirrel-100 text-squirrel-700 hover:bg-squirrel-200'
@@ -123,11 +124,13 @@ export function BlogList({ posts }: BlogListProps) {
         <p className="py-12 text-center text-sm text-text-muted">No posts found.</p>
       ) : (
         <>
-          <div className="flex flex-col gap-4">
+          <div>
             {featuredPost && <PostCard post={featuredPost} featured />}
-            {pagePosts.map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {pagePosts.map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </div>
           </div>
 
           {/* Pagination */}
@@ -136,7 +139,7 @@ export function BlogList({ posts }: BlogListProps) {
               <button
                 onClick={() => updateParams({ page: String(currentPage - 1) })}
                 disabled={currentPage === 1}
-                className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft size={16} />
                 Previous
@@ -149,7 +152,7 @@ export function BlogList({ posts }: BlogListProps) {
               <button
                 onClick={() => updateParams({ page: String(currentPage + 1) })}
                 disabled={currentPage === totalPages}
-                className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-text-tertiary transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next
                 <ChevronRight size={16} />

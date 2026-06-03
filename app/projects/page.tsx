@@ -65,29 +65,32 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/projects/" />
-      <main className="mx-auto max-w-4xl px-4 py-10 md:px-6">
-        <h1 className="mb-2 text-3xl font-bold text-text-primary">Projects</h1>
-        <p className="mb-8 text-text-muted">
-          Side projects and tools I&apos;ve built.
-        </p>
+      <main className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        <div className="mb-10 max-w-3xl">
+          <h1 className="mb-2 text-3xl font-bold text-text-primary">Projects</h1>
+          <p className="text-text-muted">
+            Side projects and tools I&apos;ve built.
+          </p>
+        </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <div
               key={project.name}
-              className="rounded-xl border border-border bg-surface overflow-hidden shadow-sm"
+              className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
             >
               {project.image && (
-                <div className="relative aspect-[2/1] w-full bg-surface-alt">
+                <div className="relative aspect-[16/9] w-full bg-surface-alt">
                   <Image
                     src={project.image}
                     alt={`${project.name} screenshot`}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover object-top"
                   />
                 </div>
               )}
-              <div className="p-6">
+              <div className="flex flex-1 flex-col p-6">
               <h2 className="mb-2 text-xl font-bold text-text-primary">
                 {project.name}
               </h2>
@@ -95,18 +98,18 @@ export default function ProjectsPage() {
                 {project.description}
               </p>
 
-              <div className="mb-4 flex flex-wrap gap-2">
+              <div className="mb-5 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-surface-brand px-2.5 py-0.5 text-xs font-medium text-squirrel-700"
+                    className="rounded-full bg-squirrel-100 px-2.5 py-0.5 text-xs font-medium text-squirrel-700"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="mt-auto flex flex-wrap gap-2">
                 {project.url && (
                   <a
                     href={project.url}

@@ -9,6 +9,10 @@ stack overlay in
 Skills (`developer`, `reviewer`, `architect`, `infosec`) read both when applying
 conventions to this project.
 
+Visual / UI conventions live in [`docs/STYLE_GUIDE.md`](docs/STYLE_GUIDE.md) —
+colour tokens, typography, component patterns, and **when to use cards vs
+when not to**. Consult it before introducing or restyling components.
+
 ---
 
 ## Project Overview

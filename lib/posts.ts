@@ -102,9 +102,3 @@ export function getAllSlugs(): string[] {
   return getAllPostMeta().map((p) => p.slug);
 }
 
-export function getAboutContent(): string {
-  const aboutPath = path.join(process.cwd(), "about.md");
-  if (!fs.existsSync(aboutPath)) return "";
-  const { content } = matter(fs.readFileSync(aboutPath, "utf8"));
-  return renderMermaidBlocks(content);
-}
