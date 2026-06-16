@@ -1,6 +1,6 @@
 # garethhughes.dev
 
-Personal blog built with Next.js (static export), deployed to S3.
+Personal blog built with Next.js (static export), deployed to GitHub Pages.
 
 ## Writing a post
 
