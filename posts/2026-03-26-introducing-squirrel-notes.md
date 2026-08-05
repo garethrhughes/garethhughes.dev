@@ -6,7 +6,7 @@ tags: ai, software-development, productivity, notes, security
 coverImage: /images/screenshot2.png
 ---
 
-How I build and released [Squirrel Notes](https://squirrelnotes.app) with Claude Code and Copilot. Use it for free at [Squirrel Notes](https://my.squirrelnotes.app).
+How I built and released [Squirrel Notes](https://squirrelnotes.app) with Claude Code and Copilot. Use it for free at [Squirrel Notes](https://my.squirrelnotes.app).
 
 ![Squirrel Notes](/images/screenshot2.png)
 
