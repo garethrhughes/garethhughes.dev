@@ -1,9 +1,17 @@
 # 0002 — Currently Reading Section
 
 **Date:** 2026-08-20
-**Status:** Accepted
+**Status:** Accepted (amended 2026-08-20 — synopsis dropped for a compact display; see note below)
 **Author:** Architect Agent
 **Related ADRs:** _pending — created on acceptance_
+
+## Amendment (2026-08-20)
+
+After first implementation the card was slimmed to match the height of the Blog
+title + subtitle and the border/card chrome was removed. The synopsis no longer fits this
+compact layout and was dropped from the component, the `CurrentlyReading` type, and the
+`currentlyReading` data. The section now shows: label, cover image, title, author. All
+references to "synopsis" and to card/border styling below are superseded by this amendment.
 
 ## Problem Statement
 

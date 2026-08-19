@@ -46,7 +46,7 @@ export default function HomePage() {
               Thoughts on software engineering, leadership, and technology.
             </p>
           </div>
-          <div className="w-full md:w-96 md:shrink-0">
+          <div className="md:shrink-0">
             <CurrentlyReading />
           </div>
         </div>

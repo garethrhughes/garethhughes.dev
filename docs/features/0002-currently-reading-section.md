@@ -8,8 +8,12 @@
 ## Summary
 
 Add a "Currently Reading" section to the home page, positioned to the right of the
-"Blog" header. It shows the book currently being read: title, a short synopsis, and a
-cover image.
+"Blog" header. It shows the book currently being read: title, author, and a cover image,
+in a compact layout matching the height of the Blog title + subtitle (no card/border).
+
+> **Amendment (2026-08-20):** the original design included a short synopsis and a bordered
+> card. During implementation the section was slimmed to match the Blog title + subtitle
+> height with the border removed, and the synopsis was dropped as it no longer fit.
 
 ## Background / Motivation
 
