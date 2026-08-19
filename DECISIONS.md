@@ -22,6 +22,12 @@ Living log of implementation and architecture decisions for this repository.
 
 ## 2026-08-20
 
+### Extend tag taxonomy with product tags
+- Decision: Added `fragile` and `squirrel-notes` to the canonical tag set (ADR-0011). Tagged the two Fragile posts with `fragile` and the three Squirrel Notes posts with `squirrel-notes`. Excluded the opencode-skills post (passing mentions only).
+- Why: Enable product-based discovery — readers can filter to all posts about a given product, which topic tags alone cannot express.
+- Scope: `posts/2026-04-15-introducing-fragile.md`, `posts/2026-08-13-how-fragile-survived-first-deployment.md`, `posts/2026-03-26-introducing-squirrel-notes.md`, `posts/2026-03-29-how-squirrel-notes-keeps-your-data-private.md`, `posts/2026-04-08-using-claude-as-a-first-class-interface-for-squirrel-notes.md`, `docs/decisions/0011`, `docs/decisions/0015`.
+- Notes: ADR `docs/decisions/0015-extend-tag-taxonomy-product-tags.md`. Apply product tags only to posts genuinely about the product, not passing mentions.
+
 ### Currently Reading section on the home page
 - Decision: Added a "Currently Reading" card to the right of the Blog header on the home page, backed by a typed constant in `lib/reading.ts` (title, author, synopsis, coverImage, coverAlt). Rejected a markdown+gray-matter pipeline (YAGNI for one record) and any Goodreads/external fetch (violates static-export rules). Cover committed to `public/reading/`.
 - Why: Adds a personal signal to the landing page without a runtime data source; a typed constant is the smallest type-safe solution consistent with the build-time-only data convention.

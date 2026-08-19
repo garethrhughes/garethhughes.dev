@@ -26,4 +26,4 @@ A clean taxonomy makes tag-based filtering and content discovery predictable. Re
 
 ## Related Decisions
 
-None.
+- [0015 — Extend Tag Taxonomy with Product Tags](0015-extend-tag-taxonomy-product-tags.md) — adds `fragile` and `squirrel-notes` to the canonical set.
