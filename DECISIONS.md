@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-08-20
+
+### Currently Reading section on the home page
+- Decision: Added a "Currently Reading" card to the right of the Blog header on the home page, backed by a typed constant in `lib/reading.ts` (title, author, synopsis, coverImage, coverAlt). Rejected a markdown+gray-matter pipeline (YAGNI for one record) and any Goodreads/external fetch (violates static-export rules). Cover committed to `public/reading/`.
+- Why: Adds a personal signal to the landing page without a runtime data source; a typed constant is the smallest type-safe solution consistent with the build-time-only data convention.
+- Scope: `lib/reading.ts`, `components/CurrentlyReading.tsx`, `app/page.tsx`, `public/reading/leadership-is-language.jpg`.
+- Notes: Proposal `docs/proposals/0002-currently-reading-section.md`; ADR `docs/decisions/0014-currently-reading-typed-constant.md`. First book: *Leadership is Language* by L. David Marquet. Revisit with a markdown-backed approach if this grows into a reading list/history.
+
 ## 2026-06-03
 
 ### Widen landing pages to `max-w-7xl`

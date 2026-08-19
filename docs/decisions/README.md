@@ -19,3 +19,4 @@ New decisions should be added here and summarised in the root `DECISIONS.md`.
 | [0011](0011-canonical-tag-taxonomy.md) | Normalise post tag taxonomy | Accepted | 2026-04-19 |
 | [0012](0012-remove-dark-mode.md) | Remove dark mode | Accepted | 2026-04-21 |
 | [0013](0013-build-time-mermaid-rendering.md) | Build-time mermaid rendering via @mermaid-js/mermaid-cli | Accepted | 2026-04-26 |
+| [0014](0014-currently-reading-typed-constant.md) | Currently Reading data as a typed constant | Accepted | 2026-08-20 |
