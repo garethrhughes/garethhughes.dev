@@ -2,7 +2,7 @@
 title: "How Fragile Survived First Deployment"
 datePublished: "2026-08-13T22:11:57Z"
 slug: "how-fragile-survived-first-deployment"
-tags: ai, engineering-metrics, leadership, software-development
+tags: ai, engineering-metrics, leadership, software-development, fragile
 coverImage: "/images/fragile-healthcheck.png"
 ---
 

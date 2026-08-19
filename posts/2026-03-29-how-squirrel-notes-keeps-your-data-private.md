@@ -2,7 +2,7 @@
 title: "How Squirrel Notes Keeps Your Data Private"
 datePublished: 2026-03-29T00:00:00Z
 slug: how-squirrel-notes-keeps-your-data-private
-tags: software-development, productivity, security, notes
+tags: software-development, productivity, security, notes, squirrel-notes
 coverImage: /images/private.png
 ---
 
