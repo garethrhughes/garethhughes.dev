@@ -176,3 +176,15 @@ Recorded during implementation. Each deviates from the proposal above.
 5. **The post `<h1>` keeps `text-3xl font-bold`.** `PageHeader` replaced the bold heading on
    the four *index* pages. An article title is the page's content, not its chrome, and it
    matches the timeline hero's own `text-3xl font-bold`.
+
+6. **The active chip classes were extracted too.** The proposal only called for `/archive/`
+   to *adopt* the home chip's appearance, which the first pass did by copying the class
+   string — recreating the exact failure mode this change exists to fix. `chipClass` now
+   lives beside `TagPill` and both callers import it, so "one gesture, one look" is
+   structural rather than a claim in a document.
+
+7. **Capping the measure forced `overflow-x` onto wide post content.** `.mermaid-diagram`
+   was `overflow: hidden`, so a diagram wider than the new 72ch measure would have been
+   cropped without a scrollbar. Verified that today's four diagrams scale rather than clip,
+   but the rule was luck; `overflow-x: auto` (plus `display: block` on tables) makes it
+   correct for the next one.

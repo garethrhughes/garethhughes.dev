@@ -1,6 +1,7 @@
 'use client';
 
 import { TOPIC_NAMES, type Topic } from '@/lib/post-meta';
+import { chipClass } from './TagPill';
 
 export const EVERYTHING = 'Everything' as const;
 
@@ -10,9 +11,6 @@ interface TopicFilterProps {
   active: TopicSelection;
   onChange: (topic: TopicSelection) => void;
 }
-
-const CHIP_BASE =
-  'shrink-0 cursor-pointer whitespace-nowrap rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-colors';
 
 /**
  * Five curated topic chips. There is deliberately no search box here — searching the ten
@@ -33,11 +31,7 @@ export function TopicFilter({ active, onChange }: TopicFilterProps) {
             type="button"
             onClick={() => onChange(topic)}
             aria-pressed={isActive}
-            className={`${CHIP_BASE} ${
-              isActive
-                ? 'border-squirrel-400 bg-squirrel-100 text-squirrel-700'
-                : 'border-border text-text-secondary hover:bg-surface-hover'
-            }`}
+            className={chipClass(isActive)}
           >
             {topic}
           </button>

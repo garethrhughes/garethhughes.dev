@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Fuse from 'fuse.js';
 import { Search, X } from 'lucide-react';
 import { formatPostDate, type PostMeta } from '@/lib/post-meta';
-import { TagPills } from './TagPill';
+import { chipClass, TagPills } from './TagPill';
 
 interface ArchiveListProps {
   posts: PostMeta[];
@@ -95,12 +95,7 @@ export function ArchiveList({ posts }: ArchiveListProps) {
                 key={tag}
                 onClick={() => setActiveTag(isActive ? null : tag)}
                 aria-pressed={isActive}
-                /* Same active appearance as the home topic chips — one gesture, one look. */
-                className={`cursor-pointer rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-colors ${
-                  isActive
-                    ? 'border-squirrel-400 bg-squirrel-100 text-squirrel-700'
-                    : 'border-border text-text-secondary hover:bg-surface-hover'
-                }`}
+                className={chipClass(isActive)}
               >
                 {tag}
               </button>

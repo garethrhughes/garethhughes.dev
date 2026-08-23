@@ -35,3 +35,20 @@ export function TagPills({ tags, max, inline = false, className = '' }: TagPills
     </Wrapper>
   );
 }
+
+/**
+ * The *active* filter chip — the loud counterpart to `TagPill`. Shared by the home topic
+ * chips and the archive tag list so one gesture has one appearance. Extracting this is the
+ * whole point of ADR 0017: four passive pill styles existed because each call site had its
+ * own copy, and two copies of the chip would go the same way.
+ */
+export const CHIP_BASE =
+  'shrink-0 cursor-pointer whitespace-nowrap rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-colors';
+
+export const CHIP_ACTIVE = 'border-squirrel-400 bg-squirrel-100 text-squirrel-700';
+
+export const CHIP_INACTIVE = 'border-border text-text-secondary hover:bg-surface-hover';
+
+export function chipClass(isActive: boolean): string {
+  return `${CHIP_BASE} ${isActive ? CHIP_ACTIVE : CHIP_INACTIVE}`;
+}
