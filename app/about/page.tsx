@@ -293,8 +293,12 @@ export default function AboutPage() {
           </div>
         </PageHeader>
 
-        {/* Intro — prose, unwrapped and held to a reading measure. */}
-        <section className="max-w-[72ch] space-y-4 leading-relaxed text-text-secondary">
+        {/* Two columns: the narrative stays at a reading measure and "Core competencies"
+            moves out beside it. At full width the prose left ~500px of dead air down the
+            right of the page, and the competencies were a labelled list crammed inline
+            into a paragraph — the split fixes both. 1.6fr keeps the prose near 72ch. */}
+        <section className="grid gap-6 leading-relaxed text-text-secondary md:grid-cols-[1.6fr_1fr] md:gap-12">
+          <div className="space-y-4">
           <p>
             Expert .NET and JavaScript engineer and hands-on technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
           </p>
@@ -305,10 +309,16 @@ export default function AboutPage() {
             <Link href="https://github.com/garethrhughes/fragile" className="text-squirrel-700 underline-offset-2 hover:underline">Fragile</Link>
             {' '}— using AI-assisted development workflows, demonstrating active IC technical contribution alongside organisational impact.
           </p>
-          <p>
-            <span className="font-semibold text-text-primary">Core competencies:</span>{' '}
-            System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
-          </p>
+          </div>
+
+          {/* A callout aside with its own scope — the one card STYLE_GUIDE.md sanctions
+              here. Flat, matching the project tiles. */}
+          <aside className="self-start rounded-xl border border-border bg-surface-alt p-5">
+            <SectionLabel className="mb-2.5">Core competencies</SectionLabel>
+            <p className="text-[15px] leading-relaxed">
+              System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
+            </p>
+          </aside>
         </section>
 
         {/* Skills — a label/value list, not seven card boxes. The category names are too

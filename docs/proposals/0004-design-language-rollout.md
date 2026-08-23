@@ -213,3 +213,11 @@ Recorded during implementation. Each deviates from the proposal above.
     `/about/` the actions were being pushed to the far edge by `justify-between` and stranded
     ~500px from the lead they belong to. Stacking them underneath fixed the marooning but
     left the whole top-right empty; sitting them next to the lead fixes both.
+
+13. **The `/about/` intro is two columns.** `compact` fixed the marooned CTAs but not the
+    real problem: the intro prose held a 72ch measure across a 1232px page, leaving ~500px
+    of dead air down the right until Skills. "Core competencies" — already a labelled list
+    crammed inline into a paragraph — moves out into a flat callout aside beside the
+    narrative. A `1.6fr / 1fr` split keeps the prose near 72ch and fills the page. The
+    aside is the one card `STYLE_GUIDE.md` sanctions here ("a side panel / aside with its
+    own scope"), so it is flat, matching the project tiles.
