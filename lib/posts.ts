@@ -2,42 +2,27 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { renderMermaidBlocks } from "./mermaid";
+import {
+  extractExcerpt,
+  formatTimelineStamp,
+  leadParagraphs,
+  parseDate,
+  type Post,
+  type PostMeta,
+  type TimelinePost,
+} from "./post-meta";
 
 const POSTS_DIR = path.join(process.cwd(), "posts");
 
-export interface PostMeta {
-  slug: string;
-  title: string;
-  datePublished: string;
-  tags: string[];
-  excerpt: string;
-  coverImage?: string;
-}
-
-export interface Post extends PostMeta {
-  content: string;
-}
-
-function parseDate(raw: string): string {
-  try {
-    return new Date(raw).toISOString();
-  } catch {
-    return raw;
+function parseTags(raw: unknown): string[] {
+  if (typeof raw === "string") {
+    return raw.split(",").map((t) => t.trim()).filter(Boolean);
   }
+  return Array.isArray(raw) ? raw : [];
 }
 
-function extractExcerpt(content: string, maxLength = 400): string {
-  const text = content
-    .replace(/^---[\s\S]*?---/, "")
-    .replace(/#{1,6}\s+/g, "")
-    .replace(/\*\*|__|\*|_|`{1,3}/g, "")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/\n+/g, " ")
-    .trim();
-  return text.length > maxLength ? text.slice(0, maxLength).replace(/\s\S*$/, "") + "…" : text;
-}
-
-export function getAllPostMeta(): PostMeta[] {
+/** Every post as `{ meta, content }`, newest first. Content is raw markdown — unrendered. */
+function readAllPosts(): { meta: PostMeta; content: string }[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
 
   return fs
@@ -47,25 +32,53 @@ export function getAllPostMeta(): PostMeta[] {
       const raw = fs.readFileSync(path.join(POSTS_DIR, filename), "utf8");
       const { data, content } = matter(raw);
       const slug = data.slug || filename.replace(/\.md$/, "");
-      const tags =
-        typeof data.tags === "string"
-          ? data.tags.split(",").map((t: string) => t.trim()).filter(Boolean)
-          : Array.isArray(data.tags)
-          ? data.tags
-          : [];
       return {
-        slug,
-        title: data.title || slug,
-        datePublished: parseDate(data.datePublished || ""),
-        tags,
-        excerpt: extractExcerpt(content),
-        coverImage: data.coverImage || undefined,
+        meta: {
+          slug,
+          title: data.title || slug,
+          datePublished: parseDate(data.datePublished || ""),
+          tags: parseTags(data.tags),
+          excerpt: extractExcerpt(content),
+          coverImage: data.coverImage || undefined,
+        },
+        content,
       };
     })
     .sort(
       (a, b) =>
-        new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()
+        new Date(b.meta.datePublished).getTime() -
+        new Date(a.meta.datePublished).getTime()
     );
+}
+
+export function getAllPostMeta(): PostMeta[] {
+  return readAllPosts().map((p) => p.meta);
+}
+
+/** The year of the oldest published post — the timeline's "back to 2020" marker. */
+export function getEarliestPostYear(): number | null {
+  const posts = readAllPosts();
+  const oldest = posts[posts.length - 1];
+  if (!oldest) return null;
+  const d = new Date(oldest.meta.datePublished);
+  return Number.isNaN(d.getTime()) ? null : d.getUTCFullYear();
+}
+
+/**
+ * Every post with its lead paragraphs and gutter stamp attached, newest first. The home
+ * page shows a slice of these unfiltered but filters across all of them, so a topic chip
+ * surfaces older posts too.
+ *
+ * Only the newest post carries three lead paragraphs — it is the only one rendered as the
+ * hero. Reads raw markdown directly, deliberately not via `getPostBySlug`, which renders
+ * mermaid blocks through Puppeteer.
+ */
+export function getTimelinePosts(): TimelinePost[] {
+  return readAllPosts().map(({ meta, content }, i) => ({
+    ...meta,
+    lead: leadParagraphs(content, i === 0 ? 3 : 1),
+    stamp: formatTimelineStamp(meta.datePublished),
+  }));
 }
 
 export function getPostBySlug(slug: string): Post | null {
@@ -78,18 +91,11 @@ export function getPostBySlug(slug: string): Post | null {
     const fileSlug = data.slug || filename.replace(/\.md$/, "");
     if (fileSlug !== slug) continue;
 
-    const tags =
-      typeof data.tags === "string"
-        ? data.tags.split(",").map((t: string) => t.trim()).filter(Boolean)
-        : Array.isArray(data.tags)
-        ? data.tags
-        : [];
-
     return {
       slug,
       title: data.title || slug,
       datePublished: parseDate(data.datePublished || ""),
-      tags,
+      tags: parseTags(data.tags),
       excerpt: extractExcerpt(content),
       coverImage: data.coverImage || undefined,
       content: renderMermaidBlocks(content),

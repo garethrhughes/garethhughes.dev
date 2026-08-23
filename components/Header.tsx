@@ -9,6 +9,7 @@ interface HeaderProps {
 export function Header({ currentPath = '' }: HeaderProps) {
   const navLinks = [
     { href: '/', label: 'Blog' },
+    { href: '/archive/', label: 'Archive' },
     { href: '/projects/', label: 'Projects' },
     { href: '/about/', label: 'About' },
     { href: 'https://gareth.photography', label: 'Photography' }

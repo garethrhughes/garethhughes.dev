@@ -5,24 +5,20 @@ export function CurrentlyReading() {
   const book = currentlyReading;
 
   return (
-    <aside className="flex items-center gap-3">
-      <div className="relative aspect-[2/3] h-16 shrink-0 overflow-hidden rounded-md bg-surface-alt">
-        <Image
-          src={book.coverImage}
-          alt={book.coverAlt}
-          fill
-          sizes="43px"
-          className="object-cover"
-        />
-      </div>
+    <aside className="flex items-center gap-3 border-y border-border-light py-3.5 md:border-0 md:py-0">
+      <Image
+        src={book.coverImage}
+        alt={book.coverAlt}
+        width={38}
+        height={56}
+        className="h-14 w-[38px] flex-none rounded-[5px] object-cover"
+      />
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-          Currently Reading
+        <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-text-faint">
+          Reading
         </p>
-        <h2 className="text-sm font-semibold leading-snug text-text-primary">
-          {book.title}
-        </h2>
-        <p className="text-sm text-text-tertiary">{book.author}</p>
+        <p className="text-sm font-semibold text-text-primary">{book.title}</p>
+        <p className="text-[13px] text-text-muted">{book.author}</p>
       </div>
     </aside>
   );

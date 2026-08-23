@@ -21,3 +21,4 @@ New decisions should be added here and summarised in the root `DECISIONS.md`.
 | [0013](0013-build-time-mermaid-rendering.md) | Build-time mermaid rendering via @mermaid-js/mermaid-cli | Accepted | 2026-04-26 |
 | [0014](0014-currently-reading-typed-constant.md) | Currently Reading data as a typed constant | Accepted | 2026-08-20 |
 | [0015](0015-extend-tag-taxonomy-product-tags.md) | Extend tag taxonomy with product tags (fragile, squirrel-notes) | Accepted | 2026-08-20 |
+| [0016](0016-timeline-home-page-and-archive-split.md) | Timeline home page and archive split | Accepted | 2026-08-23 |

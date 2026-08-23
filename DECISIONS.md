@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-08-23
+
+### Timeline home page, archive route for the back catalogue
+- Decision: Replaced the home page card grid, search input, and 26-pill tag wall with a single chronological timeline over the ten most recent posts, filtered by four curated topic chips (Leading teams, Building with AI, Cloud & architecture, Side projects) plus an Everything default. Search, the full tag list, and all 23 posts moved to a new `/archive/` route; the home page has no search box at all, since an input that only navigates elsewhere reads as broken. Deleted `components/BlogList.tsx` and `components/PostCard.tsx`.
+- Why: `docs/STYLE_GUIDE.md` prescribes dividers or a rail — not cards — for a chronological list of long-form entries, so the old home page contradicted the site's own guide. A 26-tag wall is a taxonomy dump rather than navigation, and search belongs with the full back catalogue, not the recent ten.
+- Scope: `app/page.tsx`, `app/archive/page.tsx` (new), `components/Timeline.tsx`, `components/TimelineItem.tsx`, `components/TopicFilter.tsx`, `components/ArchiveList.tsx` (all new), `components/CurrentlyReading.tsx`, `components/Header.tsx`, `app/projects/page.tsx`, `app/sitemap.ts`, `lib/posts.ts`, `lib/post-meta.ts` (new), `lib/projects.ts` (new).
+- Notes: ADR `docs/decisions/0016-timeline-home-page-and-archive-split.md`, proposal `docs/proposals/0003-timeline-home-page.md`. Three supporting points worth remembering: (1) `lib/post-meta.ts` exists so client components can import formatters and the `TOPICS` map without pulling `fs` into the browser bundle — keep filesystem reads in `lib/posts.ts`. (2) Every desktop/mobile difference on the timeline is CSS (`hidden md:contents`, duplicated hero image), because a media-query hook hydrates inconsistently against a static export. (3) Topic chips filter the whole 23-post catalogue, not just the ten shown unfiltered — scoping them to the recent slice made "Cloud & architecture" hide the older AWS posts that are the best of that topic. Re-check the tag counts when adding a topic: a chip matching most of the catalogue does no work. (4) The archive search input holds its value in local state and mirrors to the URL — driving it straight from `useSearchParams` drops keystrokes, a bug inherited from `BlogList.tsx` and fixed here.
+
 ## 2026-08-20
 
 ### Extend tag taxonomy with product tags
