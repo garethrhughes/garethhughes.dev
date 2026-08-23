@@ -1,17 +1,17 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   getAdjacentPosts,
   getAllSlugs,
   getPostBySlug,
   getRelatedPosts,
 } from '@/lib/posts';
-import { formatPostDate, formatTimelineStamp, type PostMeta } from '@/lib/post-meta';
+import { formatPostDate, type PostMeta } from '@/lib/post-meta';
 import { Header } from '@/components/Header';
 import { PostContent } from '@/components/PostContent';
 import { SectionLabel } from '@/components/PageHeader';
 import { GUTTER } from '@/components/Rail';
+import { PostRow, PostRowList } from '@/components/PostRow';
 import { TagPills } from '@/components/TagPill';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -61,35 +61,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [imageUrl],
     },
   };
-}
-
-/**
- * A related post as a timeline row rather than a card. This aside used to render the
- * `PostCard` that ADR 0016 removed from the home page — shadow lift, 16/9 cover and an
- * image zoom — on the page every timeline click lands on.
- */
-function RelatedRow({ post }: { post: PostMeta }) {
-  return (
-    <li>
-      <Link href={`/posts/${post.slug}/`} className="group flex gap-3 py-3.5">
-        <div className="min-w-0 flex-1">
-          <div className={`${GUTTER} mb-1`}>{formatTimelineStamp(post.datePublished)}</div>
-          <div className="text-sm font-semibold leading-snug text-text-primary transition-colors group-hover:text-squirrel-700">
-            {post.title}
-          </div>
-        </div>
-        {post.coverImage && (
-          <Image
-            src={post.coverImage}
-            alt=""
-            width={96}
-            height={60}
-            className="h-[60px] w-24 flex-none rounded-lg border border-border bg-surface-alt object-cover object-top"
-          />
-        )}
-      </Link>
-    </li>
-  );
 }
 
 /** Older / newer navigation, stamped in the timeline's gutter style. */
@@ -182,11 +153,11 @@ export default async function PostPage({ params }: Props) {
           {related.length > 0 && (
             <aside className="lg:sticky lg:top-20 lg:self-start">
               <SectionLabel>Related posts</SectionLabel>
-              <ul className="divide-y divide-border border-t border-border">
+              <PostRowList>
                 {related.map((r) => (
-                  <RelatedRow key={r.slug} post={r} />
+                  <PostRow key={r.slug} post={r} />
                 ))}
-              </ul>
+              </PostRowList>
             </aside>
           )}
         </div>

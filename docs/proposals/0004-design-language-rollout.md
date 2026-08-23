@@ -216,8 +216,16 @@ Recorded during implementation. Each deviates from the proposal above.
 
 13. **The `/about/` intro is two columns.** `compact` fixed the marooned CTAs but not the
     real problem: the intro prose held a 72ch measure across a 1232px page, leaving ~500px
-    of dead air down the right until Skills. "Core competencies" — already a labelled list
-    crammed inline into a paragraph — moves out into a flat callout aside beside the
-    narrative. A `1.6fr / 1fr` split keeps the prose near 72ch and fills the page. The
-    aside is the one card `STYLE_GUIDE.md` sanctions here ("a side panel / aside with its
-    own scope"), so it is flat, matching the project tiles.
+    of dead air down the right until Skills. A `1.6fr / 1fr` split keeps the prose near 72ch
+    and fills the page.
+
+14. **The right column is recent writing, not a boxed callout.** The first attempt moved
+    "Core competencies" into a flat card there; a box on a prose page read as too heavy.
+    `/about/` sits on a blog, so the natural thing beside a CV is the writing itself — three
+    recent posts as compact rows over dividers, matching the Skills list below, then a link
+    to the archive. Core competencies went back to being the third paragraph. Thumbnails are
+    off in this column: they compete with the prose beside them.
+
+15. **`components/PostRow.tsx` was extracted for it.** The post page's related list already
+    had exactly this markup. Copying it into `/about/` is how four tag-pill styles happened,
+    so both callers now share one component and `PostRowList`.

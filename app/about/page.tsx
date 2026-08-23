@@ -2,8 +2,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { PageHeader, SectionLabel } from '@/components/PageHeader';
+import { PostRow, PostRowList } from '@/components/PostRow';
 import { GUTTER, Rail, RailRow } from '@/components/Rail';
 import { TagPills } from '@/components/TagPill';
+import { getAllPostMeta } from '@/lib/posts';
 import type { Metadata } from 'next';
 
 const title = 'About - Gareth Hughes';
@@ -240,6 +242,10 @@ function Period({ period }: { period: string }) {
 }
 
 export default function AboutPage() {
+  const posts = getAllPostMeta();
+  const recent = posts.slice(0, 3);
+  const total = posts.length;
+
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/about/" />
@@ -309,15 +315,28 @@ export default function AboutPage() {
             <Link href="https://github.com/garethrhughes/fragile" className="text-squirrel-700 underline-offset-2 hover:underline">Fragile</Link>
             {' '}— using AI-assisted development workflows, demonstrating active IC technical contribution alongside organisational impact.
           </p>
-          </div>
-
-          {/* A callout aside with its own scope — the one card STYLE_GUIDE.md sanctions
-              here. Flat, matching the project tiles. */}
-          <aside className="self-start rounded-xl border border-border bg-surface-alt p-5">
-            <SectionLabel className="mb-2.5">Core competencies</SectionLabel>
-            <p className="text-[15px] leading-relaxed">
+            <p>
+              <span className="font-semibold text-text-primary">Core competencies:</span>{' '}
               System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
             </p>
+          </div>
+
+          {/* Recent writing, not a boxed callout — /about/ sits on a blog, so the natural
+              thing to put beside a CV is the writing itself. No thumbnails: they compete
+              with the prose in the neighbouring column. */}
+          <aside className="self-start">
+            <SectionLabel>Recent writing</SectionLabel>
+            <PostRowList>
+              {recent.map((post) => (
+                <PostRow key={post.slug} post={post} thumbnail={false} />
+              ))}
+            </PostRowList>
+            <Link
+              href="/archive/"
+              className="mt-3.5 inline-block text-sm font-medium text-squirrel-700 transition-colors hover:text-squirrel-800"
+            >
+              All {total} posts →
+            </Link>
           </aside>
         </section>
 
