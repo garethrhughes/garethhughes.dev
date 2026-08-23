@@ -1,3 +1,9 @@
+/**
+ * The page's two-column split: a reading-measure column and a narrower one beside it.
+ * Shared so a header's actions and the content below them sit on the same grid.
+ */
+export const PAGE_COLUMNS = 'md:grid-cols-[1.6fr_1fr] md:gap-12';
+
 interface PageHeaderProps {
   /** Small-caps kicker — the page's name, not its headline. */
   label: string;
@@ -8,12 +14,11 @@ interface PageHeaderProps {
   /** Actions or a secondary block, laid out to the right on desktop. */
   children?: React.ReactNode;
   /**
-   * Sit the children next to the text instead of pushing them to the far edge. Use when
-   * the page has nothing else to fill the right-hand side — `justify-between` across a
-   * 1232px container otherwise strands a row of buttons in the middle of a void, adrift
-   * from the lead they belong to.
+   * Lay the header out on `PAGE_COLUMNS` so the children line up with whatever occupies
+   * the right-hand column below. Without it the actions land wherever the lead happens to
+   * end, aligned to nothing.
    */
-  compact?: boolean;
+  columns?: boolean;
   className?: string;
 }
 
@@ -30,13 +35,15 @@ export function PageHeader({
   lead,
   leading,
   children,
-  compact = false,
+  columns = false,
   className = '',
 }: PageHeaderProps) {
   return (
     <div
-      className={`mb-8 flex flex-col gap-5 md:mb-11 md:flex-row md:items-end md:gap-10 ${
-        compact ? '' : 'md:justify-between'
+      className={`mb-8 flex flex-col gap-5 md:mb-11 md:items-end ${
+        columns
+          ? `md:grid ${PAGE_COLUMNS}`
+          : 'md:flex-row md:justify-between md:gap-10'
       } ${className}`}
     >
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:gap-6">

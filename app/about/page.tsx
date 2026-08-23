@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
-import { PageHeader, SectionLabel } from '@/components/PageHeader';
+import { PAGE_COLUMNS, PageHeader, SectionLabel } from '@/components/PageHeader';
 import { PostRow, PostRowList } from '@/components/PostRow';
 import { GUTTER, Rail, RailRow } from '@/components/Rail';
 import { TagPills } from '@/components/TagPill';
@@ -250,11 +250,11 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background">
       <Header currentPath="/about/" />
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-14">
-        {/* `compact` keeps the CTAs beside the lead. Pushed to the far edge they sat ~500px
-            from the text they belong to, marooned in the empty right-hand side that /about/
-            — unlike the home page — has nothing to fill. */}
+        {/* `columns` puts the actions in the same column as the recent-writing rail below,
+            so they line up on both edges. Left to fall where the lead ends, they sat
+            mid-page aligned to nothing. */}
         <PageHeader
-          compact
+          columns
           label="Gareth Hughes"
           lead="Senior Engineering Manager in Sydney. Twenty years building software, and over a decade leading the people who build it."
           leading={
@@ -303,7 +303,7 @@ export default function AboutPage() {
             moves out beside it. At full width the prose left ~500px of dead air down the
             right of the page, and the competencies were a labelled list crammed inline
             into a paragraph — the split fixes both. 1.6fr keeps the prose near 72ch. */}
-        <section className="grid gap-6 leading-relaxed text-text-secondary md:grid-cols-[1.6fr_1fr] md:gap-12">
+        <section className={`grid gap-6 leading-relaxed text-text-secondary ${PAGE_COLUMNS}`}>
           <div className="space-y-4">
           <p>
             Expert .NET and JavaScript engineer and hands-on technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.

@@ -236,3 +236,9 @@ Recorded during implementation. Each deviates from the proposal above.
     visibility classes. Hidden below `md:` and omitted when a post has no cover, matching
     the timeline. The archive row is baseline-aligned so its date sits on the title's
     baseline, so the image takes `self-center` — baselined, it would hang below the row.
+
+17. **`PageHeader` gained `columns`, replacing `compact`.** `compact` sat the actions right
+    after the lead, which just moved the problem: they ended mid-page aligned to nothing.
+    `columns` lays the header out on `PAGE_COLUMNS` — the same `1.6fr / 1fr` split the
+    `/about/` intro uses — so the buttons share both edges with the recent-writing rail
+    beneath them. The grid template is exported rather than written twice.
