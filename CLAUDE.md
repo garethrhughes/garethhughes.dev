@@ -35,7 +35,7 @@ Personal blog site for Gareth Hughes, built with Next.js 16 static export. Cover
 | Data fetching | Build-time filesystem reads via Server Components + `generateStaticParams` |
 | Content parsing | gray-matter (frontmatter), react-markdown, remark-gfm, rehype-highlight, rehype-raw |
 | Diagrams | Build-time mermaid rendering via `@mermaid-js/mermaid-cli` + Puppeteer |
-| Search | Fuse.js client-side fuzzy search (`components/BlogList.tsx`) |
+| Search | Fuse.js client-side fuzzy search on `/archive/` (`components/ArchiveList.tsx`) |
 | Auth | None — fully public site |
 
 ### Infrastructure
@@ -72,30 +72,40 @@ Personal blog site for Gareth Hughes, built with Next.js 16 static export. Cover
 ├── Makefile                         ← S3/CloudFront deployment commands
 ├── app/
 │   ├── about/page.tsx
+│   ├── archive/page.tsx             ← Full post list + search + tag filter
 │   ├── calendar/page.tsx            ← Calendar redirect (client component)
 │   ├── cutting-cloud-costs-.../page.tsx  ← Legacy URL redirect
 │   ├── globals.css
 │   ├── layout.tsx                   ← Root layout + site metadata
-│   ├── page.tsx                     ← Blog index
+│   ├── page.tsx                     ← Home — timeline, topic filter, projects
 │   ├── posts/[slug]/page.tsx        ← Individual post + generateMetadata
 │   ├── projects/page.tsx
 │   ├── robots.ts
 │   └── sitemap.ts
 ├── components/
-│   ├── BlogList.tsx                 ← Client: search + filter + pagination
+│   ├── ArchiveList.tsx              ← Client: archive search + tag filter
+│   ├── CurrentlyReading.tsx
 │   ├── Footer.tsx
 │   ├── Header.tsx
 │   ├── MobileMenu.tsx
-│   ├── PostCard.tsx
-│   └── PostContent.tsx              ← Client: react-markdown renderer
+│   ├── PageHeader.tsx               ← Shared page front + SectionLabel
+│   ├── PostContent.tsx              ← Client: react-markdown renderer
+│   ├── Rail.tsx                     ← Shared date-gutter/rail geometry
+│   ├── TagPill.tsx                  ← The site's one passive tag pill
+│   ├── Timeline.tsx                 ← Client: topic filter state + timeline rows
+│   ├── TimelineItem.tsx             ← Hero and standard timeline rows
+│   └── TopicFilter.tsx              ← Home page topic chips
 ├── docs/
 │   ├── decisions/                   ← ADRs (architect / decision-log skills)
 │   └── proposals/                  ← Design proposals (architect skill)
 ├── lib/
 │   ├── mermaid.ts                   ← Build-time mermaid rendering
+│   ├── post-meta.ts                 ← Post types, formatters, lead text, topic map (fs-free)
 │   ├── posts.ts                     ← Markdown loading, parsing, sorting
-│   └── puppeteer-config.json
-├── posts/                           ← Blog post markdown files (20 posts)
+│   ├── projects.ts                  ← Project list, shared by home and /projects/
+│   ├── puppeteer-config.json
+│   └── reading.ts                   ← Currently-reading constant
+├── posts/                           ← Blog post markdown files (23 posts)
 ├── public/                          ← Static assets, CNAME, images
 ├── scripts/
 │   ├── import-hashnode.mjs
@@ -191,6 +201,8 @@ See the `architect` and `decision-log` skills for the exact proposal and ADR for
 | 6 | `/avatar.jpeg` is the stable fallback social image — path must not change without updating all metadata |
 | 7 | Dark mode removed — site is light-mode only |
 | 8 | Canonical tag taxonomy defined (see DECISIONS.md 2026-04-19) |
+| 9 | Home page is a timeline (no cards, no search box); search and the full tag list live on `/archive/` (ADR 0016) |
+| 10 | One design language site-wide: `TagPill`, `PageHeader`/`SectionLabel` and `Rail` are the shared primitives. Cards only where `docs/STYLE_GUIDE.md` sanctions them, and flat (`border` + `hover:border-squirrel-300`), never `shadow-sm` → `shadow-md` (ADR 0017) |
 
 ---
 
@@ -200,8 +212,14 @@ See the `architect` and `decision-log` skills for the exact proposal and ADR for
 - **Static export and redirects**: `redirects()` in `next.config.ts` and server-side `redirect()` do not work with `output: "export"`. All redirects must be client-side via `useRouter().replace()`.
 - **Image optimisation disabled**: `images.unoptimized: true` in `next.config.ts` — required for static export. Do not remove this.
 - **Trailing slashes**: `trailingSlash: true` in `next.config.ts` — all routes end with `/`. Keep canonical URLs consistent with this.
+- **Wide content in posts must scroll, not clip**: the article measure is capped at `max-w-[72ch]`, so `.note-preview .mermaid-diagram` and `.note-preview table` carry `overflow-x: auto` (the table also needs `display: block` for it to take effect). Without them a wide diagram is silently cropped rather than scrollable.
 - **`rehype-raw` required**: Mermaid diagrams are inlined as raw HTML `<div>` tags. Without `rehype-raw` in `PostContent.tsx`, the SVG is stripped by react-markdown.
-- **Tag filtering and pagination state**: `BlogList.tsx` persists search query, selected tag, and page index in URL search params — linking to a filtered view preserves state across page loads.
+- **Archive search state**: `ArchiveList.tsx` holds the query and active tag in local state and mirrors them to `?q=` / `?tag=`, so a filtered view is still linkable. Do not drive the input directly from `useSearchParams` — `router.replace` is async, so each keystroke reads a stale value and characters are dropped.
+- **`lib/post-meta.ts` must stay filesystem-free**: client components (`Timeline`, `TopicFilter`, `ArchiveList`) import formatters and the `TOPICS` map from it. Any `fs` import there breaks the build with "Can't resolve 'fs'". Filesystem reads belong in `lib/posts.ts`.
+- **`Rail` is geometry only**: `components/Rail.tsx` owns the gutter width, rail border, dot, and the `display: contents` row wrapper — nothing else. `Rail`/`RailRow` have two callers (the home timeline and About's Experience section), and the exported `GUTTER` stamp style has two more (the post page's related list and its adjacent-post nav), so a change here moves all of them. Pass content as children rather than adding a mode flag per caller. About's Skills section deliberately opts out: category names like "Cloud & Infrastructure" do not fit the 96px gutter.
+- **Pills have two jobs**: `TagPill` (`bg-squirrel-50`) is the *passive* label used everywhere. The loud filled treatment is reserved for the *active* state of an interactive chip, and both callers (`TopicFilter`, the archive tag list) import `chipClass` from the same file rather than copying it. Do not introduce a third pill style.
+- **Dates go through `lib/post-meta.ts`**: `formatPostDate` and `formatTimelineStamp` are the only date formatters. `toLocaleDateString` is out — see settled decision #4.
+- **Timeline breakpoints are CSS-only**: rows hidden on mobile use `hidden md:contents` so both grid children stay direct children of the grid at `md:` and up, and the hero image is rendered twice because it reorders rather than hides. Do not reach for a media-query hook — it hydrates inconsistently against a static export.
 
 ---
 

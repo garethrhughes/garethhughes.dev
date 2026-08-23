@@ -10,3 +10,5 @@ See the `architect` skill for the proposal format.
 |---|---|---|---|
 | [0001](0001-wider-blog-layouts.md) | Wider blog layouts | — | — |
 | [0002](0002-currently-reading-section.md) | Currently Reading section | Accepted | 2026-08-20 |
+| [0003](0003-timeline-home-page.md) | Timeline home page | Accepted | 2026-08-23 |
+| [0004](0004-design-language-rollout.md) | Roll the timeline design language across the site | Accepted | 2026-08-23 |

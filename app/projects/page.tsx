@@ -1,83 +1,52 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/Header';
+import { projects } from '@/lib/projects';
+import { PageHeader } from '@/components/PageHeader';
+import { TagPills } from '@/components/TagPill';
 import type { Metadata } from 'next';
+
+const title = 'Projects - Gareth Hughes';
+const description =
+  'Side projects and tools built by Gareth Hughes — a zero-knowledge notes app, an engineering metrics dashboard, developer tooling, and a photography portfolio.';
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'Side projects by Gareth Hughes.',
+  description,
   alternates: {
     canonical: '/projects/',
   },
+  openGraph: {
+    type: 'website',
+    url: '/projects/',
+    title,
+    description,
+    siteName: 'Gareth Hughes',
+    images: [{ url: '/avatar.jpeg', alt: 'Gareth Hughes' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: ['/avatar.jpeg'],
+  },
 };
-
-const projects = [
-  {
-    name: 'opencode-bedrock-openai-token',
-    description:
-      'An OpenCode plugin that authenticates requests to AWS Bedrock\'s OpenAI-compatible endpoint using short-lived tokens from the Bedrock Token Generator. Supports SSO, IAM roles, and AWS credential profiles with automatic token refresh.',
-    url: null,
-    appUrl: null,
-    githubUrl: 'https://github.com/garethrhughes/opencode-bedrock-openai-token',
-    npmUrl: 'https://www.npmjs.com/package/opencode-bedrock-openai-token',
-    tags: ['AWS Bedrock', 'OpenCode', 'Plugin', 'TypeScript'],
-    blogSlug: 'opencode-and-gpt-5-5-on-bedrock'
-  },
-  {
-    name: 'OpenCode Skills',
-    description:
-      'A collection of reusable OpenCode skills for structured AI-assisted software development. Includes skills for architecture design, TDD-based development, security reviews, decision logging, and full feature dev-workflow orchestration.',
-    githubUrl: 'https://github.com/garethrhughes/skills',
-    tags: ['OpenCode', 'AI', 'Developer Tooling', 'Skills'],
-    blogSlug: 'opencode-skills'
-  },
-  {
-    name: 'Squirrel Notes',
-    description:
-      'A zero-knowledge, end-to-end encrypted notes app built for people who struggle to focus. Your passphrase never leaves your browser — the server stores only ciphertext. Features markdown editing, collections, tags, file attachments, and an MCP integration for Claude.',
-    url: 'https://squirrelnotes.app',
-    appUrl: 'https://my.squirrelnotes.app',
-    tags: ['Zero-Knowledge', 'E2EE', 'Notes', 'MCP'],
-    blogSlug: 'introducing-squirrel-notes',
-    image: '/images/screenshot2.png',
-  },
-  {
-    name: 'Fragile',
-    description:
-      'A lightweight engineering metrics tool that syncs with Jira to surface DORA metrics, planning accuracy, cycle time, and roadmap accuracy — without the maintenance overhead of expensive SaaS alternatives. Built to give teams an honest snapshot of their sprints and planning.',
-    githubUrl: 'https://github.com/garethrhughes/fragile',
-    tags: ['DORA', 'Jira', 'Engineering Metrics'],
-    blogSlug: 'introducing-fragile',
-    image: '/images/screencapture-localhost-3000-dora-2026-04-15-12_10_43.png',
-  },
-  {
-    name: 'gareth.photography',
-    description:
-      'A photography portfolio showcasing landscapes, wildlife, and nature across Australia. Built as a statically-exported Next.js site with album-based organisation and a clean, minimal gallery experience.',
-    url: 'https://gareth.photography',
-    githubUrl: 'https://github.com/garethrhughes/gareth.photography',
-    tags: ['Photography', 'Portfolio', 'Next.js'],
-    image: '/images/gareth-photography-preview.jpg',
-  },
-];
 
 export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/projects/" />
       <main className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-        <div className="mb-10 max-w-3xl">
-          <h1 className="mb-2 text-3xl font-bold text-text-primary">Projects</h1>
-          <p className="text-text-muted">
-            Side projects and tools I&apos;ve built.
-          </p>
-        </div>
+        <PageHeader
+          label="Projects"
+          lead="Side projects and tools I've built — mostly things I wanted to exist and couldn't buy."
+        />
 
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <div
               key={project.name}
-              className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
+              className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-alt transition-colors hover:border-squirrel-300"
             >
               {project.image && (
                 <div className="relative aspect-[16/9] w-full bg-surface-alt">
@@ -98,16 +67,7 @@ export default function ProjectsPage() {
                 {project.description}
               </p>
 
-              <div className="mb-5 flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-squirrel-100 px-2.5 py-0.5 text-xs font-medium text-squirrel-700"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              <TagPills tags={project.tags} className="mb-5" />
 
               <div className="mt-auto flex flex-wrap gap-2">
                 {project.url && (

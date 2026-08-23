@@ -32,7 +32,9 @@ const socials = [
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-border bg-surface-alt">
-      <div className="mx-auto max-w-4xl px-4 py-8 md:px-6">
+      {/* max-w-7xl to line up with the page above it — this was max-w-4xl, so the footer
+          content sat visibly narrower than every page on the site. */}
+      <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <p className="text-sm text-text-muted">
             © {new Date().getFullYear()} Gareth Hughes
