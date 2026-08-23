@@ -250,3 +250,9 @@ Recorded during implementation. Each deviates from the proposal above.
     longer needs to know about page columns; it takes `layout: 'split' | 'stacked'`,
     replacing the `stacked` → `compact` → `columns` boolean churn with the discriminated
     union the TypeScript overlay asks for. `PAGE_COLUMNS` stays exported for the page grid.
+
+18. **The recent-writing rail carries seven posts.** Three left it ending ~280px short of
+    the intro beside it. Seven brings the two columns level: measured 550px against 545px
+    at 1280 and above. The two still diverge as the viewport narrows and the prose wraps
+    more (38px apart at 1024), which is the nature of two columns of unequal content — the
+    count is tuned for the width the page is usually read at, not pinned by script.

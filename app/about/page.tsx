@@ -196,6 +196,8 @@ const roles: Role[] = [
   },
 ];
 
+const RECENT_POST_COUNT = 7;
+
 const earlierRoles: { company: string; role: string }[] = [
   { company: 'Corporate Travel Management', role: 'Senior Developer' },
   { company: 'HotelsCombined', role: 'Senior Developer' },
@@ -243,7 +245,8 @@ function Period({ period }: { period: string }) {
 
 export default function AboutPage() {
   const posts = getAllPostMeta();
-  const recent = posts.slice(0, 3);
+  /** Enough rows to run the rail down alongside the intro rather than stopping short. */
+  const recent = posts.slice(0, RECENT_POST_COUNT);
   const total = posts.length;
 
   return (
