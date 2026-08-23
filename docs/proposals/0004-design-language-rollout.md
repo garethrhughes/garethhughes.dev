@@ -256,3 +256,7 @@ Recorded during implementation. Each deviates from the proposal above.
     at 1280 and above. The two still diverge as the viewport narrows and the prose wraps
     more (38px apart at 1024), which is the nature of two columns of unequal content — the
     count is tuned for the width the page is usually read at, not pinned by script.
+
+19. **The recent-writing rail is desktop only.** Stacked under the intro on a phone it stops
+    being a companion column and just delays the CV, which is what the page is for. Hidden
+    below `md:`; the nav and the home timeline already reach the writing from here.

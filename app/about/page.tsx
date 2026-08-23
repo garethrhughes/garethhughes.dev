@@ -324,8 +324,12 @@ export default function AboutPage() {
 
           {/* Recent writing, not a boxed callout — /about/ sits on a blog, so the natural
               thing to put beside a CV is the writing itself. No thumbnails: they compete
-              with the prose in the neighbouring column. */}
-          <aside className="self-start">
+              with the prose in the neighbouring column.
+
+              Desktop only. Stacked under the intro on mobile it stops being a companion
+              column and just delays the CV, which is what the page is for. The nav and the
+              home timeline already reach the writing from here. */}
+          <aside className="hidden self-start md:block">
             <SectionLabel>Recent writing</SectionLabel>
             <PostRowList>
               {recent.map((post) => (
