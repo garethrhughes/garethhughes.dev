@@ -24,7 +24,7 @@
 set -euo pipefail
 
 # ── Resolve skills directory ────────────────────────────────────────────────
-SKILLS_DIR="${1:-${HOME}/.config/opencode/skills}"
+SKILLS_DIR="${1:-${PWD}/.opencode/skills}"
 
 if [[ ! -d "$SKILLS_DIR" ]]; then
   echo "Error: skills directory not found: $SKILLS_DIR" >&2
