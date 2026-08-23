@@ -7,6 +7,13 @@ interface PageHeaderProps {
   leading?: React.ReactNode;
   /** Actions or a secondary block, laid out to the right on desktop. */
   children?: React.ReactNode;
+  /**
+   * Sit the children next to the text instead of pushing them to the far edge. Use when
+   * the page has nothing else to fill the right-hand side — `justify-between` across a
+   * 1232px container otherwise strands a row of buttons in the middle of a void, adrift
+   * from the lead they belong to.
+   */
+  compact?: boolean;
   className?: string;
 }
 
@@ -23,11 +30,14 @@ export function PageHeader({
   lead,
   leading,
   children,
+  compact = false,
   className = '',
 }: PageHeaderProps) {
   return (
     <div
-      className={`mb-8 flex flex-col gap-5 md:mb-11 md:flex-row md:items-end md:justify-between md:gap-10 ${className}`}
+      className={`mb-8 flex flex-col gap-5 md:mb-11 md:flex-row md:items-end md:gap-10 ${
+        compact ? '' : 'md:justify-between'
+      } ${className}`}
     >
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:gap-6">
         {leading}

@@ -188,3 +188,28 @@ Recorded during implementation. Each deviates from the proposal above.
    cropped without a scrollbar. Verified that today's four diagrams scale rather than clip,
    but the rule was luck; `overflow-x: auto` (plus `display: block` on tables) makes it
    correct for the next one.
+
+### Post-review adjustments
+
+8. **The archive shows each post's opening paragraph.** Rows were title + tags only. They
+   now carry the same `lead[0]` the timeline uses, clamped to two lines — *not* `excerpt`,
+   which retains a post's H1 and made rows read "OpenCode Skills OpenCode Skills Getting
+   hands-on with…". `app/archive/page.tsx` switched from `getAllPostMeta()` to
+   `getTimelinePosts()`; Fuse still searches `excerpt`.
+
+9. **`line-clamp-2` needs no sibling `display` utility.** The first attempt paired it with
+   `block`, which overrides line-clamp's own `display: -webkit-box` and silently disabled
+   the clamp — four-line rows shipped to the screenshot before it was caught.
+
+10. **Five related posts, not three.** Rail rows take far less vertical space than the cards
+    they replaced, so the aside was mostly empty beside a long article.
+
+11. **The post container is `max-w-[1140px]`, so the grid column *is* the measure.** Capping
+    the article at 72ch inside a `1fr` column of a `max-w-7xl` grid left ~140px of dead
+    space, which read as a ~190px gutter between the post and the aside. The cap stays for
+    the single-column layout below `lg`, where it is still doing work.
+
+12. **`PageHeader` gained `compact` instead of the `stacked` variant first tried.** On
+    `/about/` the actions were being pushed to the far edge by `justify-between` and stranded
+    ~500px from the lead they belong to. Stacking them underneath fixed the marooning but
+    left the whole top-right empty; sitting them next to the lead fixes both.

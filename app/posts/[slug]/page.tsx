@@ -125,14 +125,17 @@ export default async function PostPage({ params }: Props) {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const related = getRelatedPosts(post.slug, post.tags, 3);
+  const related = getRelatedPosts(post.slug, post.tags, 5);
   const { newer, older } = getAdjacentPosts(post.slug);
 
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/" />
 
-      <main className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+      {/* Narrower than the site's max-w-7xl so the article column *is* the reading measure.
+          Capping at 72ch inside a 1fr column left ~140px of dead space that read as an
+          enormous gutter between the post and the aside. */}
+      <main className="mx-auto max-w-[1140px] px-4 py-10 md:px-6">
         <Link
           href="/"
           className="mb-8 inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-squirrel-600 transition-colors"
@@ -143,9 +146,8 @@ export default async function PostPage({ params }: Props) {
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
           <article className="min-w-0">
-            {/* Capped to a readable measure. The article column is ~900px on a wide screen,
-                well past 65–75ch, and past the max-w-[720px] the timeline sets for its own
-                lead text. */}
+            {/* Still capped for the single-column layout below `lg`, where the container is
+                wider than the measure. At `lg` and up the grid column already matches it. */}
             <div className="max-w-[72ch]">
               <header className="mb-8">
                 <h1 className="mb-4 text-3xl font-bold leading-tight text-text-primary [text-wrap:pretty]">

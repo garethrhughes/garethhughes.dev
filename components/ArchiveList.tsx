@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Fuse from 'fuse.js';
 import { Search, X } from 'lucide-react';
-import { formatPostDate, type PostMeta } from '@/lib/post-meta';
+import { formatPostDate, type TimelinePost } from '@/lib/post-meta';
 import { chipClass, TagPills } from './TagPill';
 
 interface ArchiveListProps {
-  posts: PostMeta[];
+  posts: TimelinePost[];
 }
 
 export function ArchiveList({ posts }: ArchiveListProps) {
@@ -123,7 +123,17 @@ export function ArchiveList({ posts }: ArchiveListProps) {
                   <span className="block text-[17px] font-semibold leading-[1.35] text-text-primary transition-colors group-hover:text-squirrel-700">
                     {post.title}
                   </span>
-                  <TagPills tags={post.tags} inline className="mt-1.5" />
+                  {/* The post's opening paragraph, not `excerpt` — `excerpt` keeps a
+                      post's H1, so rows read "OpenCode Skills OpenCode Skills Getting...".
+                      Clamped for the same reason the timeline clamps: leads run from one
+                      sentence to a paragraph and unclamped rows destroy the list's rhythm.
+                      No `block` here — it overrides line-clamp's own display. */}
+                  {post.lead[0] && (
+                    <span className="mt-1.5 line-clamp-2 max-w-[720px] text-sm leading-[1.55] text-text-secondary">
+                      {post.lead[0]}
+                    </span>
+                  )}
+                  <TagPills tags={post.tags} inline className="mt-2" />
                 </span>
               </Link>
             </li>

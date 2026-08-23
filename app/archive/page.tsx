@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getAllPostMeta } from '@/lib/posts';
+import { getTimelinePosts } from '@/lib/posts';
 import { Header } from '@/components/Header';
 import { ArchiveList } from '@/components/ArchiveList';
 import { PageHeader } from '@/components/PageHeader';
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 };
 
 export default function ArchivePage() {
-  const posts = getAllPostMeta();
+  const posts = getTimelinePosts();
 
   return (
     <div className="min-h-screen bg-background">

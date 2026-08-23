@@ -244,9 +244,11 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background">
       <Header currentPath="/about/" />
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-14">
-        {/* Uncarded, matching the home page's front door — /about/ and / are both first
-            impressions and used to open in two different registers. */}
+        {/* `compact` keeps the CTAs beside the lead. Pushed to the far edge they sat ~500px
+            from the text they belong to, marooned in the empty right-hand side that /about/
+            — unlike the home page — has nothing to fill. */}
         <PageHeader
+          compact
           label="Gareth Hughes"
           lead="Senior Engineering Manager in Sydney. Twenty years building software, and over a decade leading the people who build it."
           leading={
@@ -291,7 +293,7 @@ export default function AboutPage() {
           </div>
         </PageHeader>
 
-        {/* Intro — prose, unwrapped and capped to a readable measure. */}
+        {/* Intro — prose, unwrapped and held to a reading measure. */}
         <section className="max-w-[72ch] space-y-4 leading-relaxed text-text-secondary">
           <p>
             Expert .NET and JavaScript engineer and hands-on technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
