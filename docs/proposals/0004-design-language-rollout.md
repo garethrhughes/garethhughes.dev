@@ -237,8 +237,16 @@ Recorded during implementation. Each deviates from the proposal above.
     the timeline. The archive row is baseline-aligned so its date sits on the title's
     baseline, so the image takes `self-center` — baselined, it would hang below the row.
 
-17. **`PageHeader` gained `columns`, replacing `compact`.** `compact` sat the actions right
-    after the lead, which just moved the problem: they ended mid-page aligned to nothing.
-    `columns` lays the header out on `PAGE_COLUMNS` — the same `1.6fr / 1fr` split the
-    `/about/` intro uses — so the buttons share both edges with the recent-writing rail
-    beneath them. The grid template is exported rather than written twice.
+17. **`/about/` is two columns from the top, and `PageHeader` takes one `layout` enum.**
+    Three attempts at the header actions failed for the same underlying reason. `compact`
+    sat them after the lead, where they ended mid-page aligned to nothing. `columns` put
+    them on the page grid, which aligned the edges but left the header row reading as a
+    heavy left block against a thin strip pinned to the bottom of an empty cell. The actual
+    problem was the *structure*: the header spanned the page while only the content below it
+    was columnar.
+
+    The grid now opens above the header, so both columns start at the same y — name, lead,
+    actions and intro on the left, the recent-writing rail on the right. `PageHeader` no
+    longer needs to know about page columns; it takes `layout: 'split' | 'stacked'`,
+    replacing the `stacked` → `compact` → `columns` boolean churn with the discriminated
+    union the TypeScript overlay asks for. `PAGE_COLUMNS` stays exported for the page grid.

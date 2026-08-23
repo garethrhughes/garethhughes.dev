@@ -250,11 +250,13 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background">
       <Header currentPath="/about/" />
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-14">
-        {/* `columns` puts the actions in the same column as the recent-writing rail below,
-            so they line up on both edges. Left to fall where the lead ends, they sat
-            mid-page aligned to nothing. */}
+        {/* Both columns start at the top. Previously the header spanned the page and the
+            actions sat in a right-hand cell that was otherwise empty, so the row read as a
+            heavy left block against a thin strip pinned to its bottom edge. */}
+        <div className={`grid gap-8 ${PAGE_COLUMNS}`}>
+          <div>
         <PageHeader
-          columns
+          layout="stacked"
           label="Gareth Hughes"
           lead="Senior Engineering Manager in Sydney. Twenty years building software, and over a decade leading the people who build it."
           leading={
@@ -299,12 +301,7 @@ export default function AboutPage() {
           </div>
         </PageHeader>
 
-        {/* Two columns: the narrative stays at a reading measure and "Core competencies"
-            moves out beside it. At full width the prose left ~500px of dead air down the
-            right of the page, and the competencies were a labelled list crammed inline
-            into a paragraph — the split fixes both. 1.6fr keeps the prose near 72ch. */}
-        <section className={`grid gap-6 leading-relaxed text-text-secondary ${PAGE_COLUMNS}`}>
-          <div className="space-y-4">
+        <section className="space-y-4 leading-relaxed text-text-secondary">
           <p>
             Expert .NET and JavaScript engineer and hands-on technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
           </p>
@@ -319,6 +316,7 @@ export default function AboutPage() {
               <span className="font-semibold text-text-primary">Core competencies:</span>{' '}
               System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
             </p>
+        </section>
           </div>
 
           {/* Recent writing, not a boxed callout — /about/ sits on a blog, so the natural
@@ -338,7 +336,7 @@ export default function AboutPage() {
               All {total} posts →
             </Link>
           </aside>
-        </section>
+        </div>
 
         {/* Skills — a label/value list, not seven card boxes. The category names are too
             long for the 96px rail gutter, so this borrows the rail's idea (quiet label on

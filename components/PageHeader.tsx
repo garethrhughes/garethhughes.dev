@@ -14,11 +14,11 @@ interface PageHeaderProps {
   /** Actions or a secondary block, laid out to the right on desktop. */
   children?: React.ReactNode;
   /**
-   * Lay the header out on `PAGE_COLUMNS` so the children line up with whatever occupies
-   * the right-hand column below. Without it the actions land wherever the lead happens to
-   * end, aligned to nothing.
+   * `split` puts the children opposite the lead, for pages with something to fill the
+   * right — the home page's currently-reading block. `stacked` puts them underneath, for
+   * a header that already sits inside a column.
    */
-  columns?: boolean;
+  layout?: 'split' | 'stacked';
   className?: string;
 }
 
@@ -35,15 +35,15 @@ export function PageHeader({
   lead,
   leading,
   children,
-  columns = false,
+  layout = 'split',
   className = '',
 }: PageHeaderProps) {
   return (
     <div
-      className={`mb-8 flex flex-col gap-5 md:mb-11 md:items-end ${
-        columns
-          ? `md:grid ${PAGE_COLUMNS}`
-          : 'md:flex-row md:justify-between md:gap-10'
+      className={`mb-8 flex flex-col gap-5 md:mb-11 ${
+        layout === 'split'
+          ? 'md:flex-row md:items-end md:justify-between md:gap-10'
+          : 'md:gap-6'
       } ${className}`}
     >
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:gap-6">
