@@ -130,3 +130,22 @@ export function getRelatedPosts(
     .map((entry) => entry.post);
 }
 
+
+/**
+ * The chronologically adjacent posts. The timeline sets up a chronological reading model
+ * and the post page used to dead-end, so an article offers a way to keep moving along it.
+ *
+ * `readAllPosts` is newest-first, so the *newer* post is the preceding index.
+ */
+export function getAdjacentPosts(slug: string): {
+  newer: PostMeta | null;
+  older: PostMeta | null;
+} {
+  const all = getAllPostMeta();
+  const i = all.findIndex((p) => p.slug === slug);
+  if (i === -1) return { newer: null, older: null };
+  return {
+    newer: all[i - 1] ?? null,
+    older: all[i + 1] ?? null,
+  };
+}

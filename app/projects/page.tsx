@@ -2,13 +2,33 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/Header';
 import { projects } from '@/lib/projects';
+import { PageHeader } from '@/components/PageHeader';
+import { TagPills } from '@/components/TagPill';
 import type { Metadata } from 'next';
+
+const title = 'Projects - Gareth Hughes';
+const description =
+  'Side projects and tools built by Gareth Hughes — a zero-knowledge notes app, an engineering metrics dashboard, developer tooling, and a photography portfolio.';
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'Side projects by Gareth Hughes.',
+  description,
   alternates: {
     canonical: '/projects/',
+  },
+  openGraph: {
+    type: 'website',
+    url: '/projects/',
+    title,
+    description,
+    siteName: 'Gareth Hughes',
+    images: [{ url: '/avatar.jpeg', alt: 'Gareth Hughes' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: ['/avatar.jpeg'],
   },
 };
 
@@ -17,18 +37,16 @@ export default function ProjectsPage() {
     <div className="min-h-screen bg-background">
       <Header currentPath="/projects/" />
       <main className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-        <div className="mb-10 max-w-3xl">
-          <h1 className="mb-2 text-3xl font-bold text-text-primary">Projects</h1>
-          <p className="text-text-muted">
-            Side projects and tools I&apos;ve built.
-          </p>
-        </div>
+        <PageHeader
+          label="Projects"
+          lead="Side projects and tools I've built — mostly things I wanted to exist and couldn't buy."
+        />
 
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <div
               key={project.name}
-              className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
+              className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-alt transition-colors hover:border-squirrel-300"
             >
               {project.image && (
                 <div className="relative aspect-[16/9] w-full bg-surface-alt">
@@ -49,16 +67,7 @@ export default function ProjectsPage() {
                 {project.description}
               </p>
 
-              <div className="mb-5 flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-squirrel-100 px-2.5 py-0.5 text-xs font-medium text-squirrel-700"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              <TagPills tags={project.tags} className="mb-5" />
 
               <div className="mt-auto flex flex-wrap gap-2">
                 {project.url && (

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { postMatchesTopic, type TimelinePost } from '@/lib/post-meta';
 import { EVERYTHING, TopicFilter, type TopicSelection } from './TopicFilter';
 import { TimelineHero, TimelineRow } from './TimelineItem';
+import { GUTTER, Rail } from './Rail';
 
 /** Posts visible on mobile, hero included. Desktop shows every post it is handed. */
 const MOBILE_VISIBLE = 6;
@@ -42,7 +43,7 @@ export function Timeline({ posts, recentCount, earliestYear }: TimelineProps) {
     <>
       <TopicFilter active={topic} onChange={setTopic} />
 
-      <div className="grid grid-cols-[52px_1fr] md:grid-cols-[96px_1fr]">
+      <Rail>
         {isFiltering ? (
           visible.map((post) => <TimelineRow key={post.slug} post={post} />)
         ) : (
@@ -58,9 +59,7 @@ export function Timeline({ posts, recentCount, earliestYear }: TimelineProps) {
 
             {desktopRemaining > 0 && (
               <>
-                <div className="pt-[18px] font-mono text-[11px] font-medium text-text-faint md:pt-5 md:text-xs">
-                  EARLIER
-                </div>
+                <div className={`${GUTTER} pt-[18px] md:pt-5`}>EARLIER</div>
                 <div className="border-l-2 border-border-light pl-[18px] pt-3.5 md:pl-8 md:pt-4">
                   <Link
                     href="/archive/"
@@ -76,7 +75,7 @@ export function Timeline({ posts, recentCount, earliestYear }: TimelineProps) {
             )}
           </>
         )}
-      </div>
+      </Rail>
 
       {visible.length === 0 && (
         <p className="py-10 text-sm text-text-muted">

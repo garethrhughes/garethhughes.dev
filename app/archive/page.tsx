@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { getAllPostMeta } from '@/lib/posts';
 import { Header } from '@/components/Header';
 import { ArchiveList } from '@/components/ArchiveList';
+import { PageHeader } from '@/components/PageHeader';
 import type { Metadata } from 'next';
 
 const title = 'Archive - Gareth Hughes';
@@ -42,12 +43,10 @@ export default function ArchivePage() {
     <div className="min-h-screen bg-background">
       <Header currentPath="/archive/" />
       <main className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-        <div className="mb-8 max-w-3xl">
-          <h1 className="mb-2 text-3xl font-bold text-text-primary">Archive</h1>
-          <p className="text-text-muted">
-            All {posts.length} posts, newest first.
-          </p>
-        </div>
+        <PageHeader
+          label="Archive"
+          lead={`Every post — all ${posts.length} of them, newest first. Search by keyword or filter by tag.`}
+        />
         <Suspense>
           <ArchiveList posts={posts} />
         </Suspense>

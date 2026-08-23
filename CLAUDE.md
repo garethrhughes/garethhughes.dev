@@ -88,7 +88,10 @@ Personal blog site for Gareth Hughes, built with Next.js 16 static export. Cover
 │   ├── Footer.tsx
 │   ├── Header.tsx
 │   ├── MobileMenu.tsx
+│   ├── PageHeader.tsx               ← Shared page front + SectionLabel
 │   ├── PostContent.tsx              ← Client: react-markdown renderer
+│   ├── Rail.tsx                     ← Shared date-gutter/rail geometry
+│   ├── TagPill.tsx                  ← The site's one passive tag pill
 │   ├── Timeline.tsx                 ← Client: topic filter state + timeline rows
 │   ├── TimelineItem.tsx             ← Hero and standard timeline rows
 │   └── TopicFilter.tsx              ← Home page topic chips
@@ -199,6 +202,7 @@ See the `architect` and `decision-log` skills for the exact proposal and ADR for
 | 7 | Dark mode removed — site is light-mode only |
 | 8 | Canonical tag taxonomy defined (see DECISIONS.md 2026-04-19) |
 | 9 | Home page is a timeline (no cards, no search box); search and the full tag list live on `/archive/` (ADR 0016) |
+| 10 | One design language site-wide: `TagPill`, `PageHeader`/`SectionLabel` and `Rail` are the shared primitives. Cards only where `docs/STYLE_GUIDE.md` sanctions them, and flat (`border` + `hover:border-squirrel-300`), never `shadow-sm` → `shadow-md` (ADR 0017) |
 
 ---
 
@@ -211,6 +215,9 @@ See the `architect` and `decision-log` skills for the exact proposal and ADR for
 - **`rehype-raw` required**: Mermaid diagrams are inlined as raw HTML `<div>` tags. Without `rehype-raw` in `PostContent.tsx`, the SVG is stripped by react-markdown.
 - **Archive search state**: `ArchiveList.tsx` holds the query and active tag in local state and mirrors them to `?q=` / `?tag=`, so a filtered view is still linkable. Do not drive the input directly from `useSearchParams` — `router.replace` is async, so each keystroke reads a stale value and characters are dropped.
 - **`lib/post-meta.ts` must stay filesystem-free**: client components (`Timeline`, `TopicFilter`, `ArchiveList`) import formatters and the `TOPICS` map from it. Any `fs` import there breaks the build with "Can't resolve 'fs'". Filesystem reads belong in `lib/posts.ts`.
+- **`Rail` is geometry only**: `components/Rail.tsx` owns the gutter width, rail border, dot, and the `display: contents` row wrapper — nothing else. `Rail`/`RailRow` have two callers (the home timeline and About's Experience section), and the exported `GUTTER` stamp style has two more (the post page's related list and its adjacent-post nav), so a change here moves all of them. Pass content as children rather than adding a mode flag per caller. About's Skills section deliberately opts out: category names like "Cloud & Infrastructure" do not fit the 96px gutter.
+- **Pills have two jobs**: `TagPill` (`bg-squirrel-50`) is the *passive* label used everywhere. The loud filled treatment is reserved for the *active* state of an interactive chip (`TopicFilter`, the archive tag list), and both of those use the same active classes. Do not introduce a third.
+- **Dates go through `lib/post-meta.ts`**: `formatPostDate` and `formatTimelineStamp` are the only date formatters. `toLocaleDateString` is out — see settled decision #4.
 - **Timeline breakpoints are CSS-only**: rows hidden on mobile use `hidden md:contents` so both grid children stay direct children of the grid at `md:` and up, and the hero image is rendered twice because it reorders rather than hides. Do not reach for a media-query hook — it hydrates inconsistently against a static export.
 
 ---

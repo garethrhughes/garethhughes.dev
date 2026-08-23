@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Fuse from 'fuse.js';
 import { Search, X } from 'lucide-react';
 import { formatPostDate, type PostMeta } from '@/lib/post-meta';
+import { TagPills } from './TagPill';
 
 interface ArchiveListProps {
   posts: PostMeta[];
@@ -94,10 +95,11 @@ export function ArchiveList({ posts }: ArchiveListProps) {
                 key={tag}
                 onClick={() => setActiveTag(isActive ? null : tag)}
                 aria-pressed={isActive}
-                className={`cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                /* Same active appearance as the home topic chips — one gesture, one look. */
+                className={`cursor-pointer rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-colors ${
                   isActive
-                    ? 'bg-squirrel-500 text-white'
-                    : 'bg-squirrel-100 text-squirrel-700 hover:bg-squirrel-200'
+                    ? 'border-squirrel-400 bg-squirrel-100 text-squirrel-700'
+                    : 'border-border text-text-secondary hover:bg-surface-hover'
                 }`}
               >
                 {tag}
@@ -119,25 +121,14 @@ export function ArchiveList({ posts }: ArchiveListProps) {
                 href={`/posts/${post.slug}/`}
                 className="group flex flex-col gap-1 py-4 md:flex-row md:items-baseline md:gap-4"
               >
-                <span className="flex-none font-mono text-xs text-text-faint md:w-[118px] md:text-[13px]">
+                <span className="flex-none font-mono text-xs text-text-faint md:w-24 md:text-[13px]">
                   {formatPostDate(post.datePublished)}
                 </span>
                 <span className="flex-1">
                   <span className="block text-[17px] font-semibold leading-[1.35] text-text-primary transition-colors group-hover:text-squirrel-700">
                     {post.title}
                   </span>
-                  {post.tags.length > 0 && (
-                    <span className="mt-1.5 flex flex-wrap gap-1.5">
-                      {post.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-squirrel-50 px-[9px] py-0.5 text-xs font-medium text-squirrel-700"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </span>
-                  )}
+                  <TagPills tags={post.tags} inline className="mt-1.5" />
                 </span>
               </Link>
             </li>
