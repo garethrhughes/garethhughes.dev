@@ -229,3 +229,10 @@ Recorded during implementation. Each deviates from the proposal above.
 15. **`components/PostRow.tsx` was extracted for it.** The post page's related list already
     had exactly this markup. Copying it into `/about/` is how four tag-pill styles happened,
     so both callers now share one component and `PostRowList`.
+
+16. **Archive rows carry thumbnails, and `PostThumbnail` was extracted for it.** The 96×60
+    cover treatment existed in `TimelineItem` and `PostRow` already; the archive would have
+    been the third copy. All three now share one component, callers passing their own
+    visibility classes. Hidden below `md:` and omitted when a post has no cover, matching
+    the timeline. The archive row is baseline-aligned so its date sits on the title's
+    baseline, so the image takes `self-center` — baselined, it would hang below the row.

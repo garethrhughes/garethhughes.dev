@@ -7,6 +7,7 @@ import Fuse from 'fuse.js';
 import { Search, X } from 'lucide-react';
 import { formatPostDate, type TimelinePost } from '@/lib/post-meta';
 import { chipClass, TagPills } from './TagPill';
+import { PostThumbnail } from './PostRow';
 
 interface ArchiveListProps {
   posts: TimelinePost[];
@@ -135,6 +136,14 @@ export function ArchiveList({ posts }: ArchiveListProps) {
                   )}
                   <TagPills tags={post.tags} inline className="mt-2" />
                 </span>
+                {/* `self-center` because the row is baseline-aligned so the date sits on the
+                    title's baseline — an image baselined to that would hang below the row. */}
+                {post.coverImage && (
+                  <PostThumbnail
+                    src={post.coverImage}
+                    className="hidden md:block md:self-center"
+                  />
+                )}
               </Link>
             </li>
           ))}

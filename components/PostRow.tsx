@@ -3,6 +3,23 @@ import Link from 'next/link';
 import { formatTimelineStamp, type PostMeta } from '@/lib/post-meta';
 import { GUTTER } from './Rail';
 
+/**
+ * The 96x60 cover thumbnail used by the timeline, the archive and the post page's aside.
+ * Callers pass their own visibility classes — most hide it on mobile. Never rendered when
+ * a post has no cover: an empty bordered box reads as a failed image (ADR 0016).
+ */
+export function PostThumbnail({ src, className = '' }: { src: string; className?: string }) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={96}
+      height={60}
+      className={`h-[60px] w-24 flex-none rounded-lg border border-border bg-surface-alt object-cover object-top ${className}`}
+    />
+  );
+}
+
 interface PostRowProps {
   post: PostMeta;
   /**
@@ -27,15 +44,7 @@ export function PostRow({ post, thumbnail = true }: PostRowProps) {
             {post.title}
           </div>
         </div>
-        {thumbnail && post.coverImage && (
-          <Image
-            src={post.coverImage}
-            alt=""
-            width={96}
-            height={60}
-            className="h-[60px] w-24 flex-none rounded-lg border border-border bg-surface-alt object-cover object-top"
-          />
-        )}
+        {thumbnail && post.coverImage && <PostThumbnail src={post.coverImage} />}
       </Link>
     </li>
   );

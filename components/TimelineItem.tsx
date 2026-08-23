@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { TimelinePost } from '@/lib/post-meta';
 import { RailRow } from './Rail';
+import { PostThumbnail } from './PostRow';
 import { TagPills } from './TagPill';
 
 /**
@@ -90,17 +91,7 @@ export function TimelineRow({ post, hideOnMobile = false }: TimelineRowProps) {
           <TagPills tags={post.tags} max={3} className="mt-2.5" />
         </div>
 
-        {/* Desktop-only, and omitted entirely when the post has no cover — an empty
-            bordered box reads as a failed image rather than as spacing. */}
-        {post.coverImage && (
-          <Image
-            src={post.coverImage}
-            alt=""
-            width={96}
-            height={60}
-            className="hidden h-[60px] w-24 flex-none rounded-lg border border-border bg-surface-alt object-cover object-top md:block"
-          />
-        )}
+        {post.coverImage && <PostThumbnail src={post.coverImage} className="hidden md:block" />}
       </Link>
     </RailRow>
   );
