@@ -20,6 +20,14 @@ Living log of implementation and architecture decisions for this repository.
 - Notes: Follow-ups, caveats, or migration details.
 ```
 
+## 2026-10-01
+
+### Project series tags
+- Decision: Added project series tags to the canonical tag set: `squirrel-notes` and `fragile`. A series tag names a single side project and goes on every post about that project, alongside the broad topic tags rather than replacing them.
+- Why: Both tags were already in use (four `squirrel-notes` posts, two `fragile` posts) without being recorded as canonical. Related-post suggestions rely on tag overlap, so a shared series tag reliably links each post in a series to the others.
+- Scope: `posts/` frontmatter — `2026-03-26-introducing-squirrel-notes.md`, `2026-03-29-how-squirrel-notes-keeps-your-data-private.md`, `2026-04-08-using-claude-as-a-first-class-interface-for-squirrel-notes.md`, `2026-10-01-squirrel-notes-2-0.md`, `2026-04-15-introducing-fragile.md`, `2026-08-13-how-fragile-survived-first-deployment.md`.
+- Notes: Current canonical tag set: `software-development`, `aws`, `ai`, `productivity`, `security`, `interviewing`, `architecture`, `linux`, `dotnet`, `typescript`, `cdk`, `terraform`, `serverless`, `devops`, `developer-setup`, `blogging`, `photography`, `engineering-metrics`, `javascript`, `web`, `notes`, `cost-optimisation`, `open-source`, `leadership`, plus series tags `squirrel-notes` and `fragile`. Add a new series tag only for a project with two or more posts.
+
 ## 2026-08-23
 
 ### Timeline home page, archive route for the back catalogue
