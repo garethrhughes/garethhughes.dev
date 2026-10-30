@@ -15,43 +15,8 @@ proceed to code checks until both the feature doc and proposal reviews are compl
 either has blocking issues, state them and stop — there is no value reviewing code that
 implements a flawed or misaligned design.
 
-## Project Context
-
-**Project:** garethhughes.dev — Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).
-
-**Frontend:** Next.js 16.2.1 App Router (static export) / TypeScript 5 strict / Tailwind CSS v4 + Geist font
-**Auth:** None — fully public site
-**Content:** gray-matter + react-markdown + remark-gfm + rehype-highlight + rehype-raw; mermaid diagrams rendered at build time via @mermaid-js/mermaid-cli
-**Search:** Fuse.js client-side fuzzy search
-**Testing:** None — intentionally test-free for a static blog
-**Data fetching:** Build-time filesystem reads only (lib/posts.ts); no runtime server, no API routes
-
-**Infra:** No IaC; primary deployment GitHub Pages (GitHub Actions); secondary deployment AWS S3 + CloudFront (manual Makefile)
-**Local dev:** npm run dev — no Docker required
-**CI/CD:** GitHub Actions (.github/workflows/deploy.yml) — build + deploy-pages jobs
-
-**Compliance:** None
-**Data classes:** Not applicable — no user data collected
-**Encryption:** Managed by hosting infrastructure
-
-**Repo structure:** app/ (routes), components/ (UI), lib/ (data/build utilities), posts/ (markdown), public/ (static assets), docs/proposals/, docs/decisions/
-**Module structure:** All content loading through lib/posts.ts; lib/mermaid.ts for build-time diagram rendering; Server Components by default; 'use client' only for search/filter UI (BlogList.tsx), markdown renderer (PostContent.tsx), and legacy URL redirects.
-
-**Key rules:**
-- Static export — no server runtime; never add API routes or server-side redirects
-- All data loading at build time via lib/posts.ts — no fetch() in components
-- Post files: YYYY-MM-DD-slug.md with ISO-8601 datePublished and matching slug frontmatter
-- Canonical tag taxonomy defined in DECISIONS.md 2026-04-19
-- /avatar.jpeg is the stable social image fallback — do not change this path
-- Legacy URL redirects use thin 'use client' pages (useRouter().replace()); next.config.ts redirects() unavailable in static export
-- TypeScript strict: true — no as any or : any
-- No barrel index.ts files
-- Write a proposal in docs/proposals/ before significant changes; record decisions in docs/decisions/ and DECISIONS.md
-
-**External integrations:** None
-**Key entities:** Post (public markdown content), PostMeta (parsed frontmatter + excerpt)
-**Known gotchas:** Mermaid requires Chromium system libs in CI; image optimisation disabled (required for static export); trailingSlash: true on all routes; rehype-raw required for inlined mermaid SVGs
-**Open onboarding gaps:** 5 items — see CLAUDE.md ## Onboarding Notes
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
 
 ---
 
@@ -62,7 +27,7 @@ The convention checks below are role-tailored summaries of:
 1. The language-agnostic rules in [`RULES.md`](../RULES.md) (config & secrets,
    external HTTP clients, observability, IaC, testing, git & PRs).
 2. The active **stack overlay** under [`rules/`](../rules/), pinned by the project's
-   `## Active Skillset` line in `CLAUDE.md` — e.g.
+   `## Active Skillset` line in `AGENTS.md` — e.g.
    [`rules/typescript.md`](../rules/typescript.md) or
    [`rules/dotnet.md`](../rules/dotnet.md).
 
@@ -72,8 +37,32 @@ deviation is a finding (severity depends on which rule). Frequent reference sect
 *Logging & Observability*, *Testing*, *Infrastructure as Code* (core only), plus the
 overlay's *Language Conventions*.
 
-If `CLAUDE.md` does not declare an active skillset, default to the
+If `AGENTS.md` does not declare an active skillset, default to the
 [`typescript`](../rules/typescript.md) overlay for backwards compatibility.
+
+---
+
+## Before Forming a Verdict
+
+Read the Patterns in `docs/corrections-log.md`, if the project has one, and apply
+[`RULES.md#evidence-corrections--decisions`](../RULES.md#evidence-corrections--decisions).
+Your brief is set by [`RULES.md#git--prs`](../RULES.md#git--prs): a list of fixes you
+are handed is a set of claims to verify, not the scope. Check in particular:
+
+1. "Done / out of scope / pre-existing" claims: reproduce them (merge base for
+   pre-existing failures).
+2. Tests that cannot fail: mutate the enforcing lines and watch them go red
+   ([`RULES.md#testing`](../RULES.md#testing)), including earlier rounds' mutations on
+   this head.
+3. Mitigations: construct each failure the change says it prevents.
+4. Documents claimed amended (`git show` the passage) and reported results (ask for the
+   failing count).
+5. One-sided changes: a guard on one path but not its twin, a rule changed in one copy,
+   a removed name still referenced.
+6. Every Acceptance Criterion traced to a test.
+
+Measure disagreements on measurable facts. Report anything the corrections log has not
+seen so it can be added.
 
 ---
 
@@ -108,6 +97,11 @@ Read the full feature document and check the following.
 - The feature document's `Status` field should be updated to `In Progress` or
   `Implemented` — if it is still `Draft`, flag as **Minor**.
 - The `Related proposal` field should be populated — if blank, flag as **Minor**.
+
+**Privacy screening** ([`RULES.md#privacy`](../RULES.md#privacy)): present and complete
+(unless the doc predates the adoption point in `AGENTS.md`), any Yes links an existing
+PIA, and the diff stays within the PIA's data table. Any failure → **Blocker**. Run the
+project's privacy-screening guard if it has one.
 
 If the feature doc has **Blocker** findings, state the verdict and stop. Do not proceed
 to Phase 2 or Phase 3.
@@ -152,6 +146,9 @@ using the standard severity levels before touching the code.
   and request rewrite
 
 **Security & privacy considerations**
+- Does the proposal carry its privacy screening, and a PIA for any Yes
+  ([`RULES.md#privacy`](../RULES.md#privacy))? Missing → **Blocker** (unless it predates
+  the adoption point).
 - Does the proposal identify any new data being collected, stored, or transmitted?
 - Are auth/authorisation implications called out?
 - If the proposal introduces new external integrations or public surface area, are the
@@ -216,6 +213,19 @@ Read the diff and flag any deviation. Severity is determined as follows:
   risk).
 - Rules under core [Testing](../RULES.md#testing) and [Git & PRs](../RULES.md#git--prs)
   (and overlay testing primitives) → **Major** when violated.
+
+### Process Checks — each failure → **BLOCK**
+
+- **CI evidence** per [`RULES.md#git--prs`](../RULES.md#git--prs). If `AGENTS.md` does
+  not say whether CI runs on pull requests, read the workflows' `on:` triggers, apply
+  the matching case and ask the owner to record it. On an open PR, red or missing on the
+  head blocks; still running is recorded as pending.
+- **Changelog** per [`RULES.md#changelog`](../RULES.md#changelog) (projects with one).
+- **Privacy screening** per [`RULES.md#privacy`](../RULES.md#privacy), for every PR it
+  covers. A PR with no feature doc (Phase 1 skipped) has it in its PR-description draft.
+- **Risk register** per [`RULES.md#risk-register`](../RULES.md#risk-register).
+- **Evaluation gates** per
+  [`RULES.md#evaluation-and-recall-gates`](../RULES.md#evaluation-and-recall-gates).
 
 ### Design Principles — Clean Code, SOLID, DRY
 
@@ -420,12 +430,10 @@ Use the GitHub MCP server to:
 - Review comments from previous review rounds to ensure findings have been addressed
 
 ### semgrep — Automated Security Scanning
-Use the Semgrep MCP server as part of the Security Checks phase:
-
-- Run a Semgrep scan on changed files before completing the review
-- Include any High or Critical Semgrep findings as **Blocker** items in your verdict
-- Include Medium findings as **Major** items; Low as **Minor**
-- Note the Semgrep rule ID alongside each finding so the developer can reproduce it
+Run Semgrep on every review, before completing it, as
+[`RULES.md#static-analysis`](../RULES.md#static-analysis) describes (MCP server or the
+CLI command there), and use its review severities. Give each finding's rule ID and
+`file:line`.
 
 ### filesystem — Feature Doc, Proposal, Design & Decision Cross-Reference
 Use the Filesystem MCP server to:
@@ -459,7 +467,12 @@ Use the Filesystem MCP server to:
 - Any new public API endpoint is reflected in the OpenAPI / API docs
 - If a new API endpoint or field is added, the API reference docs (Swagger, Redoc, or
   equivalent) are regenerated or manually updated to reflect it
-- If the project has a changelog (`CHANGELOG.md` or equivalent), a new entry is present
+- If the project has a changelog, the entry follows
+  [`RULES.md#changelog`](../RULES.md#changelog)
+- Removed names, and every copy of a changed rule, are reconciled
+  ([`RULES.md#evidence-corrections--decisions`](../RULES.md#evidence-corrections--decisions)),
+  including the PR description (or its draft)
+- `docs/privacy/data-inventory.md` reflects any personal-data row the change touches
 
 ## Review Output Format
 
@@ -477,6 +490,7 @@ Status: In Progress | Implemented | Draft | Missing link — <action if problema
 - [✓] Scope is consistent with what was built
 - [✗] Open question "X" is unresolved → flagged as Major below
 - [✓] Related proposal field is populated
+- [✓] Privacy screening complete; Yes answers link a PIA that matches the diff
 - [✗] Status field is still Draft → flagged as Minor below
 ```
 
@@ -517,10 +531,14 @@ Phase 3.
 ## Verdict: PASS | PASS WITH COMMENTS | BLOCK
 ```
 
+State the Semgrep summary (or `Semgrep: NOT RUN` and why) and the CI evidence below the
+verdict line.
+
 - **PASS** — no issues found
 - **PASS WITH COMMENTS** — Minor/Suggestion items only; can merge after author acknowledges
 - **BLOCK** — one or more Blocker or Major findings (including any Unverified Acceptance
-  Criterion or proposal quality issue); must be resolved before merge
+  Criterion, proposal quality issue, or failed Process Check); must be resolved before
+  merge
 
 Then list each finding (from all phases) using this structure:
 

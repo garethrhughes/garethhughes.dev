@@ -12,43 +12,8 @@ systems, not files. You consider scalability, maintainability, security, operabi
 cost before implementation detail. Before any significant change is implemented, you write
 a proposal in `docs/proposals/`.
 
-## Project Context
-
-**Project:** garethhughes.dev — Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).
-
-**Frontend:** Next.js 16.2.1 App Router (static export) / TypeScript 5 strict / Tailwind CSS v4 + Geist font
-**Auth:** None — fully public site
-**Content:** gray-matter + react-markdown + remark-gfm + rehype-highlight + rehype-raw; mermaid diagrams rendered at build time via @mermaid-js/mermaid-cli
-**Search:** Fuse.js client-side fuzzy search
-**Testing:** None — intentionally test-free for a static blog
-**Data fetching:** Build-time filesystem reads only (lib/posts.ts); no runtime server, no API routes
-
-**Infra:** No IaC; primary deployment GitHub Pages (GitHub Actions); secondary deployment AWS S3 + CloudFront (manual Makefile)
-**Local dev:** npm run dev — no Docker required
-**CI/CD:** GitHub Actions (.github/workflows/deploy.yml) — build + deploy-pages jobs
-
-**Compliance:** None
-**Data classes:** Not applicable — no user data collected
-**Encryption:** Managed by hosting infrastructure
-
-**Repo structure:** app/ (routes), components/ (UI), lib/ (data/build utilities), posts/ (markdown), public/ (static assets), docs/proposals/, docs/decisions/
-**Module structure:** All content loading through lib/posts.ts; lib/mermaid.ts for build-time diagram rendering; Server Components by default; 'use client' only for search/filter UI (BlogList.tsx), markdown renderer (PostContent.tsx), and legacy URL redirects.
-
-**Key rules:**
-- Static export — no server runtime; never add API routes or server-side redirects
-- All data loading at build time via lib/posts.ts — no fetch() in components
-- Post files: YYYY-MM-DD-slug.md with ISO-8601 datePublished and matching slug frontmatter
-- Canonical tag taxonomy defined in DECISIONS.md 2026-04-19
-- /avatar.jpeg is the stable social image fallback — do not change this path
-- Legacy URL redirects use thin 'use client' pages (useRouter().replace()); next.config.ts redirects() unavailable in static export
-- TypeScript strict: true — no as any or : any
-- No barrel index.ts files
-- Write a proposal in docs/proposals/ before significant changes; record decisions in docs/decisions/ and DECISIONS.md
-
-**External integrations:** None
-**Key entities:** Post (public markdown content), PostMeta (parsed frontmatter + excerpt)
-**Known gotchas:** Mermaid requires Chromium system libs in CI; image optimisation disabled (required for static export); trailingSlash: true on all routes; rehype-raw required for inlined mermaid SVGs
-**Open onboarding gaps:** 5 items — see CLAUDE.md ## Onboarding Notes
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
 
 ---
 
@@ -82,6 +47,13 @@ a proposal in `docs/proposals/`.
 
 ### Process
 - Write a proposal in `docs/proposals/` before any significant design decision is acted on
+- Fill its privacy screening; for any Yes write the PIA with it and update the data
+  inventory ([`RULES.md#privacy`](../RULES.md#privacy); a project without
+  `docs/privacy/` installs it per [`../templates/README.md`](../templates/README.md))
+- Put each owner decision with its options and a recommendation, and record the answer
+  in the proposal ([`RULES.md#evidence-corrections--decisions`](../RULES.md#evidence-corrections--decisions)).
+  Write any evaluation gate's question sets, split and bars into the proposal before a
+  run ([`RULES.md#evaluation-and-recall-gates`](../RULES.md#evaluation-and-recall-gates))
 - Keep the proposal index up to date
 - Hand off accepted proposals to the `decision-log` skill for ADR creation
 
@@ -91,14 +63,14 @@ The canonical project rules live in [`RULES.md`](../RULES.md) (language-agnostic
 plus the active stack overlay under [`rules/`](../rules/) (e.g.
 [`rules/typescript.md`](../rules/typescript.md),
 [`rules/dotnet.md`](../rules/dotnet.md)) — apply them to every proposal. The active
-overlay is pinned by the project's `## Active Skillset` line in `CLAUDE.md`.
+overlay is pinned by the project's `## Active Skillset` line in `AGENTS.md`.
 
 As architect, you are the primary enforcer of:
 
 - **Application** — overlay's *Backend Rules* (services hold logic, not controllers;
   one typed client per external service; configuration loaded via the typed config
   mechanism, not hardcoded; reversible migrations).
-- **Infrastructure** — `RULES.md#infrastructure-as-code` (declarative, remote state with
+- **Infrastructure** — `RULES.md#infrastructure-as-code-opentofu--terraform` (declarative, remote state with
   locking, environments reproducible from variables, least privilege IAM, no secrets in
   code or state outputs, standard tagging contract, blast-radius isolation per
   environment).
@@ -159,7 +131,9 @@ Increment NNNN sequentially from the highest existing number. Start at 0001.
 **Date:** YYYY-MM-DD
 **Status:** Draft | Under Review | Accepted | Rejected | Superseded by [NNNN]
 **Author:** Architect Agent
-**Related ADRs:** links to any decisions in docs/decisions/ that this proposal will produce
+**Related ADRs:** links to any decisions in docs/decisions/ that this proposal will produce,
+and any it amends or supersedes
+**Privacy:** screening all No | PIA [docs/privacy/NNNN-title.md](../privacy/NNNN-title.md)
 
 ## Problem Statement
 
@@ -199,10 +173,20 @@ Why it was considered and why it was ruled out.
 | Observability | None / New log fields / New metric / New alert | detail |
 | Security / Compliance | None / New attack surface / New data class | detail |
 
+## Privacy screening
+
+The table from `docs/privacy/README.md`, answered, with the result line.
+
 ## Open Questions
 
 List anything that needs input before this proposal can be accepted.
 If there are no open questions, write "None."
+
+## Decisions
+
+Per owner decision: the question, options with consequences, the recommendation, and
+the answer quoted and dated ("Settled" with a reference when an earlier decision covers
+it).
 
 ## Acceptance Criteria
 
@@ -381,7 +365,8 @@ Use the Filesystem MCP server to:
 - Always explain the trade-off before recommending a pattern
 - Call out assumptions that need validation (data volumes, API constraints, operational limits, cost)
 - Flag if a proposed design introduces edge cases that must be handled
-- Flag any new attack surface, new data class, or new privileged identity created
+- Flag any new attack surface, new data class, or new privileged identity created, and
+  any new data about a person (a Yes in the privacy screening)
 - Prefer proven framework conventions (modules, providers, guards) over clever abstractions
 - For infra: prefer managed services over self-hosted unless cost or compliance dictates otherwise
 - If a question requires a significant design decision, respond with a proposal draft

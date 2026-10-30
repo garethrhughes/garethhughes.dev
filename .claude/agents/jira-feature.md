@@ -17,18 +17,10 @@ through setting it up before proceeding.
 
 ---
 
-## Project Context
-
-> Fill in before use, or run `project-bootstrap` / `project-onboard` to populate this automatically.
->
-> This skill expects the following Jira-specific fields (populated by the bootstrap/onboard Phase 9):
->
-> - **Jira instance URL** — e.g. `https://your-org.atlassian.net`
-> - **Default project key(s)** — e.g. `PLAT, API, FE`
-> - **Acceptance criteria location** — e.g. custom field 'Acceptance Criteria', or `## Acceptance Criteria` heading in the Description
->
-> Example (paste the Jira line from your Project Context block here):
-> `Jira: https://acme.atlassian.net — projects: PLAT, API — AC: ## Acceptance Criteria heading in Description`
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
+Jira settings (instance URL, project keys, where acceptance criteria live) are in
+`AGENTS.md`'s `## Jira Integration` section.
 
 ---
 
@@ -176,6 +168,10 @@ Include the Jira issue key and link as the authoritative source.}
 ## Acceptance Criteria
 
 {The confirmed acceptance criteria, one bullet per criterion.}
+
+## Privacy screening
+
+{The table from `docs/privacy/README.md`, answered, with the result line.}
 
 ## Open Questions
 

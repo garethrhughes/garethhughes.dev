@@ -9,22 +9,28 @@ description: Use to walk through the full feature development cycle: proposal �
 This skill describes the complete feature development cycle used in this project. Follow
 these steps in order for any non-trivial piece of work. Each step maps to a specific skill.
 
-## Project Context
-
-> Fill in before use: Replace this section with your project's conventions, repository
-> locations for proposals and decisions, and any team-specific workflow notes.
->
-> Example: "Proposals: docs/proposals/. Decisions: docs/decisions/. Branches: feature/NNNN-short-title.
-> PRs target main. CI runs Jest + Vitest + `tofu plan`. Compliance: ISO27001."
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
 
 ---
 
 ## Authoritative Rules
 
-Project-wide engineering conventions enforced across every step of this cycle live in
-[`RULES.md`](../RULES.md). Each downstream skill (`developer`, `reviewer`, `infosec`)
-references the same file. When orchestrating a feature, treat `RULES.md` as the
+Project-wide engineering conventions enforced across every step of this cycle live in two
+layers:
+
+1. The language-agnostic core in [`RULES.md`](../RULES.md).
+2. The active **stack overlay** under [`rules/`](../rules/), pinned by the project's
+   `## Active Skillset` line in `AGENTS.md` — e.g.
+   [`rules/typescript.md`](../rules/typescript.md) or
+   [`rules/dotnet.md`](../rules/dotnet.md).
+
+Each downstream skill (`architect`, `design`, `developer`, `reviewer`, `infosec`) reads the
+same two files. When orchestrating a feature, treat (`RULES.md` + the active overlay) as the
 contract that all output must satisfy.
+
+If `AGENTS.md` does not declare an active skillset, downstream skills default to the
+[`typescript`](../rules/typescript.md) overlay.
 
 ---
 
@@ -109,14 +115,30 @@ linked ticket, etc.).
 - Given {context}, when {action}, then {outcome}
 - *(one bullet per criterion — specific and testable)*
 
+## Privacy screening
+
+*(The table from `docs/privacy/README.md`: five questions, Yes/No, one-line reason, and
+the result line.)*
+
 ## Open Questions
 
 List anything that needs answering before or during design. If none, write "None."
+Give each question for the product owner its options, consequences and a
+recommendation.
+
+## Decisions
+
+The product owner's answers, quoted and dated; decisions taken on their behalf marked
+"pending review".
 
 ## Notes
 
 Any additional context, constraints, or decisions that should inform the architect.
 ```
+
+**Privacy** ([`RULES.md#privacy`](../RULES.md#privacy)): any Yes with no proposal means
+the PIA is written here, before implementation, and infosec becomes required. Run the
+project's privacy-screening guard if it has one.
 
 After writing the file, confirm to the user:
 
@@ -134,8 +156,9 @@ Use the **architect** skill to:
 1. Determine whether the change warrants a proposal (see the architect skill's "When to Write
    a Proposal" section — note this includes infra-only changes such as new IAM policies,
    network changes, new resources)
-2. If yes: write a proposal in `docs/proposals/NNNN-short-title.md`, including the
-   **Infrastructure Addendum** if any infra is touched
+2. If yes: write a proposal in `docs/proposals/NNNN-short-title.md`, with its privacy
+   screening (and PIA for any Yes) and the **Infrastructure Addendum** if any infra is
+   touched
 3. **Present the completed proposal to the user as a structured summary table, then ask for sign-off:**
 
    ```
@@ -149,6 +172,7 @@ Use the **architect** skill to:
    |                          | {decision 2}                                 |
    | Infrastructure changes   | {yes — {summary} / no}                       |
    | Security considerations  | {yes — {summary} / none identified}          |
+   | Privacy                  | {screening all No / PIA docs/privacy/NNNN}   |
    | Proposal file            | docs/proposals/NNNN-short-title.md           |
    ```
 
@@ -161,24 +185,54 @@ Use the **architect** skill to:
    it, update the proposal, update the summary table, and ask again. Repeat until the user accepts.
 4. Once accepted: update the proposal status to `Accepted`
 5. Update the feature document's **Related proposal** field with the proposal file path
-6. Create any ADR(s) that the proposal produces in `docs/decisions/`
+
+Any ADR(s) the accepted proposal produces are created in **Step 5** by the `decision-log`
+skill, which is the sole owner of ADR creation. The architect hands off to it rather than
+writing `docs/decisions/` files directly.
 
 **Skip this step only for:** trivial bug fixes, copy changes, or configuration tweaks that
 do not affect architecture, module boundaries, schema, infra, or security posture.
 
 **Handoff to Step 2 when:** the user has explicitly accepted the proposal (or the change is
-confirmed as trivial).
+confirmed as trivial) — via Step 1.5 first if the feature has UI surface.
+
+---
+
+### Step 1.5 — Design Direction (Design skill)
+
+**When:** The proposal is accepted **and** the feature introduces or reshapes user-facing
+UI, or a design handover from Claude exists for it.
+
+Skip this step for backend-only, infra-only, or docs-only features, and for routine UI work
+that only consumes tokens and components the project already has.
+
+Use the **design** skill to:
+1. Classify the work (handover port / net-new / restyle) and read the project's styling
+   system and existing design system
+2. For a handover: extract the token system from the artifact and produce the port report
+   listing everything that cannot cross into the codebase as-is
+3. Write a design plan to `docs/design/NNNN-short-title.md` — tokens, layout, component
+   map, copy, accessibility floor, divergences — and update `docs/design/README.md`
+4. Audit the plan for genericness and restraint, then present it and get explicit sign-off
+5. Set the plan's status to `Accepted` and back-link it from the feature document
+
+**Handoff to Step 2 when:** the user has explicitly accepted the design plan. The developer
+implements against the accepted plan; the reviewer traces the built UI back to it in Step 3.
 
 ---
 
 ### Step 2 — Implementation (Developer skill)
 
-**When:** Proposal is accepted (or change is confirmed trivial).
+**When:** Proposal is accepted (or change is confirmed trivial), and — for UI-bearing work
+— the design plan from Step 1.5 is accepted.
 
 Use the **developer** skill to:
+0. Start the **PR-description draft**. For a PR with no feature doc, its privacy
+   screening (and any PIA) comes first, before any code
+   ([`RULES.md#privacy`](../RULES.md#privacy)); a Yes makes Step 4 required
 1. Create a new branch: `git checkout -b feature/NNNN-short-title` *(adjust the branch
    naming convention to match your project's standard, or use the convention defined in
-   your CLAUDE.md)*
+   your AGENTS.md)*
 2. Follow the red-green-refactor TDD cycle for every unit of behaviour:
    - Write a failing test first
    - Write the minimum code to make it pass
@@ -190,7 +244,14 @@ Use the **developer** skill to:
    environment from a developer machine
 5. Call out any new dependencies (npm packages, Terraform modules, providers) explicitly
    before adding them
-6. Run the full test suite before considering the implementation complete
+6. **For UI changes:** implement against the accepted design plan from Step 1.5 — tokens
+   into the token layer first, then components. The `design` skill owns Phase 4/5 of that
+   work (implementation and the accessibility/visual critique); record any divergence from
+   the plan in the plan's Divergences section
+7. Build only what the PIA lists; follow [`RULES.md#changelog`](../RULES.md#changelog)
+8. Run the full test suite and Semgrep, and produce the CI evidence
+   [`RULES.md#git--prs`](../RULES.md#git--prs) requires (where CI runs on pull requests,
+   "pending" until Step 6)
 
 **Handoff to Step 3 when:** all tests pass and the branch is ready for review.
 
@@ -200,11 +261,16 @@ Use the **developer** skill to:
 
 **When:** Implementation is complete and tests are green.
 
+Brief the reviewer as [`RULES.md#git--prs`](../RULES.md#git--prs) says: the original
+request, the diff and the existing evidence, including the PR-description draft.
+
 Use the **reviewer** skill to:
 1. Trace each Acceptance Criterion from the proposal to a covering test
 2. Review all staged / branch changes for correctness, security, performance, IaC safety,
    observability, and convention adherence
-3. Return a verdict: PASS / PASS WITH COMMENTS / BLOCK
+3. For UI changes: check the built UI against the accepted design plan, and against the
+   accessibility floor
+4. Return a verdict: PASS / PASS WITH COMMENTS / BLOCK
 
 **If BLOCK or Major findings:**
 - Return to **Step 2** (developer) to address all Blocker and Major findings
@@ -231,8 +297,12 @@ Blockers and Majors resolved.
 - Infrastructure (IAM, network, secrets manager, KMS, public endpoints)
 - A new external integration
 - A new dependency that handles credentials, crypto, or PII
+- A PIA (any Yes in the privacy screening)
 
 For pure UI / pure refactor / pure docs changes with none of the above, **skip this step**.
+If infosec has no shell, run Semgrep for it
+([`RULES.md#static-analysis`](../RULES.md#static-analysis)) and hand over the file list,
+summary and JSON with the reviewer's brief.
 
 Use the **infosec** skill to:
 1. Run the project's compliance review against the diff (e.g. ISO27001 controls if applicable)
@@ -243,7 +313,8 @@ Use the **infosec** skill to:
 **If REQUIRES CHANGES:**
 - Return to **Step 2** to fix
 - Re-run infosec after fixes
-- Document any APPROVED WITH EXCEPTION findings as ADRs in Step 5
+- Document any APPROVED WITH EXCEPTION findings as ADRs in Step 5, with the risk-register
+  rows infosec proposed
 
 **Handoff to Step 5 when:** infosec verdict is APPROVED or APPROVED WITH EXCEPTION
 (with exceptions queued for ADR).
@@ -264,7 +335,9 @@ Use the **decision-log** skill to log any significant decisions made during Step
 - Proposal accepted (if not already logged in Step 1)
 
 Update any proposals in `docs/proposals/` whose status is still `Draft` or `Under Review`
-to `Accepted`, linking the ADR numbers.
+to `Accepted`, linking the ADR numbers. Add one line per settled decision to `AGENTS.md`
+([`RULES.md#project-facts`](../RULES.md#project-facts)), and append anything that went
+wrong to `docs/corrections-log.md`.
 
 **Handoff to Step 6 when:** all relevant ADRs are written and the index is updated.
 
@@ -274,17 +347,24 @@ to `Accepted`, linking the ADR numbers.
 
 **When:** Steps 1–5 are complete.
 
-1. Push the branch to remote: `git push -u origin feature/NNNN-short-title`
+1. Push the branch to remote: `git push -u origin feature/NNNN-short-title` (the owner
+   started this cycle, so pushing and opening the PR need no further ask)
 2. Open a PR targeting `main` (or the project's default branch)
 3. In the PR description, include:
    - A summary of what changed and why
    - Link to the feature document (`docs/features/NNNN-short-title.md`)
    - Link to the accepted proposal (if one exists)
+   - Link to the accepted design plan and the Phase 5 screenshots (for UI changes)
    - Link to any new ADRs created
-   - Test coverage summary (new tests added, all passing)
+   - Test summary: new tests added and the full test result line, with failures
+   - Reviewer verdict (PASS / PASS WITH COMMENTS)
    - For infra changes: the `terraform plan` (or equivalent) summary
-   - Infosec verdict (APPROVED / APPROVED WITH EXCEPTION + ADR link)
-4. Ensure CI passes (including infra `plan` and any IaC tests)
+   - Infosec verdict (APPROVED / APPROVED WITH EXCEPTION + ADR link + risk-register row)
+   - The PR-description draft (with its privacy screening), the Semgrep summary and the
+     CI evidence
+4. Ensure CI passes (including infra `plan` and any IaC tests): where it runs on the PR,
+   wait for the run on the head and report it
+5. Keep the PR description current after each fix round ([`RULES.md#git--prs`](../RULES.md#git--prs))
 
 ---
 
@@ -295,10 +375,11 @@ section summarises where each is most relevant:
 
 | MCP Server | Most relevant steps | Primary use |
 |---|---|---|
-| **context7** | Step 1, Step 2 | Look up live framework/provider docs before designing or coding |
+| **context7** | Step 1, Step 1.5, Step 2 | Look up live framework/provider/styling docs before designing or coding |
 | **github** | Step 2, Step 3, Step 6 | Branch/PR operations, CI status checks, diff access for review |
-| **filesystem** | Intake, Step 1, Step 2, Step 5 | Read/write feature docs, proposals, ADRs, and source files |
+| **filesystem** | Intake, Step 1, Step 1.5, Step 2, Step 5 | Read/write feature docs, proposals, design plans, ADRs, and source files |
 | **semgrep** | Step 2, Step 3, Step 4 | Static analysis — run before handoff at each gate |
+| **playwright** | Step 1.5, Step 2, Step 3 | Screenshots per breakpoint and accessibility snapshots for UI work |
 
 Each skill in the cycle is responsible for using these tools appropriately — the guidance
 above is a cross-step reference to avoid duplication. See each individual skill for
@@ -312,21 +393,28 @@ step-specific instructions.
 |---|---|
 | Reviewer returns BLOCK | Fix all Blockers → re-review (Step 3 → Step 2 → Step 3) |
 | Infosec returns REQUIRES CHANGES | Fix → re-run infosec (Step 4 → Step 2 → Step 4) |
-| Implementation reveals design flaw | Write a new proposal or amend the existing one (Step 1) before proceeding |
+| Implementation reveals an architectural flaw | Write a new proposal or amend the existing one (Step 1) before proceeding |
+| User rejects the design plan | Revise and re-present via the `design` skill (Step 1.5) — no UI code until accepted |
+| Implementation reveals the design won't work | Return to Step 1.5, amend the plan, re-confirm, then resume Step 2 |
+| Design handover conflicts with the project design system | The design system wins unless the user decides otherwise; record the decision in the plan's Divergences (Step 1.5) |
+| Accessibility floor conflicts with the design | Change the design, not the floor (Step 1.5 → Step 2) |
 | New dependency needed | Call it out explicitly in Step 2; reviewer checks supply-chain in Step 3; infosec checks crypto/secrets handling in Step 4 |
 | Infra-only change | Same flow — proposal must include Infrastructure Addendum; PR must include `plan` output |
-| Trivial fix (no design impact, no infra, no security) | Start at Step 2; skip Steps 1 and 4 |
+| Trivial fix (no design impact, no infra, no security) | Start at Step 2 (screening first) and skip Step 1; skip Step 4 unless the screening has a Yes |
+| A step is refused (e.g. a write is not permitted) | The requirement is **not met**; say so in every status line |
+| An evaluation bar fails its first run | Take it to the product owner ([`RULES.md#evaluation-and-recall-gates`](../RULES.md#evaluation-and-recall-gates)) |
 | Bug fix | Write regression test first (TDD red step), then fix (green), then review |
 | Security exception accepted | Must be documented as an ADR in Step 5; reference it in the PR |
 
 ## Quick Reference
 
 ```
-Feature doc → docs/features/NNNN-short-title.md (written before Step 1)
-Step 1 → architect skill     (propose; include Infra Addendum if relevant; back-link feature doc)
-Step 2 → developer skill     (implement with TDD; capture plan output for infra)
-Step 3 → reviewer skill      (code review; loop back to Step 2 if blocked)
-Step 4 → infosec skill       (security/compliance sign-off; conditional — see Step 4)
-Step 5 → decision-log skill  (log ADRs, update proposal statuses, log any exceptions)
-Step 6 → open PR             (include feature doc link, proposal link, ADRs, plan output, infosec verdict)
+Feature doc → docs/features/NNNN-short-title.md (written before Step 1; privacy screening)
+Step 1   → architect skill     (propose; include Infra Addendum if relevant; back-link feature doc)
+Step 1.5 → design skill        (UI-bearing work only: token plan in docs/design/, sign-off)
+Step 2   → developer skill     (implement with TDD; capture plan output for infra)
+Step 3   → reviewer skill      (code review incl. design/a11y; loop back to Step 2 if blocked)
+Step 4   → infosec skill       (security/compliance sign-off; conditional — see Step 4)
+Step 5   → decision-log skill  (log ADRs, update proposal statuses, log any exceptions)
+Step 6   → open PR             (feature doc, proposal, design plan + screenshots, ADRs, plan output, infosec verdict)
 ```

@@ -11,45 +11,10 @@ project conventions exactly and do not introduce new dependencies (packages, mod
 provider versions) without calling them out explicitly.
 
 The exact language and framework conventions you apply depend on the project's
-**active skillset profile**, declared in `CLAUDE.md` under `## Active Skillset`.
+**active skillset profile**, declared in `AGENTS.md` under `## Active Skillset`.
 
-## Project Context
-
-**Project:** garethhughes.dev — Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).
-
-**Frontend:** Next.js 16.2.1 App Router (static export) / TypeScript 5 strict / Tailwind CSS v4 + Geist font
-**Auth:** None — fully public site
-**Content:** gray-matter + react-markdown + remark-gfm + rehype-highlight + rehype-raw; mermaid diagrams rendered at build time via @mermaid-js/mermaid-cli
-**Search:** Fuse.js client-side fuzzy search
-**Testing:** None — intentionally test-free for a static blog
-**Data fetching:** Build-time filesystem reads only (lib/posts.ts); no runtime server, no API routes
-
-**Infra:** No IaC; primary deployment GitHub Pages (GitHub Actions); secondary deployment AWS S3 + CloudFront (manual Makefile)
-**Local dev:** npm run dev — no Docker required
-**CI/CD:** GitHub Actions (.github/workflows/deploy.yml) — build + deploy-pages jobs
-
-**Compliance:** None
-**Data classes:** Not applicable — no user data collected
-**Encryption:** Managed by hosting infrastructure
-
-**Repo structure:** app/ (routes), components/ (UI), lib/ (data/build utilities), posts/ (markdown), public/ (static assets), docs/proposals/, docs/decisions/
-**Module structure:** All content loading through lib/posts.ts; lib/mermaid.ts for build-time diagram rendering; Server Components by default; 'use client' only for search/filter UI (BlogList.tsx), markdown renderer (PostContent.tsx), and legacy URL redirects.
-
-**Key rules:**
-- Static export — no server runtime; never add API routes or server-side redirects
-- All data loading at build time via lib/posts.ts — no fetch() in components
-- Post files: YYYY-MM-DD-slug.md with ISO-8601 datePublished and matching slug frontmatter
-- Canonical tag taxonomy defined in DECISIONS.md 2026-04-19
-- /avatar.jpeg is the stable social image fallback — do not change this path
-- Legacy URL redirects use thin 'use client' pages (useRouter().replace()); next.config.ts redirects() unavailable in static export
-- TypeScript strict: true — no as any or : any
-- No barrel index.ts files
-- Write a proposal in docs/proposals/ before significant changes; record decisions in docs/decisions/ and DECISIONS.md
-
-**External integrations:** None
-**Key entities:** Post (public markdown content), PostMeta (parsed frontmatter + excerpt)
-**Known gotchas:** Mermaid requires Chromium system libs in CI; image optimisation disabled (required for static export); trailingSlash: true on all routes; rehype-raw required for inlined mermaid SVGs
-**Open onboarding gaps:** 5 items — see CLAUDE.md ## Onboarding Notes
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
 
 ---
 
@@ -60,7 +25,7 @@ The conventions in this skill are role-tailored summaries of:
 1. The language-agnostic rules in [`RULES.md`](../RULES.md) (config & secrets, external
    HTTP clients, observability, IaC, testing, git & PRs).
 2. The active **stack overlay** under [`rules/`](../rules/), pinned by the project's
-   `## Active Skillset` line in `CLAUDE.md`. Examples:
+   `## Active Skillset` line in `AGENTS.md`. Examples:
    [`rules/typescript.md`](../rules/typescript.md),
    [`rules/dotnet.md`](../rules/dotnet.md).
 
@@ -71,10 +36,18 @@ Sections most relevant to this skill (read both the core file and the overlay):
 *Configuration & Secrets*, *External HTTP Clients*, *Backend Rules*, *Frontend Rules*,
 *Logging & Observability*, *Testing*, plus *Infrastructure as Code* (core only).
 
-If `CLAUDE.md` does not declare an active skillset, default to the
+If `AGENTS.md` does not declare an active skillset, default to the
 [`typescript`](../rules/typescript.md) overlay for backwards compatibility.
 
 ---
+
+## Working Rules
+
+Apply [`RULES.md#evidence-corrections--decisions`](../RULES.md#evidence-corrections--decisions)
+(read the corrections log's Patterns first). The moments that matter most here: before
+writing "done / out of scope / pre-existing", before keeping a test, before claiming a
+change, and before reporting a result. Run commands without `cd`, and push or open a PR
+only as the outward-actions rule there allows.
 
 ## Test-Driven Development (TDD)
 
@@ -108,6 +81,48 @@ write the implementation, the test is wrong.
 - **No shared mutable state between tests.** Each test sets up and tears down its own fixtures
 - **Snapshot tests** only for stable, intentional output (e.g. generated SQL, generated
   Terraform plan). Never for UI components — use semantic queries instead
+- Every test must be able to fail, every input path gets the guard, no races, realistic
+  fixtures ([`RULES.md#testing`](../RULES.md#testing)); evaluation gates follow
+  [`RULES.md#evaluation-and-recall-gates`](../RULES.md#evaluation-and-recall-gates)
+
+## Privacy — the PIA Is Your Specification
+
+Per [`RULES.md#privacy`](../RULES.md#privacy): read the screening before coding. With a
+PIA, build only what it lists and test each deletion path it names; if the build must
+differ, update the PIA and the inventory in the branch. If the screening said No and the
+build now touches personal data, change it and write the PIA. **A PR with no feature
+doc:** write its screening (and any PIA) before any code, in the PR-description draft.
+A project without `docs/privacy/` installs it per
+[`../templates/README.md`](../templates/README.md).
+
+## Design-Heavy Work — Delegate to the `design` Skill
+
+Stop and invoke the **design** skill before writing UI code when any of the following
+applies:
+
+- A **design handover from Claude** exists — an artifact of HTML/CSS or React/JSX that is
+  meant to become UI in this project
+- A **new user-facing surface** is being introduced (page, dashboard, onboarding flow,
+  marketing section) where the visual decisions have not been made yet
+- An existing surface is being **restyled**, or the project's tokens / design system are
+  being changed
+- The work requires choices about palette, typography, layout, or motion that no existing
+  token or component already answers
+
+The `design` skill writes an accepted design plan to `docs/design/NNNN-short-title.md`.
+You then implement **against that accepted plan** — it is the artefact the reviewer traces
+the UI against, the same way tests are traced to Acceptance Criteria.
+
+Two hard rules that apply to you even when `design` is not involved:
+
+- **Never paste handover/artifact code into the repo.** It typically carries CDN scripts,
+  remote font links, inline styles, arbitrary one-off values, mock data, and `useEffect`
+  fetching — all rule violations. Rebuild it under project conventions.
+- **Do not lower the accessibility floor** (visible keyboard focus, contrast, reduced
+  motion respected, semantic markup, labelled controls) to reach a visual goal.
+
+Routine UI work that consumes existing tokens and components — adding a field to a form,
+wiring a new endpoint into an existing table — does **not** need the `design` skill.
 
 ## Language, Backend, Frontend, IaC, and Observability Conventions
 
@@ -201,9 +216,9 @@ against live docs, especially for framework features that change across minor ve
 ### github — Branch & PR Operations
 Use the GitHub MCP server to:
 
-- Create and push branches when starting a new feature (`feature/NNNN-short-title`)
-- Open pull requests targeting the project's default branch
-- Check CI status on a branch before considering implementation complete
+- Create branches when starting a new feature (`feature/NNNN-short-title`); push and open
+  pull requests as the outward-actions rule allows
+- Check the CI evidence as [`RULES.md#git--prs`](../RULES.md#git--prs) describes
 - Read existing PRs to understand what is already in flight before starting work
 
 ### filesystem — Source File Operations
@@ -216,13 +231,9 @@ tools are insufficient — for example:
   of the active editor session
 
 ### semgrep — Static Analysis
-Use the Semgrep MCP server to run static analysis scans before marking implementation
-complete. This catches common security and quality issues early — before the reviewer and
-infosec steps:
-
-- Run a scan on any new service or controller file before committing
-- Pay particular attention to injection risks, secrets in code, and missing validation
-- Address any High or Critical findings before handoff to the reviewer skill
+Before marking an implementation complete, run Semgrep as
+[`RULES.md#static-analysis`](../RULES.md#static-analysis) describes; fix
+CRITICAL/HIGH/ERROR findings and report the summary (or `Semgrep: NOT RUN`).
 
 ---
 
@@ -281,7 +292,11 @@ problems you could have caught yourself.
 - Update API reference docs (Swagger, Redoc, or equivalent) for any new or changed endpoint
   or field — regenerate if the project auto-generates them
 - Update the relevant runbook (`infra/README.md` or equivalent) for any infra change
-- Add a changelog entry if the project maintains a `CHANGELOG.md` or equivalent
+- Changelog entry per [`RULES.md#changelog`](../RULES.md#changelog)
+- A risk-register row for anything left open on purpose
+  ([`RULES.md#risk-register`](../RULES.md#risk-register)); removed names searched for
+- Provide the CI evidence [`RULES.md#git--prs`](../RULES.md#git--prs) requires for this
+  project (the local report where CI does not run on pull requests)
 
 ---
 

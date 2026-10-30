@@ -52,12 +52,13 @@ drip-feed one question at a time. Wait for answers before generating.
 
 ### 5. MCP Tools
 - Which of the available MCP servers should this skill use?
-  (context7, github, filesystem, memory, squirrel-notes, semgrep, jira — or none)
+  (context7, github, filesystem, memory, squirrel-notes, semgrep, jira, playwright — or none)
 - For each: in what specific situations should it be used within this skill?
 
-### 6. Project Context
-- Does this skill need a `## Project Context` placeholder that the user fills in per
-  project? (Most skills do — only omit for skills that operate on the skills repo itself.)
+### 6. Project Facts
+- What project facts does the skill need from `AGENTS.md`? Skills carry no per-project
+  block ([`RULES.md#project-facts`](../RULES.md#project-facts)); the skill names what it
+  reads there.
 
 ### 7. Conventions & Rules
 - Are there specific rules, constraints, or principles the agent must follow while
@@ -89,9 +90,9 @@ skeleton and ask the user to fill it in — produce the final, ready-to-use cont
 <skills-root>/<skill-name>/SKILL.md
 ```
 
-Where `<skills-root>` is the directory containing all skill folders (e.g.
-`~/.config/opencode/skills/` for a global install, or `.opencode/skills/` for a
-project-local install). If in doubt, read the existing skills to infer the root.
+Where `<skills-root>` is the project-local skills directory (`.opencode/skills/` by
+default, or the path the project uses). If in doubt, read the existing skills to infer
+the root.
 
 ### Required Frontmatter
 
@@ -107,26 +108,59 @@ compatibility: opencode
 
 Every skill must have these sections in this order:
 
-1. `# <Skill Name> Skill` — H1 heading with a 2–4 sentence summary of what the agent is
-   and what it does
-2. `## Project Context` — placeholder block (omit only for skills that operate on the
-   skills repo itself, such as `update-skills` and `create-skill`)
-3. The skill's substantive content (responsibilities, workflow, rules, output format, etc.)
-4. `## MCP Tools` — only if the skill uses one or more MCP servers (see format below)
+1. `# <Skill Name>` — H1 heading with a 2–4 sentence summary of what the agent is and what
+   it does. Role-style skills append "Skill" (`# Architect Skill`, `# Developer Skill`);
+   task-style skills do not (`# Update Skills`, `# Create Feature Skill` is either).
+   Match the closest existing skill.
+2. The project-facts pointer line ("**Project facts** (stack, structure, conventions,
+   decisions) are in the project's `AGENTS.md`; read it first."), omitted only for
+   skills that operate on the skills repo itself, such as `update-skills`
+3. `## Authoritative Rules` — required for any skill that writes, reviews, or audits
+   project code or infrastructure (see format below). Omit for skills that only operate on
+   the skills repo or on external services (e.g. `mcp-setup`, `update-skills`).
+4. The skill's substantive content (responsibilities, workflow, rules, output format, etc.)
+5. `## MCP Tools` — only if the skill uses one or more MCP servers (see format below)
 
-### `## Project Context` Placeholder Format
+---
+
+### `## Authoritative Rules` Section Format
+
+The rules live in two layers and every worker skill must point at both, so that a project
+on a non-default stack gets the right conventions. Use this block, tailored to the skill's
+concerns:
 
 ```markdown
-## Project Context
+## Authoritative Rules
 
-> Fill in before use: Replace this section with your project's stack, conventions, and
-> any domain-specific rules relevant to this skill.
->
-> Example: "…"
+The conventions in this skill are role-tailored summaries of:
+
+1. The language-agnostic rules in [`RULES.md`](../RULES.md) (config & secrets, external
+   HTTP clients, observability, IaC, testing, git & PRs).
+2. The active **stack overlay** under [`rules/`](../rules/), pinned by the project's
+   `## Active Skillset` line in `AGENTS.md` — e.g.
+   [`rules/typescript.md`](../rules/typescript.md) or
+   [`rules/dotnet.md`](../rules/dotnet.md).
+
+[One sentence on precedence: for skills that write code, the rule files win over this
+file; for skills that review or audit, any deviation from them is a finding.]
+
+Sections most relevant to this skill: [list the specific sections].
+
+If `AGENTS.md` does not declare an active skillset, default to the
+[`typescript`](../rules/typescript.md) overlay for backwards compatibility.
 ```
 
-The example should be tailored to what this specific skill actually needs from the
-project context.
+Never restate a rule's content inline — reference it by anchor. Changing a rule means a PR
+against `RULES.md` or the overlay, never a weakened copy inside a skill.
+
+### Project-Facts Pointer
+
+```markdown
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
+```
+
+Add one sentence naming the facts this skill relies on, if they are not obvious.
 
 ---
 
@@ -153,6 +187,9 @@ Use the Filesystem MCP server to…
 
 ### semgrep — [purpose in this skill]
 Use the Semgrep MCP server to…
+
+### playwright — [purpose in this skill]
+Use the Playwright MCP server to…
 ```
 
 Only include servers that this skill actually uses.
@@ -228,8 +265,15 @@ README needs to be updated to reflect the change.
 ## Rules
 
 - Never generate a partial SKILL.md and ask the user to complete it. Produce the full file.
-- Never omit the `## Project Context` section unless the skill explicitly operates on the
-  skills repo itself.
+- Never add a per-project block to a skill; project facts go in `AGENTS.md`.
+- Never omit the `## Authoritative Rules` section for a skill that touches project code or
+  infrastructure — and always reference both layers (`RULES.md` + the active overlay),
+  never `RULES.md` alone.
+- If the new skill needs per-skill tool restrictions or a Claude-tuned description when
+  installed as a Claude Code subagent, add it to `skill_tools()` / `skill_description()` in
+  `scripts/install-claude-agents.sh` at the skills root. Note that an explicit `tools:`
+  allowlist there excludes MCP tools unless they are listed too — leave a skill
+  unrestricted if its workflow depends on MCP servers.
 - Never add sections the user did not ask for without noting what was added and why.
 - The `description` frontmatter field is what appears in the skill picker — keep it to
   one sentence, active voice, focused on when to use it.

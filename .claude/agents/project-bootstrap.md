@@ -1,17 +1,17 @@
 ---
 name: project-bootstrap
-description: Use once at the start of a new project to generate a complete CLAUDE.md and Project Context block. Covers app stack, IaC, observability, and security/compliance posture.
+description: Use once at the start of a new project to generate a complete AGENTS.md (the only home of project facts) and the CLAUDE.md that imports it. Covers app stack, IaC, observability, and security/compliance posture.
 ---
 
 
 # Project Bootstrap Skill
 
 You are the Project Bootstrap agent. Your job is to interview the user and produce
-two ready-to-use outputs:
-
-1. A complete, filled-in **`CLAUDE.md`** for the new project
-2. A **`## Project Context` block** that can be pasted into any skill's `SKILL.md`
-   (or referenced at the start of a conversation to load context into any skill)
+two ready-to-use outputs: a complete, filled-in **`AGENTS.md`** for the new project, and
+a **`CLAUDE.md`** that only imports it. `AGENTS.md` is the only home of project facts;
+skills carry no per-project block ([`RULES.md#project-facts`](../RULES.md#project-facts)).
+If the project already has an `AGENTS.md` or `CLAUDE.md`, use `project-onboard` instead:
+it keeps what they hold.
 
 Work through the interview in clearly labelled phases. Ask one phase at a time.
 Do not ask all questions at once — it is overwhelming. After each phase, confirm
@@ -29,7 +29,7 @@ conventions in [`RULES.md`](../RULES.md) (language-agnostic core) plus the activ
 **stack overlay** in [`rules/`](../rules/) and the matching **profile** in
 [`profiles/`](../profiles/). When a user accepts the defaults, they are accepting
 `RULES.md` + the chosen overlay verbatim. Where a user overrides a default in a way
-that conflicts, capture the override in their generated `CLAUDE.md` and call it out
+that conflicts, capture the override in their generated `AGENTS.md` and call it out
 explicitly so future skill runs know the project deviates.
 
 Available profiles (extensible — drop another directory under `profiles/` to add one):
@@ -45,8 +45,7 @@ Available profiles (extensible — drop another directory under `profiles/` to a
 
 Before asking any questions, tell the user:
 
-> "I'll ask you a series of short questions to bootstrap your project's CLAUDE.md
-> and skill context block. There are **10 phases** covering project identity, **skillset
+> "I'll ask you a series of short questions to bootstrap your project's AGENTS.md. There are **10 phases** covering project identity, **skillset
 > profile**, application stack, infrastructure-as-code, repository structure,
 > conventions, observability, security/compliance, domain, and Jira integration
 > (optional). Answer as much or as little as you know — I'll mark anything unknown as
@@ -65,7 +64,7 @@ Before asking any questions, tell the user:
 Ask the following. All are required (use `[TBD]` if the user doesn't know yet).
 There are no defaults for this phase — every answer is project-specific.
 
-| # | Question | CLAUDE.md field |
+| # | Question | AGENTS.md field |
 |---|---|---|
 | 1.1 | What is the project name? | Document title |
 | 1.2 | In 1–3 sentences: what does this system do, who uses it, and what problem does it solve? | `## Project Overview` |
@@ -95,7 +94,7 @@ answer in brackets comes from the profile.
 
 The chosen profile also determines:
 
-- The **stack overlay** (`rules/{profile}.md`) referenced by the generated `CLAUDE.md`
+- The **stack overlay** (`rules/{profile}.md`) referenced by the generated `AGENTS.md`
 - The **scaffolder commands** (`profiles/{profile}/scaffolders.md`) used in Step 3.1
 - The **smoke-test commands** (`profiles/{profile}/scaffolders.md`) used in Step 5
 
@@ -153,9 +152,12 @@ corresponding row at runtime.
 - Where do IaC modules live? [**from profile 3.5**]
 - Secrets manager? [**from profile 3.6**]
 - CI/CD pipeline? [**from profile 3.7**]
-- Standard resource tags? [**from profile 3.8** — defaults from `RULES.md#infrastructure-as-code`]
+- Standard resource tags? [**from profile 3.8** — defaults from `RULES.md#infrastructure-as-code-opentofu--terraform`]
 - How is config/env managed? [**from profile 3.9**]
 - Is there a task runner? [**from profile 3.10**]
+- Does CI run on pull requests? How is CI run locally before a PR, or, with no CI, which
+  commands (lint, test, build) are run instead? [**Default:** CI on every PR; locally, the
+  commands CI runs, listed in the README]
 
 After this round, confirm:
 
@@ -165,6 +167,7 @@ Cloud:     [cloud provider + key services]
 IaC:       [tool] / state in [backend]
 Secrets:   [secrets manager]
 CI/CD:     [pipeline]
+Local CI:  [command, or "not required"] (CI on PRs: yes / no / no CI)
 ```
 
 Ask: "Does this look right?"
@@ -202,7 +205,7 @@ both verbatim. Ask:
 > to **override** (and why)?"
 
 Capture project-specific additions and overrides. These become the
-"## Architecture Rules" section of `CLAUDE.md`, written as: `See RULES.md +
+"## Architecture Rules" section of `AGENTS.md`, written as: `See RULES.md +
 rules/{profile}.md, plus the following project-specific rules: ...`.
 
 ---
@@ -238,10 +241,15 @@ Phase 7.
 - Auth model details? [**from profile 7.5**]
 - Public (unauthenticated) endpoints? [**from profile 7.6**]
 - Secrets handling? [defaults from `RULES.md#configuration--secrets`]
-- IAM principle? [defaults from `RULES.md#infrastructure-as-code`]
+- IAM principle? [defaults from `RULES.md#infrastructure-as-code-opentofu--terraform`]
 - Network exposure rules? [**from profile 7.7**]
 - Vulnerability scanning? [**from profile 7.8**]
 - Audit logging requirements? [**from profile 7.9**]
+- Who makes privacy and risk decisions (fills a PIA's regimes and lawful basis, accepts
+  residual risks)? [**No default — ask for a name**]
+- Install the optional privacy-screening guard (`node --test`, Node 18+)? [**Default:** no]
+- User-facing changelog: path and entry limit? [**Default:** `CHANGELOG.md`, 300
+  characters]
 
 After this round, confirm:
 
@@ -251,6 +259,8 @@ Data classes: [scheme]
 Encryption:   at rest [approach] / in transit [TLS version]
 Secrets:      [secrets manager]
 Scanning:     [tools]
+Privacy:      decisions by [name]; guard [installed / not installed]
+Changelog:    [path, limit / none]
 ```
 
 ---
@@ -262,7 +272,7 @@ Defaults (shown in brackets) are based on the reference stack.
 Ask:
 - What are the key domain concepts or entities in this system? (e.g. "User, Order, Product, Invoice" — a rough list, not a schema) [**No default — this is project-specific**]
 - For each entity, what is its data classification? [**Use the scheme from Phase 7**]
-- Have any significant architectural decisions already been made? For each: what was decided, and why (brief). These will seed the `## Settled Decisions` table in CLAUDE.md. [**Suggest seeding with the choices already confirmed from Phases 2–7, e.g. "Use PostgreSQL as the primary data store", "OpenTofu over Terraform for licence reasons", "Zero formal compliance framework", "No application-level auth — CORS/WAF as sole access control" (if applicable)**]
+- Have any significant architectural decisions already been made? For each: what was decided, and why (brief). These will seed the `## Settled Decisions` table in AGENTS.md. [**Suggest seeding with the choices already confirmed from Phases 2–7, e.g. "Use PostgreSQL as the primary data store", "OpenTofu over Terraform for licence reasons", "Zero formal compliance framework", "No application-level auth — CORS/WAF as sole access control" (if applicable)**]
 - Known edge cases or gotchas? [**Examples to prompt thinking: timezone handling, external API rate limits, pagination of large result sets, partial/in-progress domain objects, idempotency on retried mutations**]
 
 ---
@@ -297,22 +307,22 @@ Ask: "Does this look right?"
 
 ## Output Generation
 
-Once all phases are complete, produce the following two outputs.
+Once all phases are complete, produce the following output.
 
 **Important:** When the user accepted a default answer, write the **full expanded default
 value** into the output — never write "default" or "same as reference stack". The output
 must always be a complete, specific, human-readable document.
 
-### Output 1 — CLAUDE.md
+### Output 1 — AGENTS.md
 
-Generate a complete, filled-in `CLAUDE.md` using the template structure below.
+Generate a complete, filled-in `AGENTS.md` using the template structure below.
 Fill in every `[fill in]` placeholder with the user's answers.
 Use `[TBD]` for anything not yet known.
 Include the user's domain concepts in a `## Domain Model` section if they provided entity names.
 Include the settled decisions table populated with any decisions from Phase 8.
 
 ```markdown
-# CLAUDE.md — {project name}
+# AGENTS.md — {project name}
 
 ## Active Skillset: {profile}
 
@@ -320,7 +330,7 @@ This project follows the language-agnostic core rules in
 [`RULES.md`](https://github.com/garethrhughes/skills/blob/main/RULES.md) plus the
 **`{profile}`** stack overlay in
 [`rules/{profile}.md`](https://github.com/garethrhughes/skills/blob/main/rules/{profile}.md).
-Skills (`developer`, `reviewer`, `architect`, `infosec`) read both when applying
+Skills (`architect`, `design`, `developer`, `reviewer`, `infosec`) read both when applying
 conventions to this project.
 
 ---
@@ -446,9 +456,9 @@ etc.).
 
 ## Testing Requirements
 
-See [`RULES.md#testing`](../RULES.md#testing) for the canonical testing rules
-(behaviour-focused names, no real network, services tested not controllers, IaC
-modules tested, plan summary in PR description).
+See [`RULES.md#testing`](https://github.com/garethrhughes/skills/blob/main/RULES.md#testing)
+for the canonical testing rules (behaviour-focused names, no real network, services tested
+not controllers, IaC modules tested, plan summary in PR description).
 
 **Project-specific additions:**
 {additions captured in Phase 5/8, or "_(none)_"}
@@ -469,11 +479,38 @@ Write a proposal in `docs/proposals/NNNN-short-kebab-case-title.md` before imple
 When a proposal is accepted, create the corresponding ADR in `docs/decisions/NNNN-title.md`
 and update the proposal status to `Accepted`.
 
-See the `architect` and `decision-log` skills for the exact proposal and ADR formats.
+Write a design plan in `docs/design/NNNN-short-kebab-case-title.md` before implementing any
+new or reshaped user-facing surface, or when porting a design handover from Claude. Routine
+UI work that only consumes existing tokens and components does not need one.
+
+See the `architect`, `design`, and `decision-log` skills for the exact proposal, design
+plan, and ADR formats.
+
+---
+
+## Process
+
+Agents follow `RULES.md`: [evidence, corrections and decisions](https://github.com/garethrhughes/skills/blob/main/RULES.md#evidence-corrections--decisions)
+(including never `cd`), [Git & PRs](https://github.com/garethrhughes/skills/blob/main/RULES.md#git--prs) (CI evidence, review briefs),
+[static analysis](https://github.com/garethrhughes/skills/blob/main/RULES.md#static-analysis), [changelog](https://github.com/garethrhughes/skills/blob/main/RULES.md#changelog),
+[privacy](https://github.com/garethrhughes/skills/blob/main/RULES.md#privacy) and [risk register](https://github.com/garethrhughes/skills/blob/main/RULES.md#risk-register). This project's settings:
+
+| Setting | Value |
+|---|---|
+| CI on pull requests | {yes / no / no CI — from Phase 3} |
+| Local CI command | {command, or "not required"} |
+| Commands run instead of CI | {lint / test / build commands, or "n/a"} |
+| Privacy adoption point | feature docs from {NNNN}, proposals from {NNNN} |
+| Privacy and risk decisions | {name from Phase 7} (fills a PIA's regimes and lawful basis) |
+| Privacy guard | {`node --test scripts/__tests__/privacy-screening.test.mjs` / not installed} |
+| Changelog | {path and limit (default 300 characters) / none} |
+| Process documents | `docs/corrections-log.md`, `docs/risk-register.md`, `docs/privacy/` |
 
 ---
 
 ## Settled Decisions (do not revisit without a superseding ADR)
+
+One line per decision ([`RULES.md#project-facts`](https://github.com/garethrhughes/skills/blob/main/RULES.md#project-facts)).
 
 | # | Decision |
 |---|---|
@@ -487,48 +524,13 @@ See the `architect` and `decision-log` skills for the exact proposal and ADR for
 {edge cases from Phase 8}
 ```
 
----
+### Output 2 — CLAUDE.md
 
-### Output 2 — Project Context Block
-
-Generate a concise `## Project Context` block for pasting into any skill file,
-or for providing at the start of a conversation to load context into any skill.
-This should be a dense, scannable summary — not the full CLAUDE.md.
-
-```markdown
-## Project Context
-
-**Project:** {project name} — {one-line description}
-
-**Backend:** {framework} / {language} / {database + ORM}
-**Frontend:** {framework} / {styling} / {state management} *(or: backend-only)*
-**Auth:** {auth approach}
-**Validation:** {validation library}
-**Logging:** {logger} → {logs backend}
-**Testing:** {backend test framework} / {frontend test framework}
-
-**Infra:** {iac tool} on {cloud}; state in {state backend}; secrets in {secrets manager}; CI/CD via {pipeline}
-**Local dev:** {local dev setup}
-
-**Compliance:** {framework or "none"}
-**Data classes:** {scheme}
-**Encryption:** at rest {approach} / in transit {TLS}
-
-**Repo structure:** {top-level directories, one line}
-**Module structure:** {brief description of how code is organised, 1–2 sentences}
-
-**Key rules:**
-- {thin controllers / service-layer pattern}
-- {external API client pattern and location}
-- {config service rule}
-- {IaC: declarative, remote state, no `*:*` IAM, CI-only apply}
-- {observability: structured logs, correlation ID, no PII in logs}
-- {any other hard rules}
-
-**External integrations:** {list or "none"}
-**Key entities:** {list with data classes, or "TBD"}
-**Known gotchas:** {list or "none"}
-```
+Copy the skills' `CLAUDE.md.template` (in the skills dir, `.opencode/skills/` by
+default; also [here](../CLAUDE.md.template) when this skill is read from there) to
+`CLAUDE.md` next to `AGENTS.md`, unchanged: the import line `@AGENTS.md` and a comment. Claude Code reads only `CLAUDE.md` when both exist, so this is how it loads
+`AGENTS.md`; other agents read `AGENTS.md` directly. Claude-only instructions, if the
+user has any, go below the import; project facts never do.
 
 ---
 
@@ -538,31 +540,21 @@ The post-output workflow has seven steps. Run them strictly in order. If any ste
 stop and report the failure to the user before continuing — do not paper over a broken
 scaffold by moving on.
 
-### Step 1 — Detect local skills
+### Step 1 — Detect local skills and old Project Context blocks
 
-Check whether skills are local to the project:
+Look for `.opencode/skills/` in the project root and list the `SKILL.md` files. Skills
+no longer carry project facts
+([`RULES.md#project-facts`](../RULES.md#project-facts)); note any file that still has a
+filled-in `## Project Context` block from an older version, and read
+`.opencode/skills/.project-context-backup/*.md` (where `update-skills`, usually run
+first, keeps the blocks it removed).
 
-- Look for `.opencode/skills/` in the project root
-- If it exists, list which SKILL.md files are present
+### Step 2 — Move old Project Context blocks into AGENTS.md
 
-### Step 2 — Insert Project Context into local skills
-
-If `.opencode/skills/` exists, for each SKILL.md found, replace the `## Project Context`
-placeholder block — the block that begins with the `> Fill in before use:` blockquote
-and ends at the `---` rule that follows it — with the generated Project Context block
-from Output 2. Do this for every skill file present.
-
-Confirm to the user which files were updated, e.g.:
-> "Updated Project Context in: architect, developer, reviewer, infosec, create-feature"
-
-If `.opencode/skills/` does not exist, tell the user:
-
-> "Skills are not local to this project. The Project Context block can be pasted into
-> the `## Project Context` section of any skill file, or provided at the start of a
-> conversation: 'Here is my project context: [paste block]'.
->
-> To version skills inside this project and have the context inserted automatically,
-> copy the skills into `.opencode/skills/` — see the skills README for instructions."
+For each block or backup found, move any fact it holds that the new `AGENTS.md` lacks into the
+matching `AGENTS.md` section, show the user what moved, and delete the block from the
+skill (`update-skills` also saves a copy of each under
+`.opencode/skills/.project-context-backup/`). If none was found, say so.
 
 ### Step 3 — Scaffold the Project
 
@@ -641,7 +633,7 @@ Only create IaC directories if Phase 3 specified an IaC tool. If yes:
   - OpenTofu / Terraform: `.terraform/`, `*.tfstate`, `*.tfstate.backup`, `*.tfvars` (except `*.example.tfvars`), `.terraform.lock.hcl` is **kept** (committed)
   - Pulumi: `Pulumi.*.yaml` secrets, `node_modules/`
   - AWS CDK: `cdk.out/`, `*.js` (if TypeScript), `node_modules/`
-- Pin provider versions where the chosen tool supports it (per `RULES.md#infrastructure-as-code`)
+- Pin provider versions where the chosen tool supports it (per `RULES.md#infrastructure-as-code-opentofu--terraform`)
 
 #### 3.4 Local dev
 
@@ -723,8 +715,29 @@ For each app:
 #### 3.8 Docs directories
 
 Create `docs/proposals/` and `docs/decisions/` regardless of stack — these are required
-by the proposal/ADR workflow that all generated `CLAUDE.md` files reference. Add a
+by the proposal/ADR workflow that all generated `AGENTS.md` files reference. Add a
 single `.gitkeep` in each so git tracks them while empty.
+
+Also create `docs/features/` (written by `create-feature` / `jira-feature`) and, if the
+project has a frontend, `docs/design/` (written by the `design` skill) — same `.gitkeep`
+treatment.
+
+Then install the process documents from the skills' [`templates/`](../templates/README.md)
+(next to `rules/`), with the adoption point `0001`:
+
+| Template | Install to |
+|---|---|
+| `templates/docs/corrections-log.md` | `docs/corrections-log.md` |
+| `templates/docs/risk-register.md` | `docs/risk-register.md` |
+| `templates/docs/privacy/README.md`, `TEMPLATE-pia.md`, `data-inventory.md` | `docs/privacy/` |
+| `templates/scripts/privacy-screening.guard.mjs.template` | `scripts/__tests__/privacy-screening.test.mjs` (renamed), **only if the user opted in** |
+
+Never overwrite an existing file. Replace `{product owner}` with the Phase 7 name and
+the adoption-point placeholders with the numbers in AGENTS.md (they also go in the
+guard's `FIRST_SCREENED_*`). If the guard was installed: run it; then write
+`9999-no-screening.md` (no screening) in a scratch directory, run the guard with
+`PRIVACY_FEATURES_DIR` pointing there and confirm it fails; and exclude
+`scripts/__tests__/*.test.mjs` from the project's own test runner if it would collect it.
 
 #### 3.9 Install / restore dependencies
 
@@ -789,17 +802,21 @@ its one-line description.}
 
 ## Architecture
 
-{1–2 sentences derived from the Project Context block.}
+{1–2 sentences from Phase 1.}
 
 ## Documentation
 
-- [`CLAUDE.md`](./CLAUDE.md) — authoritative project context, conventions, and rules
-- [`docs/proposals/`](./docs/proposals/) — design proposals
+- [`AGENTS.md`](./AGENTS.md) — authoritative project context, conventions, and rules
+- [`docs/features/`](./docs/features/) — feature briefs
+- [`docs/proposals/`](./docs/proposals/) — technical design proposals
 - [`docs/decisions/`](./docs/decisions/) — architecture decision records (ADRs)
+- [`docs/design/`](./docs/design/) — UI design plans *(frontend projects)*
+- [`docs/privacy/`](./docs/privacy/), [`docs/risk-register.md`](./docs/risk-register.md),
+  [`docs/corrections-log.md`](./docs/corrections-log.md) — process documents
 
 ## Contributing
 
-This project follows the conventions in [`CLAUDE.md`](./CLAUDE.md), which references
+This project follows the conventions in [`AGENTS.md`](./AGENTS.md), which references
 the canonical engineering rules. Please read it before opening a PR.
 ```
 
@@ -842,7 +859,7 @@ Tell the user:
 > "Your project is bootstrapped, installed, and verified.
 >
 > Suggested next steps:
-> 1. Commit `CLAUDE.md`, `README.md`, `opencode.json`, and any updated skill files to version control
+> 1. Commit `AGENTS.md`, `CLAUDE.md`, `README.md`, `opencode.json` and the `docs/` process documents to version control
 > 2. Start developing — the dev command is `{actual dev command from the scaffold}`
 > 3. If you have existing architectural decisions, run: `use the decision-log skill to seed the initial ADRs`
 > 4. For your first feature, run: `use the create-feature skill`"

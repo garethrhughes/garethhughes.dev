@@ -12,66 +12,43 @@ development. You write in the ADR (Architecture Decision Record) format and keep
 log in `docs/decisions/` so the team has a traceable history of why the system is built the
 way it is.
 
-## Project Context
-
-**Project:** garethhughes.dev — Personal blog site for Gareth Hughes, built with Next.js 16 static export. Covers technical writing, photography, and software projects. Deployed to GitHub Pages (automated) and optionally AWS S3 + CloudFront (manual).
-
-**Frontend:** Next.js 16.2.1 App Router (static export) / TypeScript 5 strict / Tailwind CSS v4 + Geist font
-**Auth:** None — fully public site
-**Content:** gray-matter + react-markdown + remark-gfm + rehype-highlight + rehype-raw; mermaid diagrams rendered at build time via @mermaid-js/mermaid-cli
-**Search:** Fuse.js client-side fuzzy search
-**Testing:** None — intentionally test-free for a static blog
-**Data fetching:** Build-time filesystem reads only (lib/posts.ts); no runtime server, no API routes
-
-**Infra:** No IaC; primary deployment GitHub Pages (GitHub Actions); secondary deployment AWS S3 + CloudFront (manual Makefile)
-**Local dev:** npm run dev — no Docker required
-**CI/CD:** GitHub Actions (.github/workflows/deploy.yml) — build + deploy-pages jobs
-
-**Compliance:** None
-**Data classes:** Not applicable — no user data collected
-**Encryption:** Managed by hosting infrastructure
-
-**Repo structure:** app/ (routes), components/ (UI), lib/ (data/build utilities), posts/ (markdown), public/ (static assets), docs/proposals/, docs/decisions/
-**Module structure:** All content loading through lib/posts.ts; lib/mermaid.ts for build-time diagram rendering; Server Components by default; 'use client' only for search/filter UI (BlogList.tsx), markdown renderer (PostContent.tsx), and legacy URL redirects.
-
-**Key rules:**
-- Static export — no server runtime; never add API routes or server-side redirects
-- All data loading at build time via lib/posts.ts — no fetch() in components
-- Post files: YYYY-MM-DD-slug.md with ISO-8601 datePublished and matching slug frontmatter
-- Canonical tag taxonomy defined in DECISIONS.md 2026-04-19
-- /avatar.jpeg is the stable social image fallback — do not change this path
-- Legacy URL redirects use thin 'use client' pages (useRouter().replace()); next.config.ts redirects() unavailable in static export
-- TypeScript strict: true — no as any or : any
-- No barrel index.ts files
-- Write a proposal in docs/proposals/ before significant changes; record decisions in docs/decisions/ and DECISIONS.md
-
-**External integrations:** None
-**Key entities:** Post (public markdown content), PostMeta (parsed frontmatter + excerpt)
-**Known gotchas:** Mermaid requires Chromium system libs in CI; image optimisation disabled (required for static export); trailingSlash: true on all routes; rehype-raw required for inlined mermaid SVGs
-**Open onboarding gaps:** 5 items — see CLAUDE.md ## Onboarding Notes
+**Project facts** (stack, structure, conventions, decisions) are in the project's
+`AGENTS.md`; read it first ([`RULES.md#project-facts`](../RULES.md#project-facts)).
 
 ---
 
 ## Authoritative Rules
 
-The project-wide engineering conventions live in [`RULES.md`](../RULES.md). This skill
-is the **sole owner of ADR creation** — the architect skill writes proposals and hands
-off to this skill for the corresponding ADR.
+The project-wide engineering conventions live in two layers:
 
-### ADRs that override `RULES.md`
+1. The language-agnostic core in [`RULES.md`](../RULES.md).
+2. The active **stack overlay** under [`rules/`](../rules/), pinned by the project's
+   `## Active Skillset` line in `AGENTS.md` — e.g.
+   [`rules/typescript.md`](../rules/typescript.md) or
+   [`rules/dotnet.md`](../rules/dotnet.md).
 
-If a decision overrides a rule in `RULES.md`, the ADR **must**:
+This skill is the **sole owner of ADR creation** — the architect skill writes proposals and
+hands off to this skill for the corresponding ADR.
 
-1. Cite the exact `RULES.md` section and rule being overridden (e.g.
-   `RULES.md#external-http-clients` — "5s default timeout").
+If `AGENTS.md` does not declare an active skillset, default to the
+[`typescript`](../rules/typescript.md) overlay for backwards compatibility.
+
+### ADRs that override a rule
+
+If a decision overrides a rule in `RULES.md` **or in the active overlay**, the ADR **must**:
+
+1. Cite the exact file, section, and rule being overridden (e.g.
+   `RULES.md#external-http-clients` — "5s default timeout", or
+   `rules/typescript.md` *TypeScript Conventions* — "never `enum`").
 2. State the override explicitly in the **Decision** section.
 3. Justify the override in the **Rationale** section — what makes this project's
    constraints different.
 4. List the additional risk and mitigation in **Consequences → Risks**.
-5. Be referenced from the project's `CLAUDE.md` "project-specific overrides" table so
+5. Be referenced from the project's `AGENTS.md` "project-specific overrides" table so
    future skill runs see the deviation.
 
-Never weaken a rule in `RULES.md` itself — overrides are per-project and live in ADRs.
+Never weaken a rule in `RULES.md` or an overlay itself — overrides are per-project and live
+in ADRs.
 
 ---
 
@@ -105,7 +82,11 @@ Increment NNNN sequentially from the highest existing number. Start at 0001.
 
 **Date:** YYYY-MM-DD
 **Status:** Proposed | Accepted | Deprecated | Superseded by [NNNN]
-**Deciders:** [list of people or agents involved]
+**Decided by:** who decided, the owner's words quoted and dated; parts an agent chose
+"pending review"
+**Amends / Supersedes:** each ADR this one changes, and what it changes in it ·
+**Amended by:** added later
+**Privacy:** screening all No | PIA link · **Risks:** R-NNN rows raised, accepted or closed
 **Proposal:** link to docs/proposals/ file if this decision originated from a proposal
 
 ## Context
@@ -155,6 +136,16 @@ When asked to log a decision:
 2. Create the file at `docs/decisions/NNNN-title.md` using the format above
 3. Set Status to `Accepted` unless explicitly told otherwise
 4. Add a one-line entry to `docs/decisions/README.md` in the decision index table
+5. Link both ends: an ADR that amends or supersedes another adds **Amended by** (or
+   **Superseded by**) to that one in the same change
+6. Add one line to `AGENTS.md`'s Settled Decisions, naming the ADRs it amends or
+   supersedes
+   ([`RULES.md#project-facts`](../RULES.md#project-facts)) and rewrite any row this ADR
+   changes; reconcile the other copies of the rule
+   ([`RULES.md#evidence-corrections--decisions`](../RULES.md#evidence-corrections--decisions))
+7. Write the risk-register rows the decision accepts
+   ([`RULES.md#risk-register`](../RULES.md#risk-register)); claim a behaviour change only
+   if it was observed
 
 ## Decision Index Format (docs/decisions/README.md)
 
@@ -179,10 +170,8 @@ Use the Filesystem MCP server to:
 
 ---
 
-## When Reviewing Code
+## Out of Scope
 
-Flag any implementation that contradicts an existing ADR. Reference the ADR number in your
-comment. Example:
-
-> "This hardcodes the database host as `localhost` — ADR-0002 specifies all external
-> connection details must come from `ConfigService`. Please load from config."
+This skill does not review code. Flagging an implementation that contradicts an existing
+ADR belongs to the **reviewer** skill, which blocks on it under *Documentation Checks*.
+Your job ends at writing and indexing the ADR itself.
