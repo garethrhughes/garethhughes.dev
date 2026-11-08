@@ -36,16 +36,28 @@ export const metadata: Metadata = {
 
 const skills: { category: string; items: string[] }[] = [
   {
+    category: 'Leadership',
+    items: [
+      'Managing managers',
+      'Hiring',
+      'Performance management',
+      'Succession planning',
+      'Resourcing & capacity',
+      'Delivery governance',
+      'DORA metrics',
+    ],
+  },
+  {
     category: 'Architecture & Design',
     items: ['Event-Driven Architecture', 'Microservices', 'DDD', 'CQRS', 'System Design', 'Micro-FE'],
   },
   {
     category: 'Cloud & Infrastructure',
-    items: ['AWS (ECS, Fargate, Lambda, DynamoDB)', 'Kubernetes', 'Terraform', 'CDK', 'OpenTelemetry', 'Elastic'],
+    items: ['AWS (ECS, Fargate, Lambda, DynamoDB)', 'Terraform', 'CDK', 'Elastic', 'Splunk'],
   },
   {
     category: 'Languages & Frameworks',
-    items: ['C#', '.NET Framework', '.NET 5+', 'TypeScript', 'Node.js', 'React', 'Vue.js', 'PHP', 'GraphQL'],
+    items: ['C#', '.NET Framework', '.NET 5+', 'TypeScript', 'Node.js', 'React', 'Vue.js', 'GraphQL'],
   },
   {
     category: 'Data & Messaging',
@@ -53,15 +65,15 @@ const skills: { category: string; items: string[] }[] = [
   },
   {
     category: 'DevOps & Tooling',
-    items: ['CI/CD', 'Docker', 'Azure DevOps', 'GitHub Actions', 'IaC', 'Serverless Framework', 'OpsGenie'],
+    items: ['CI/CD', 'Docker', 'Azure DevOps', 'GitHub Actions', 'IaC', 'Serverless Framework'],
   },
   {
     category: 'AI & Automation',
-    items: ['Agentic AI', 'Claude Code', 'GitHub Copilot', 'Amazon Q', 'AI workflow design'],
+    items: ['Agentic AI', 'Claude Code', 'OpenCode', 'MCP servers', 'GitHub Copilot', 'AI workflow design'],
   },
   {
     category: 'Security & Compliance',
-    items: ['IAM Policy Design', 'Secrets Management', 'API Security', 'ISO 27001', 'PCI DSS'],
+    items: ['IAM Policy Design', 'Secrets Management', 'API Security', 'Client-side encryption', 'ISO 27001', 'PCI DSS'],
   },
 ];
 
@@ -79,8 +91,8 @@ const sideProjects: SideProject[] = [
     url: 'https://squirrelnotes.app',
     period: 'Mar 2026 – Present',
     description:
-      'A privacy-first, zero-knowledge note-taking app for ADHD brains. Built and launched end-to-end as a production SaaS product using AI-assisted development tooling — gaining firsthand intuition for where AI accelerates delivery and where human judgment remains essential.',
-    stack: 'TypeScript · Node.js · AWS · GitHub Copilot · CDK',
+      "A zero-knowledge, end-to-end encrypted notes app, built for ADHD brains. The passphrase never leaves the browser and the server stores only ciphertext. It includes an MCP server of about 44 tools, so Claude and other agents read and write notes with the user's own key, and a shared AI memory with on-device embeddings and hybrid retrieval. I design, direct and review it; AI does most of the typing, and I merge every change myself. Live and free to use.",
+    stack: 'TypeScript · Node.js · AWS (CDK) · MCP · OpenCode · Claude Code',
   },
   {
     name: 'Fragile',
@@ -88,7 +100,7 @@ const sideProjects: SideProject[] = [
     period: 'Apr 2026 – Present',
     description:
       'A self-hosted engineering metrics dashboard that connects to a Jira Cloud instance and surfaces DORA metrics, sprint and Kanban planning analytics, cycle time analysis, and roadmap accuracy tracking.',
-    stack: 'TypeScript · Node.js · AWS · GitHub Copilot · Terraform',
+    stack: 'TypeScript · Node.js · AWS · Terraform · OpenCode · Claude Code',
   },
 ];
 
@@ -111,13 +123,16 @@ const roles: Role[] = [
     location: 'Sydney',
     period: '2024–Present',
     summary:
-      'Led software engineering and data across six cross-functional squads (25–30 engineers), responsible for re-platforming and platform stability including future-state architecture design in collaboration with engineering squads.',
+      'Led software engineering and data across six teams (around 30 people) through a large-scale re-platforming.',
     highlights: [
-      'Directed a high-performance engineering department across six squads, establishing a new Platform Engineering function to bridge developer experience and operational stability',
-      'Acted as primary technical stakeholder in enterprise discovery, designing future-state architecture that secured a $6–8m ARR partnership',
-      'Authored a multi-year technical roadmap covering legacy infrastructure transition to event-driven architecture, including a comprehensive database migration strategy',
+      'Designed the future-state event-driven architecture replacing the legacy monolith, and the migration strategy across data, API and infrastructure',
+      'Authored the multi-year technical roadmap, including the database migration strategy; leading the first upgrade of the legacy database in several years',
+      'Helped win major enterprise mining engagements by running client discovery with a group product manager, designing the solution and its integrations, estimating the work, and writing the API specifications',
+      'Manage six engineering managers; hired three lead, two principal and several senior engineers, and promoted two seniors into lead roles',
+      'Own engineering resource allocation across the department, planned against the incoming client and commercial pipeline',
+      'Introduced RFCs, go-live checklists and fortnightly governance and incident reviews, now run by the lead engineers; rolled out self-serve DevOps so teams release their own services; established Platform Engineering',
     ],
-    stack: 'TypeScript · Node.js · AWS (ECS, Fargate, Lambda, DynamoDB, SNS/SQS) · PostgreSQL · Terraform · CDK · Claude Code',
+    stack: 'TypeScript · Node.js · AWS (ECS, Fargate, Lambda, DynamoDB, SNS/SQS) · PostgreSQL · Snowflake · Splunk · Terraform · CDK · Claude Code',
   },
   {
     title: 'Lead Engineer',
@@ -130,13 +145,13 @@ const roles: Role[] = [
     highlights: [
       'Delivered aleagues.com.au for the 2023/24 season including full data migration from the legacy platform',
       'Built and launched 13 club websites including complete data migration',
-      'Led initiative to rebuild data ingestion pipelines, reducing cloud costs by 70% through event-driven architecture',
-      'Established engineering standards and CI/CD practices for the new team structure',
+      'Re-architected the data ingestion pipelines onto an event-driven architecture to cut cloud cost and improve reliability',
+      'Established an engineering function that did not previously exist: two teams and 8 engineers at peak, hired half of them, set standards and CI/CD',
     ],
-    stack: 'PHP · WordPress · TypeScript · React · AWS (Lambda, SNS/SQS, DynamoDB) · Azure DevOps · CDK',
+    stack: 'PHP · TypeScript · React · AWS (Lambda, SNS/SQS, DynamoDB) · Azure DevOps · CDK',
   },
   {
-    title: 'Senior Developer',
+    title: 'Senior Software Developer',
     company: 'Pluralsight',
     companyUrl: 'https://www.pluralsight.com/',
     location: 'Remote',
@@ -156,12 +171,12 @@ const roles: Role[] = [
     location: 'Remote',
     period: '2020–2022',
     summary:
-      'Brought in to take over from an outgoing engineering team; established agile methodologies and modernised legacy systems while maintaining business continuity.',
+      'Led engineering on an insurance claims platform, establishing agile methodologies and modernising legacy systems.',
     highlights: [
-      'Migrated legacy .NET application from Azure VMs to AWS Fargate, reducing infrastructure costs and improving deployment velocity',
-      'Architected and developed a new repair portal using cloud-native technologies with CQRS/MediatR patterns',
-      'Modernised application stack from .NET Framework to .NET 6+',
-      'Created and deployed build pipelines using Azure DevOps with Terraform',
+      'Took over an insurance claims platform from an outgoing team while keeping the business running; built the replacement team (5 engineers at peak)',
+      'Migrated the legacy .NET application from Azure VMs to AWS Fargate, reducing infrastructure cost and improving deployment velocity',
+      'Architected a new cloud-native repair portal using CQRS and MediatR. Moved the stack from .NET Framework to .NET 6',
+      'Built pipelines in Azure DevOps with Terraform',
     ],
     stack: 'C# · .NET 6 · AWS (ECS, Fargate, SQS/SNS, Lambda) · SQL Server · PostgreSQL · Terraform · Vue.js',
   },
@@ -176,7 +191,7 @@ const roles: Role[] = [
     highlights: [
       'Delivered a complex price change project introducing a price-banding system, coordinating across multiple business units',
       'Designed and delivered architecture for migration from bulk billing to real-time billing with Zuora and Salesforce integrations',
-      'Improved platform stability through service modernisation and caching strategies',
+      'Improved platform stability and reduced latency through service modernisation and caching strategies',
     ],
     stack: 'C# · .NET Framework · AWS (EC2, SQS/SNS, Lambda) · SQL Server · Elasticsearch · Salesforce',
   },
@@ -189,7 +204,8 @@ const roles: Role[] = [
       'Responsible for all technical aspects of the consultancy including strategy, team resourcing, and engineering processes. Combined hands-on technical leadership with client-facing responsibilities.',
     highlights: [
       'Established technical strategy and engineering processes for a growing consultancy',
-      'Led technical engagement for major clients including NSW Government and ALDI',
+      'Led technical engagement for major clients including Transport for NSW and ALDI',
+      "Designed for and deployed into closed government environments, and liaised directly with ALDI's IT division",
       'Delivered end-to-end solutions from pre-sales through to production handover',
     ],
     stack: 'C# · .NET Framework · Node.js · React · Vue.js · PHP · AWS',
@@ -198,11 +214,30 @@ const roles: Role[] = [
 
 const RECENT_POST_COUNT = 7;
 
-const earlierRoles: { company: string; role: string }[] = [
-  { company: 'Corporate Travel Management', role: 'Senior Developer' },
-  { company: 'HotelsCombined', role: 'Senior Developer' },
-  { company: 'Nine', role: 'Contractor' },
-  { company: 'TechnoPhobia', role: 'Junior → Developer → Senior Developer' },
+const earlierRoles: { company: string; role: string; detail: string; tags?: string[] }[] = [
+  {
+    company: 'Corporate Travel Management',
+    role: 'Senior Developer',
+    detail:
+      'Rebuilt the hotel availability search and booking engine; the platform supported booking volume growth of over 500% in six months.',
+  },
+  {
+    company: 'HotelsCombined',
+    role: 'Senior Developer',
+    detail:
+      'Built a secure credit card vault relaying card data to third parties, and localised marketing email reaching 300,000 people weekly.',
+  },
+  {
+    company: 'Nine',
+    role: 'Senior Contract Engineer',
+    detail: "Full-stack .NET and Node.js on one of Australia's highest-traffic websites.",
+  },
+  {
+    company: 'TechnoPhobia',
+    role: 'Junior → Developer → Senior Developer',
+    detail: 'Technical lead on a large UK government e-commerce platform, including its Java/Lucene search engine over 500,000 products and services.',
+    tags: ['PHP'],
+  },
 ];
 
 
@@ -306,19 +341,18 @@ export default function AboutPage() {
 
         <section className="space-y-4 leading-relaxed text-text-secondary">
           <p>
-            Expert .NET and JavaScript engineer and hands-on technical leader with 20 years of experience across England and Australia, with over a decade of engineering leadership. Proven track record delivering technical transformation and platform modernisation at scale — across domains including real estate, compliance, travel, and digital media.
+            I lead software engineering and data at MyPass Global: six teams, around 30 people, six engineering managers who own their outcomes. We are part-way through a large re-platforming from a legacy monolith to an event-driven architecture. I designed the future-state architecture and wrote the multi-year roadmap behind it, and I set the governance the teams now run themselves: RFCs, go-live checklists, fortnightly incident reviews and the SOPs that support ISO 27001.
           </p>
           <p>
-            Currently building production SaaS tooling —{' '}
+            I stay technical by building outside work.{' '}
             <Link href="https://squirrelnotes.app" className="text-squirrel-700 underline-offset-2 hover:underline">Squirrel Notes</Link>
-            {' '}and{' '}
+            {' '}is a zero-knowledge encrypted notes app with an MCP server and a shared AI memory;{' '}
             <Link href="https://github.com/garethrhughes/fragile" className="text-squirrel-700 underline-offset-2 hover:underline">Fragile</Link>
-            {' '}— using AI-assisted development workflows, demonstrating active IC technical contribution alongside organisational impact.
+            {' '}is a self-hosted DORA and delivery metrics platform. Building them end to end is how I keep my judgement calibrated, and how I have formed a view on where AI-assisted development helps and where it does not.
           </p>
-            <p>
-              <span className="font-semibold text-text-primary">Core competencies:</span>{' '}
-              System design and architecture, event-driven architecture, cloud-native platforms, legacy modernisation, CI/CD pipeline development, agentic AI integration, and engineering team leadership — across delivery models from large enterprise waterfall projects to agile product-led organisations.
-            </p>
+          <p>
+            Twenty years across England and Australia, in real estate, resources, compliance, insurance, travel and digital media. The through-line is modernisation under constraint: legacy platforms made survivable, leads who do not need me in the room, and plain translation between engineers and the people funding them.
+          </p>
         </section>
           </div>
 
@@ -441,10 +475,14 @@ export default function AboutPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {earlierRoles.map(({ company, role }) => (
+                {earlierRoles.map(({ company, role, detail, tags }) => (
                   <tr key={company} className="transition-colors hover:bg-surface-hover">
-                    <td className="px-4 py-3 font-medium text-text-primary">{company}</td>
-                    <td className="px-4 py-3 text-text-secondary">{role}</td>
+                    <td className="px-4 py-3 align-top font-medium text-text-primary">{company}</td>
+                    <td className="px-4 py-3 text-text-secondary">
+                      {role}
+                      <p className="mt-1 text-text-muted">{detail}</p>
+                      {tags && <TagPills tags={tags} className="mt-2" />}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -455,7 +493,7 @@ export default function AboutPage() {
         <Section label="Education">
           <p className="text-text-secondary">
             <span className="font-semibold text-text-primary">Sheffield Hallam University</span>
-            {' — '}BSc (Hons) Computing, Software Engineering — <em>First Class</em>
+            {' — '}BSc (Hons) Computing, Software Engineering — <em>First Class</em>, 2004–2008
           </p>
         </Section>
       </main>
