@@ -9,25 +9,25 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "fuse.js": "^7.3.0",
+    "fuse.js": "^7.5.0",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^1.14.0",
-    "next": "^16.3.8",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
+    "lucide-react": "^1.70.0",
+    "next": "^16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^11.14.0",
+    "@mermaid-js/mermaid-cli": "^11.17.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^10",
-    "eslint-config-next": "16.2.4",
+    "eslint-config-next": "16.4.5",
     "tailwindcss": "^4",
     "typescript": "^6"
   }
